@@ -7,6 +7,7 @@ import java.net.UnknownHostException;
 
 public class Client {
     public void startClient(String serverIp,int port ,String message ,Bus bus) throws IOException {
+        System.out.println("StartClient");
         Socket socket =null;
         ObjectOutputStream out =null;
         ObjectInputStream in = null;
