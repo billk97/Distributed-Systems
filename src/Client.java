@@ -6,17 +6,27 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class Client {
+    /**this function is responsible for the client connection
+     * it requires:
+     * the Server ip that it wants to communicate to
+     * the port of the server
+     * the Message type String that it wants to send
+     * and an Object type bus**/
+    //TODO make two startClient 1 for message 1 for Bus
+    //TODO as Melis for an method to include in and out
     public void startClient(String serverIp,int port ,String message ,Bus bus) throws IOException {
         System.out.println("StartClient");
+        /**port initialization **/
         Socket socket =null;
         ObjectOutputStream out =null;
         ObjectInputStream in = null;
         socket= new Socket(InetAddress.getByName(serverIp),port);
         out= new ObjectOutputStream(socket.getOutputStream());
         in= new ObjectInputStream(socket.getInputStream());
+        /**sending messages **/
         out.writeUTF(message);
-        out.flush();
+        out.flush();//to send everything left inside the buffer
         out.writeObject(bus);
         out.flush();
-    }
-}
+    }//end startClient
+}//end Class Client

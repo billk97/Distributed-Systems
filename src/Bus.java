@@ -1,14 +1,21 @@
+/**The Bus class represents a Bus that a publisher will pulling from the data
+ * BusName: the name of the bus example: B12
+ * BusStop : the current/nearest Bus Stop (Suggestion)
+ * Latitude: of the bus for a given time
+ * Longitude : of the bus for a given time **/
 public class Bus {
-    String BusName;
-    double Latitude;
-    double Lontitude;
-    String BusStop;
-
-    public Bus (String BusName , double Latitude, double Lontitude ,String BusStop){
+    private String BusName;
+    private String BusStop;
+    private double Latitude;
+    private double Longitude;
+    //creating a empty constructor in case its needed
+    public Bus(){}
+    //creating a constructor with attributes inside
+    public Bus (String BusName , double Latitude, double Longitude, String BusStop){
         this.BusName=BusName;
         this.BusStop=BusStop;
         this.Latitude=Latitude;
-        this.Lontitude=Lontitude;
+        this.Longitude = Longitude;
     }
 
     public String getBusName() {
@@ -27,12 +34,12 @@ public class Bus {
         Latitude = latitude;
     }
 
-    public double getLontitude() {
-        return Lontitude;
+    public double getLongitude() {
+        return Longitude;
     }
 
-    public void setLontitude(double lontitude) {
-        Lontitude = lontitude;
+    public void setLongitude(double longitude) {
+        Longitude = longitude;
     }
 
     public String getBusStop() {
@@ -44,7 +51,7 @@ public class Bus {
     }
     public String toString()
     {
-        return "Bus Name: " + BusName + " Latitude: " +Latitude + " Longitude: " + Lontitude + " Bus Stop: "+ BusStop  ;
+        return "Bus Name: " + BusName + " Latitude: " +Latitude + " Longitude: " + Longitude + " Bus Stop: "+ BusStop  ;
     }
-}
+}//end class Bus
 

@@ -1,4 +1,6 @@
 public class TestConnection {
+    /**Nothing special about the this class just for testing
+     * **/
     public static void main(String[] args) {
         serverThread s1= new serverThread("server",1);
         new Thread(s1).start();
@@ -9,5 +11,5 @@ public class TestConnection {
         System.out.println("Client 1 created");
         new Thread(m2).start();
         System.out.println("Client 2 created");
-    }
-}
+    }//end main
+}//end class TestConnection

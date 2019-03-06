@@ -6,17 +6,17 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
+    /**creates to 2 Socket Type Objects **/
     private ServerSocket listenerSocket= null;
-    Socket connection = null;
-
+    private Socket connection = null;
+    /**opens the Server**/
     public void openServer() throws IOException, ClassNotFoundException {
         System.out.println("Start Server");
-        ServerSocket listenerSocket= null;
-        Socket connection = null;
         runServer(connection,listenerSocket);
         listenerSocket.close();
     }
-
+    /**runServer: is responsible for the running part of the Server
+     * requires two arguments  **/
     private void runServer(Socket connection1,ServerSocket listenerSocket) throws IOException, ClassNotFoundException {
         System.out.println("run Server");
         listenerSocket=new ServerSocket(4231);
@@ -32,4 +32,4 @@ public class Server {
             connection1.close();
         }
     }//end runServer
-}//end
+}//end class Server
