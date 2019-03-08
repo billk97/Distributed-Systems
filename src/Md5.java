@@ -3,7 +3,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 /**this is a small implementation for the Md5 algorithm used to hash the ip&port
  * and the buslines **/
-//todo make a class compare tha will compare two Hashes remember to use modulo
 public class Md5 {
     private MessageDigest md;
     private String BusLine;
