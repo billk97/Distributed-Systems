@@ -6,7 +6,7 @@ import java.security.NoSuchAlgorithmException;
 //TODO make a function to receive string and return a String but hashed
 //Todo clean it up and make it easy and flexible to user for the rest of the project
 //todo make a class compare tha will compare two Hashes remember to use modulo
-public class Md5Implement {
+public class Md5 {
     private MessageDigest md;
     private String BusLine;
 
@@ -25,7 +25,7 @@ public class Md5Implement {
     }
 
     public static void main(String[] args) {
-        Md5Implement m5 =new Md5Implement();
+        Md5 m5 =new Md5();
         m5.HASH("172"+Integer.toString(420));
     }
 }//end classMd5Implement
