@@ -21,7 +21,7 @@ public class Md5 {
         return myHash;
     }//end HASH
     /**compares two hashes and returns the bigger one **/
-    public String CompairHashes(String Hash1, String Hash2){
+    public String CompareHashes(String Hash1, String Hash2){
         int result= Hash1.compareTo(Hash2);
         //when Hash1>Hash2
         if(result==1)

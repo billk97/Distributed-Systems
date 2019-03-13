@@ -1,3 +1,6 @@
+import java.io.IOException;
+import java.util.HashSet;
+
 /**this class represents a NodeImpl/machine connected to the network and our programme
  * Name: from the host name
  * IpAddress: the ipAddress of the machine
@@ -5,7 +8,7 @@
  * Port: the port that the host is listening to
  * Hash the Hash of the Ip&Port
  * ADD HEAR !!!!!!! CPU/RAM USAGE**/
-public class NodeImpl {
+public class NodeImpl implements Node{
     private String Name;
     private String IpAddress;
     private String Type;
@@ -66,5 +69,25 @@ public class NodeImpl {
     }
     public String toString(){
         return "Name: "+ Name+" Ip Address: "+ IpAddress+ " Type: "+ Type + " Port: "+ Port +" Hash: "+ Hash;
+    }
+    @Override
+    public void initialize(int Hash) throws IOException {
+
+
+    }
+
+    @Override
+    public void connect() {
+
+    }
+
+    @Override
+    public void Disconect() {
+
+    }
+
+    @Override
+    public void UpdateNodes() {
+
     }
 }//end class NodeImpl

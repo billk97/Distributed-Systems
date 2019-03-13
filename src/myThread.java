@@ -14,9 +14,9 @@ public class myThread implements Runnable  {
     /**this is what the thread will do when up and running**/
     public void run() {
         //new object type bus
-        Bus bus = new Bus("b12",30,10,"patision");
-        NodeImpl nodeImpl =new NodeImpl("bill","localhost","Client",4322,344);
-        connectClient(bus, nodeImpl);
+        //Bus bus = new Bus("b12",30,10,"patision");
+        //NodeImpl nodeImpl =new NodeImpl("bill","localhost","Client",4322,344);
+        //connectClient(bus, nodeImpl);
     }//end run
     public void connectClient(Bus bus, NodeImpl nodeImpl){
         try {
