@@ -15,14 +15,14 @@ public class myThread implements Runnable  {
     public void run() {
         //new object type bus
         Bus bus = new Bus("b12",30,10,"patision");
-        Node node =new Node("bill","localhost","Client",4322,344);
-        connectClient(bus,node);
+        NodeImpl nodeImpl =new NodeImpl("bill","localhost","Client",4322,344);
+        connectClient(bus, nodeImpl);
     }//end run
-    public void connectClient(Bus bus, Node node){
+    public void connectClient(Bus bus, NodeImpl nodeImpl){
         try {
-            System.out.println("ip: " +node.getIpAddress()+" port "+ node.getPort());
+            System.out.println("ip: " + nodeImpl.getIpAddress()+" port "+ nodeImpl.getPort());
             Thread.sleep(100);
-            new Client().startClient(node.getIpAddress(),node.getPort(),"mesage",bus);
+            new Client().startClient(nodeImpl.getIpAddress(), nodeImpl.getPort(),"mesage",bus);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
