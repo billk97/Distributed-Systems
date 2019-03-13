@@ -1,3 +1,7 @@
+package DataTypes;
+
+import DataTypes.Bus;
+
 public class Value {
     private Bus bus;
     private  double latidude;

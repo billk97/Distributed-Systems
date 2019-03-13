@@ -1,8 +1,10 @@
+package DataTypes;
+
 import java.io.Serializable;
 
-/**The Bus class represents a Bus that a publisher will pulling from the data
+/**The DataTypes.Bus class represents a DataTypes.Bus that a publisher will pulling from the data
  * lineNumber: the name of the bus example: B12
- * routeCode : the current/nearest Bus Stop (Suggestion)
+ * routeCode : the current/nearest DataTypes.Bus Stop (Suggestion)
  * vehicleId: of the bus for a given time
  * lineName : of the bus for a given time **/
 public class Bus implements Serializable {
@@ -74,7 +76,7 @@ public class Bus implements Serializable {
     }
     public String toString()
     {
-        return "Bus Name: " + lineNumber + " vehicleId: " + vehicleId + " lineName: " + lineName + " Bus Stop: "+ routeCode;
+        return "DataTypes.Bus Name: " + lineNumber + " vehicleId: " + vehicleId + " lineName: " + lineName + " DataTypes.Bus Stop: "+ routeCode;
     }
-}//end class Bus
+}//end class DataTypes.Bus
 

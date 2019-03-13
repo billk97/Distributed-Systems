@@ -1,3 +1,5 @@
+package DataTypes;
+
 public class Topic {
     private String busLine;
 

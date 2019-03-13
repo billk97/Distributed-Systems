@@ -1,6 +1,9 @@
+package Experiment;
+
+import DataTypes.Bus;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -9,16 +12,16 @@ public class Server {
     /**creates to 2 Socket Type Objects **/
     private ServerSocket listenerSocket= null;
     private Socket connection = null;
-    /**opens the Server**/
+    /**opens the Experiment.Server**/
     public void openServer() throws IOException, ClassNotFoundException {
-        System.out.println("Start Server");
+        System.out.println("Start Experiment.Server");
         runServer(connection,listenerSocket);
         listenerSocket.close();
     }
-    /**runServer: is responsible for the running part of the Server
+    /**runServer: is responsible for the running part of the Experiment.Server
      * requires two arguments  **/
     private void runServer(Socket connection1,ServerSocket listenerSocket) throws IOException, ClassNotFoundException {
-        System.out.println("run Server");
+        System.out.println("run Experiment.Server");
         listenerSocket=new ServerSocket(4321);
         while (true)
         {
@@ -35,4 +38,4 @@ public class Server {
         }
 
     }//end runServer
-}//end class Server
+}//end class Experiment.Server

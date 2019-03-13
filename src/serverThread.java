@@ -1,5 +1,7 @@
+import Experiment.Server;
+
 import java.io.IOException;
-/**this is a Server thread
+/**this is a Experiment.Server thread
  * idea:  to have this server in the same machine with other stuff even in the same main
  * if needed in order to be more flexible **/
 public class serverThread implements Runnable{

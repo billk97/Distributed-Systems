@@ -1,3 +1,6 @@
+import DataTypes.Bus;
+import Experiment.Client;
+
 import java.io.IOException;
 /**this is a client type thread two emulate multiple clients in the same machine
  * idea: to have multiple clients that will do the same thing or thou parameters to slightly
@@ -14,8 +17,8 @@ public class myThread implements Runnable  {
     /**this is what the thread will do when up and running**/
     public void run() {
         //new object type bus
-        //Bus bus = new Bus("b12",30,10,"patision");
-        //NodeImpl nodeImpl =new NodeImpl("bill","localhost","Client",4322,344);
+        //DataTypes.Bus bus = new DataTypes.Bus("b12",30,10,"patision");
+        //NodeImpl nodeImpl =new NodeImpl("bill","localhost","Experiment.Client",4322,344);
         //connectClient(bus, nodeImpl);
     }//end run
     public void connectClient(Bus bus, NodeImpl nodeImpl){

@@ -1,12 +1,13 @@
+import DataTypes.Topic;
+
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class Publisher implements Node{
     private String myHash=null;
     Md5 md5= new Md5();
 
-    /**hashes the Topic it recives and compairs it with the
+    /**hashes the DataTypes.Topic it recives and compairs it with the
      * hashes that exist in the BrokerList **/
     public Brocker hashTopic(Topic topic){
         Md5 md5 = new Md5();

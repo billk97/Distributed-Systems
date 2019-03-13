@@ -1,11 +1,10 @@
-import java.awt.*;
+import DataTypes.Topic;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Writer;
 import java.net.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 /**A broker will:
  * --- Initialization/System Image ---
@@ -16,7 +15,7 @@ import java.util.HashSet;
  * --- Traffic Manipulation ---
  *
  * --- Work/responsibility ---
- * 1) receive an Object Type Bus
+ * 1) receive an Object Type DataTypes.Bus
  * 2) lock up where to send it
  * 3) send it to al consumers in the same time
  *
@@ -26,6 +25,9 @@ public class Brocker implements Node {
     private ArrayList<Publisher> registerPublisher= new ArrayList<Publisher>();
     private String BrokerRange=null;
     private int Port=4200;
+    Socket socket= null;
+    ObjectInputStream in = null;
+    ObjectOutputStream out = null;
     public String getBrokerRange(){
         return BrokerRange;
     }
@@ -33,7 +35,7 @@ public class Brocker implements Node {
 
     /**this function will activate the broker for the first time and make
      * it ready to be connected will open an thread to listen to
-     * this means to make the Broker hear/Server to accept traffic
+     * this means to make the Broker hear/Experiment.Server to accept traffic
      * **/
     @Override
     public void initialize(int listeningPort) throws IOException {
@@ -74,19 +76,26 @@ public class Brocker implements Node {
         }
         return null;
     }//end acceptConnection
+    public void acceptConnection(Subscriber sub){
+//
+//        if(sub.busLineRequest <in> BrokerRange ){
+//            registeredSubscribers.add(sub);
+    //    }
+    }
+    public void pull(Topic topic){
+
+    }
 
     @Override
     public void connect() {
         String Ip =null ;
         int port = 0;
-        Socket socket= null;
-        ObjectInputStream in = null;
-        ObjectOutputStream out = null;
+
         try {
             socket = new Socket(InetAddress.getByName("e"),12);
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
-            System.out.println("Client Running");
+            System.out.println("Experiment.Client Running");
             out.writeUTF("message");
             out.flush();
             out.writeObject(this);
@@ -98,9 +107,17 @@ public class Brocker implements Node {
 
     @Override
     public void Disconect() {
-
+        try {
+            in.close();
+            out.close();
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-
+    /**this function will be responcible to update the other hosts
+     * 1) every time it has new data example publisher every time it hash a new lockation
+     * 2) broker every time it recives new data**/
     @Override
     public void UpdateNodes() {
 
