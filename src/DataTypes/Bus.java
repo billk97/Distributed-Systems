@@ -74,9 +74,18 @@ public class Bus implements Serializable {
     public void setRouteCode(String routeCode) {
         this.routeCode = routeCode;
     }
-    public String toString()
-    {
-        return "DataTypes.Bus Name: " + lineNumber + " vehicleId: " + vehicleId + " lineName: " + lineName + " DataTypes.Bus Stop: "+ routeCode;
+
+    @Override
+    public String toString() {
+        return "Bus{" +
+                "lineNumber='" + lineNumber + '\'' +
+                ", routeCode='" + routeCode + '\'' +
+                ", vehicleId='" + vehicleId + '\'' +
+                ", lineName='" + lineName + '\'' +
+                ", busLineId='" + busLineId + '\'' +
+                ", info='" + info + '\'' +
+                '}';
     }
+
 }//end class DataTypes.Bus
 

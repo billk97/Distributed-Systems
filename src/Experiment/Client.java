@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.concurrent.TimeUnit;
 
 public class Client {
     /**this function is responsible for the client connection
@@ -17,7 +18,7 @@ public class Client {
      * and an Object type bus**/
     //TODO make two startClient 1 for message 1 for DataTypes.Bus
     //TODO as Melis for an method to include in and out
-    public void startClient(String serverIp, int port , String message , Bus bus) throws IOException {
+    public void startClient(String serverIp, int port , Bus bus) throws IOException, InterruptedException {
         System.out.println("StartClient");
         /**port initialization **/
         Socket socket =null;
@@ -29,9 +30,17 @@ public class Client {
         in= new ObjectInputStream(socket.getInputStream());
         System.out.println("running client");
         /**sending messages **/
-        out.writeUTF(message);
-        out.flush();//to send everything left inside the buffer
         out.writeObject(bus);
         out.flush();
+        in.close();
+        out.close();
+        socket.close();
+
     }//end startClient
+
+    public static void main(String[] args) throws IOException, InterruptedException {
+        Client c1 = new Client();
+        Bus b1 = new Bus("a12","3242","aero","27","id","vd");
+        c1.startClient("localhost",4201,b1);
+    }
 }//end Class Experiment.Client

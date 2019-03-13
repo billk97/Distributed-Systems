@@ -31,6 +31,7 @@ public class Publisher implements Node{
     public ArrayList<Brocker> getBrokerList(){
         return Node.BrokerList;
     }
+
     public void notitfyFailure(Brocker  broker){
 
     }
@@ -41,7 +42,7 @@ public class Publisher implements Node{
     }
 
     @Override
-    public void connect() {
+    public void connect(String ip,int port) {
 
     }
 

@@ -77,7 +77,7 @@ public class NodeImpl implements Node{
     }
 
     @Override
-    public void connect() {
+    public void connect(String ip , int port) {
 
     }
 

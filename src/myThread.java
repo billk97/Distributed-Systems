@@ -16,16 +16,15 @@ public class myThread implements Runnable  {
     @Override
     /**this is what the thread will do when up and running**/
     public void run() {
-        //new object type bus
-        //DataTypes.Bus bus = new DataTypes.Bus("b12",30,10,"patision");
-        //NodeImpl nodeImpl =new NodeImpl("bill","localhost","Experiment.Client",4322,344);
-        //connectClient(bus, nodeImpl);
+        DataTypes.Bus bus = new DataTypes.Bus("b12"," "," ","patision"," ","d");
+        //NodeImpl nodeImpl =new NodeImpl("bill","localhost","Experiment.Client",4325,344);
+        connectClient(bus, "localhost");
     }//end run
-    public void connectClient(Bus bus, NodeImpl nodeImpl){
+    public void connectClient(Bus bus, String ip){
         try {
-            System.out.println("ip: " + nodeImpl.getIpAddress()+" port "+ nodeImpl.getPort());
+            System.out.println("ip: " + ip+" port "+ 4201);
             Thread.sleep(100);
-            new Client().startClient(nodeImpl.getIpAddress(), nodeImpl.getPort(),"mesage",bus);
+            new Client().startClient(ip, 4201,bus);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
