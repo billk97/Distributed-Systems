@@ -34,12 +34,6 @@ public class Publisher implements Node{
 
     }
 
-
-    @Override
-    public HashSet brokers() {
-        return null;
-    }
-
     @Override
     public void initialize(int Hash) throws IOException {
 
