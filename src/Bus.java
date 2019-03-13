@@ -1,9 +1,12 @@
+import java.io.Serializable;
+
 /**The Bus class represents a Bus that a publisher will pulling from the data
  * BusName: the name of the bus example: B12
  * BusStop : the current/nearest Bus Stop (Suggestion)
  * Latitude: of the bus for a given time
  * Longitude : of the bus for a given time **/
-public class Bus {
+public class Bus implements Serializable {
+    private static final long serialVersionUID = -8463229278480288053L;
     private String BusName;
     private String BusStop;
     private double Latitude;

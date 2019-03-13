@@ -15,12 +15,18 @@ public class myThread implements Runnable  {
     public void run() {
         //new object type bus
         Bus bus = new Bus("b12",30,10,"patision");
+        Node node =new Node("bill","localhost","Client",4322,344);
+        connectClient(bus,node);
+    }//end run
+    public void connectClient(Bus bus, Node node){
         try {
-            Thread.sleep(1000);
-            //TODO make the below parameters
-            new Client().startClient("172.0.0.1",4201,"hy im bill ",bus);
-        } catch (IOException | InterruptedException e) {
+            System.out.println("ip: " +node.getIpAddress()+" port "+ node.getPort());
+            Thread.sleep(100);
+            new Client().startClient(node.getIpAddress(),node.getPort(),"mesage",bus);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }//end run
+    }
 }//end class myThread

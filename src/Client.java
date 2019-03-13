@@ -20,9 +20,11 @@ public class Client {
         Socket socket =null;
         ObjectOutputStream out =null;
         ObjectInputStream in = null;
+        System.out.println("ip "+serverIp + "port "+port );
         socket= new Socket(InetAddress.getByName(serverIp),port);
         out= new ObjectOutputStream(socket.getOutputStream());
         in= new ObjectInputStream(socket.getInputStream());
+        System.out.println("running client");
         /**sending messages **/
         out.writeUTF(message);
         out.flush();//to send everything left inside the buffer
