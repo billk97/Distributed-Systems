@@ -1,5 +1,3 @@
-package Experiment;
-
 import DataTypes.Bus;
 
 import java.io.IOException;
@@ -7,7 +5,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.concurrent.TimeUnit;
 
 public class Client {
     /**this function is responsible for the client connection
@@ -18,7 +15,7 @@ public class Client {
      * and an Object type bus**/
     //TODO make two startClient 1 for message 1 for DataTypes.Bus
     //TODO as Melis for an method to include in and out
-    public void startClient(String serverIp, int port , Bus bus) throws IOException, InterruptedException {
+    public void startClient(String serverIp, int port , NodeImple bus) throws IOException, InterruptedException {
         System.out.println("StartClient");
         /**port initialization **/
         Socket socket =null;
@@ -41,6 +38,9 @@ public class Client {
     public static void main(String[] args) throws IOException, InterruptedException {
         Client c1 = new Client();
         Bus b1 = new Bus("a12","3242","aero","27","id","vd");
-        c1.startClient("localhost",4201,b1);
+        NodeImple node = new NodeImple("Myname","localhost","broker",2404,"6DF8895738C9795DE942F2FC7A48E127");
+        c1.startClient("localhost",4201,node);
+        Runtime runtime = Runtime.getRuntime();
+        System.out.println(":" +(runtime.maxMemory()/1024));
     }
-}//end Class Experiment.Client
+}//end Class Client

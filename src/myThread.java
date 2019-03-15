@@ -1,5 +1,4 @@
 import DataTypes.Bus;
-import Experiment.Client;
 
 import java.io.IOException;
 /**this is a client type thread two emulate multiple clients in the same machine
@@ -17,10 +16,10 @@ public class myThread implements Runnable  {
     /**this is what the thread will do when up and running**/
     public void run() {
         DataTypes.Bus bus = new DataTypes.Bus("b12"," "," ","patision"," ","d");
-        //NodeImpl nodeImpl =new NodeImpl("bill","localhost","Experiment.Client",4325,344);
-        connectClient(bus, "localhost");
+        NodeImple nodeImpl =new NodeImple("bill","localhost","Client",4325,"6DF8895738C9795DE942F2FC7A48E127");
+        connectClient(nodeImpl, "localhost");
     }//end run
-    public void connectClient(Bus bus, String ip){
+    public void connectClient(NodeImple bus, String ip){
         try {
             System.out.println("ip: " + ip+" port "+ 4201);
             Thread.sleep(100);

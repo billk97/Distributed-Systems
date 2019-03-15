@@ -1,10 +1,16 @@
 import DataTypes.Topic;
+import DataTypes.Value;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-public class Publisher implements Node{
+public class Publisher extends Node{
     private String myHash=null;
+    private Node node = null;
     Md5 md5= new Md5();
 
     /**hashes the DataTypes.Topic it recives and compairs it with the
@@ -29,30 +35,22 @@ public class Publisher implements Node{
     }
     /**this function gets the list of all Brokers**/
     public ArrayList<Brocker> getBrokerList(){
-        return Node.BrokerList;
+        node=new Node();
+        return node.BrokerList;
+    }
+    public void push (Value value ,Topic topic) throws IOException {
+        Socket socket = null;
+        ObjectOutputStream out = null;
+       // socket= new Socket(InetAddress.getByName(ip),port);
+        out= new ObjectOutputStream(socket.getOutputStream());
+        out.writeObject(topic);
+        out.flush();
+        out.close();
     }
 
     public void notitfyFailure(Brocker  broker){
 
     }
 
-    @Override
-    public void initialize(int Hash) throws IOException {
 
-    }
-
-    @Override
-    public void connect(String ip,int port) {
-
-    }
-
-    @Override
-    public void Disconect() {
-
-    }
-
-    @Override
-    public void UpdateNodes() {
-
-    }
 }

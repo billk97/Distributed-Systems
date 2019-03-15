@@ -20,7 +20,7 @@ import java.util.ArrayList;
  * 3) send it to al consumers in the same time
  *
  * **/
-public class Brocker implements Node {
+public class Brocker extends Node {
     private ArrayList<Subscriber> registeredSubscribers = new ArrayList<Subscriber>();
     private ArrayList<Publisher> registerPublisher= new ArrayList<Publisher>();
     private String BrokerRange=null;
@@ -52,13 +52,14 @@ public class Brocker implements Node {
         System.out.println("Broker Initialization");
         listenerSocket= new ServerSocket(listeningPort);
         /**adds a broker to the list if **/
-        Node.BrokerList.add(this);
+        Node node = new Node();
+        node.setBrokerList(this);
         while (true){
             System.out.println("Broker is up ");
             connection=listenerSocket.accept();
             ObjectOutputStream out = new ObjectOutputStream(connection.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(connection.getInputStream());
-            System.out.println((Bus)in.readObject());
+            System.out.println((NodeImple)in.readObject());
             in.close();
             out.close();
             connection.close();
@@ -88,7 +89,6 @@ public class Brocker implements Node {
         return null;
     }//end acceptConnection
     public void acceptConnection(Subscriber sub){
-//
 //        if(sub.busLineRequest <in> BrokerRange ){
 //            registeredSubscribers.add(sub);
     //    }
@@ -103,7 +103,7 @@ public class Brocker implements Node {
             socket = new Socket(InetAddress.getByName("e"),12);
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
-            System.out.println("Experiment.Client Running");
+            System.out.println("Client Running");
             out.writeUTF("message");
             out.flush();
             out.writeObject(this);

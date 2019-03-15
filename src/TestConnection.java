@@ -8,8 +8,8 @@ public class TestConnection {
         myThread m1 = new myThread("client",2);
         myThread m2 = new myThread("client",3);
         new Thread(m1).start();
-        System.out.println("Experiment.Client 1 created");
+        System.out.println("Client 1 created");
         new Thread(m2).start();
-        System.out.println("Experiment.Client 2 created");
+        System.out.println("Client 2 created");
     }//end main
 }//end class TestConnection
