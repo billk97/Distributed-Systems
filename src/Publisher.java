@@ -1,8 +1,11 @@
 import DataTypes.Topic;
 import DataTypes.Value;
+import Experiment.Server;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -33,11 +36,23 @@ public class Publisher extends Node{
     public String getMyHash(){
         return myHash;
     }
-    /**this function gets the list of all Brokers**/
-    public ArrayList<Brocker> getBrokerList(){
-        node=new Node();
-        return node.BrokerList;
+    /**this function gets the list of all Brokers via tcp connection **/
+    public  ArrayList<Brocker> getBrokerList(String Ip ,int port){
+        Socket socket=null;
+        try {
+            socket= new Socket(Inet4Address.getByName(Ip),port);
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+            in.read();
+            return (ArrayList<Brocker>)in.readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
+
     public void push (Value value ,Topic topic) throws IOException {
         Socket socket = null;
         ObjectOutputStream out = null;

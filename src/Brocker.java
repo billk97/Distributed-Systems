@@ -53,7 +53,7 @@ public class Brocker extends Node {
         listenerSocket= new ServerSocket(listeningPort);
         /**adds a broker to the list if **/
         Node node = new Node();
-        node.setBrokerList(this);
+        //node.setBrokerList(this);
         while (true){
             System.out.println("Broker is up ");
             connection=listenerSocket.accept();
