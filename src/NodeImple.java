@@ -23,6 +23,7 @@ public class NodeImple extends Node implements Serializable {
     public NodeImple(){}
     //creating a constructor with attributes inside
     public NodeImple(String Name, String IpAddress, String Type, int Port , String Hash){
+        super();
         this.Name=Name;
         this.IpAddress=IpAddress;
         this.Type=Type;
@@ -71,25 +72,5 @@ public class NodeImple extends Node implements Serializable {
     }
     public String toString(){
         return "Name: "+ Name+" Ip Address: "+ IpAddress+ " Type: "+ Type + " Port: "+ Port +" Hash: "+ Hash;
-    }
-    @Override
-    public void initialize(int Hash) throws IOException {
-
-
-    }
-
-    @Override
-    public void connect(String ip , int port) {
-
-    }
-
-    @Override
-    public void Disconect() {
-
-    }
-
-    @Override
-    public void UpdateNodes() {
-
     }
 }//end class NodeImple

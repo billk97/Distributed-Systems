@@ -1,5 +1,7 @@
 import DataTypes.Topic;
 import DataTypes.Bus;
+import com.sun.corba.se.pept.broker.Broker;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -24,25 +26,28 @@ public class Brocker extends Node {
     private ArrayList<Subscriber> registeredSubscribers = new ArrayList<Subscriber>();
     private ArrayList<Publisher> registerPublisher= new ArrayList<Publisher>();
     private String BrokerRange=null;
-    private int Port;
+    private int BrokerPort;
     private int BrokerId;
-    private String BrokerIp ;
+    private String BrokerIp= Inet4Address.getLocalHost().getHostAddress();
     Socket socket= null;
     ObjectInputStream in = null;
     ObjectOutputStream out = null;
-
     public String getBrokerRange(){
         return BrokerRange;
     }
-
-    public Brocker(int BrokerId){
+    public Brocker() throws UnknownHostException {}
+    public Brocker(int BrokerId,String BrokerIp, int BrokerPort) throws UnknownHostException {
+        //todo super();
         this.BrokerId=BrokerId;
+        this.BrokerIp=BrokerIp;
+        this.BrokerPort=BrokerPort;
     }
     /**this function will activate the broker for the first time and make
      * it ready to be connected will open an thread to listen to
      * this means to make the Broker hear/Experiment.Server to accept traffic
      * **/
-    @Override
+    //todo no need hire
+/*    @Override
     public void initialize(int listeningPort) throws IOException, ClassNotFoundException {
         BrokerIp  = Inet4Address.getLocalHost().getHostAddress();
         Port=listeningPort;
@@ -51,7 +56,7 @@ public class Brocker extends Node {
         Socket connection = null;
         System.out.println("Broker Initialization");
         listenerSocket= new ServerSocket(listeningPort);
-        /**adds a broker to the list if **/
+        *//**adds a broker to the list if **//*
         Node node = new Node();
         //node.setBrokerList(this);
         while (true){
@@ -66,13 +71,13 @@ public class Brocker extends Node {
             System.out.println("Connection closed");
             //listenerSocket.close();
         }
-    }//end initialize
+    }//end initialize*/
 
-
+    /**calculates the ip + port --> md5 hash**/
+    //todo calculate for which key the broker is responsible
     public void calculateKeys() throws UnknownHostException {
-        /**returns the ip address of the mashin**/
         Md5 md5 = new Md5();
-        BrokerRange = md5.HASH(BrokerIp+Integer.toString(Port));
+        BrokerRange = md5.HASH(BrokerIp+Integer.toString(BrokerPort));
         System.out.println("BrokerRange: "+BrokerRange);
     }
     /**will accept a connection if the Publisher's hash is with in the
@@ -87,45 +92,11 @@ public class Brocker extends Node {
             return pub;
         }
         return null;
-    }//end acceptConnection
-    public void acceptConnection(Subscriber sub){
-//        if(sub.busLineRequest <in> BrokerRange ){
-//            registeredSubscribers.add(sub);
-    //    }
     }
-    public void pull(Topic topic){
-
-    }
-
-    @Override
-    public void connect(String Ip ,int port) {
-        try {
-            socket = new Socket(InetAddress.getByName("e"),12);
-            out = new ObjectOutputStream(socket.getOutputStream());
-            in = new ObjectInputStream(socket.getInputStream());
-            System.out.println("Client Running");
-            out.writeUTF("message");
-            out.flush();
-            out.writeObject(this);
-            out.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }//end connect
-
-    @Override
-    public void Disconect() {
-        try {
-            in.close();
-            out.close();
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    /**this function will be responcible to update the other hosts
-     * 1) every time it has new data example publisher every time it hash a new lockation
-     * 2) broker every time it recives new data**/
+    //todo
+    /**this function will be responsible to update the other hosts
+     * 1) every time it has new data example (publisher sends new Value)
+     * 2) broker every time it receives new data**/
     @Override
     public void UpdateNodes() {
 

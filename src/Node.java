@@ -13,8 +13,20 @@ import java.util.HashSet;
 public class Node implements Serializable ,Runnable {
     public static long serialVersionUID= 2745435983589125303L;
     public ArrayList<Brocker> BrokerList = new ArrayList<Brocker>();
-
-
+    private String Name;
+    private String IpAddress;
+    private String Type;
+    private int Port;
+    private String Hash;
+    public Node(){}
+    public Node(ArrayList<Brocker> brokerList, String name, String ipAddress, String type, int port, String hash) {
+        BrokerList = brokerList;
+        Name = name;
+        IpAddress = ipAddress;
+        Type = type;
+        Port = port;
+        Hash = hash;
+    }
 
     public void setBrokerList(ArrayList<Brocker> brokerList) {
         BrokerList = brokerList;
@@ -23,7 +35,7 @@ public class Node implements Serializable ,Runnable {
         return BrokerList;
     }
 
-    //to do for the thread
+    //todo for the thread put inside hire the functions
     @Override
     public void run() {
 
@@ -45,17 +57,18 @@ public class Node implements Serializable ,Runnable {
         listenerSocket=new ServerSocket(NodeListenerPort);
         /**just watting for ever**/
         while(true){
-            /**hear the connection is accepted that means
-             * a new socket and now a new port has been created for the
-             * comunication
-             * **/
+            /**the connection is accepted that means a new socket and now a new port
+             * has been created for the communication **/
             connection =listenerSocket.accept();
-            //todo make a thread to make the connaction or to save samethin
-            //Thread t1 = new myThread(connection);
-        }
-
+            //todo make a thread to make the connection or to save something
+            //Thread t1 = new Experiment.myThread(connection);
+        }//end while
     }//end Initialize
 
+    /**allows each subclass Broker,Publisher,Subscriber to call this method
+     * broker.setBrokerList
+     * broker --> object type broker
+     * connection --> a socket in order to send the object via tcp**/
     public void setBrokerList(Brocker brocker, Socket connection) {
         try {
             ObjectOutputStream out = new ObjectOutputStream(connection.getOutputStream());
@@ -70,9 +83,7 @@ public class Node implements Serializable ,Runnable {
             e.printStackTrace();
         }
     }//end setBrokerList
-
-
-
+    /**will perform a complete connection whit the other node**/
     public  void connect(String ip ,int port){
 
     }

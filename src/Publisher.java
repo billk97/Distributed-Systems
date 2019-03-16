@@ -1,7 +1,5 @@
 import DataTypes.Topic;
 import DataTypes.Value;
-import Experiment.Server;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -36,6 +34,7 @@ public class Publisher extends Node{
     public String getMyHash(){
         return myHash;
     }
+
     /**this function gets the list of all Brokers via tcp connection **/
     public  ArrayList<Brocker> getBrokerList(String Ip ,int port){
         Socket socket=null;
@@ -43,6 +42,7 @@ public class Publisher extends Node{
             socket= new Socket(Inet4Address.getByName(Ip),port);
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+            out.writeUTF("hi");
             in.read();
             return (ArrayList<Brocker>)in.readObject();
         } catch (IOException e) {
@@ -66,6 +66,4 @@ public class Publisher extends Node{
     public void notitfyFailure(Brocker  broker){
 
     }
-
-
 }

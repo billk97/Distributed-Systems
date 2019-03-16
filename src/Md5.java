@@ -1,4 +1,5 @@
 import javax.xml.bind.DatatypeConverter;
+import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 /**this is a small implementation for the Md5 algorithm used to hash the ip&port
