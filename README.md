@@ -146,10 +146,10 @@ components του να λειτουργούν σωστά.
 # Αναφορές – Χρήσιμοι Σύνδεσμοι:
 [1] https://docs.oracle.com/javase/8/docs/api/java/util/stream/package-summary.html
 [2] Android. URL : [http://code.google.com/android/http://code.google.com/android/](http://code.google.com/android/http://code.google.com/android/)
-[3] Android SDK: [http://developer.android.com/sdk/index.html](http://developer.android.com/sdk/index.html)
+[3] Android SDK: [http://developer.android.com/sdk/index.html](http://developer.android.com/sdk/index.html)  
 [4] Android Studio [http://developer.android.com/sdk/index.html](http://developer.android.com/sdk/index.html)
 
-# Authors 
-* Βασίλειος Κωνσταντίνου p3150085
-* Αλέξανδρος Μελής p3150102
-* Ζήσης Μιχαλάρης p3150224
+# Authors /Coders
+* Βασίλειος Κωνσταντίνου Α.Μ.: p3150085
+* Αλέξανδρος Μελής Α.Μ.: p3150102
+* Ζήσης Μιχαλάρης Α.Μ.: p3150224
