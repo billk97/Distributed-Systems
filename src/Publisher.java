@@ -8,6 +8,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class Publisher extends Node{
     private String myHash=null;
@@ -32,6 +33,8 @@ public class Publisher extends Node{
     }
 
     public String getMyHash(){
+        Md5 md5 =new Md5();
+        myHash=md5.HASH("localhost"+Integer.toString(4202));
         return myHash;
     }
 
@@ -52,9 +55,31 @@ public class Publisher extends Node{
         }
         return null;
     }
+    public void send(){
+        Socket socket=connect("localhost",4201);
+        try {
+                ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+                ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+                String anser = in.readUTF();
+                System.out.println(anser);
+                out.writeUTF(getMyHash());
+                out.flush();
+                System.out.println(in.readUTF());
+
+
+                in.close();
+                out.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            Disconnect(socket);
+        }
+    }
 
     public void push (Value value ,Topic topic) throws IOException {
-        Socket socket = null;
+        Socket socket=super.connect("localhost",4201);
         ObjectOutputStream out = null;
        // socket= new Socket(InetAddress.getByName(ip),port);
         out= new ObjectOutputStream(socket.getOutputStream());

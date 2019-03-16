@@ -22,57 +22,46 @@ import java.util.ArrayList;
  * 3) send it to al consumers in the same time
  *
  * **/
-public class Brocker extends Node {
+public class Brocker extends Node implements Runnable{
     private ArrayList<Subscriber> registeredSubscribers = new ArrayList<Subscriber>();
     private ArrayList<Publisher> registerPublisher= new ArrayList<Publisher>();
     private String BrokerRange=null;
     private int BrokerPort;
     private int BrokerId;
+    private Socket socket;
     private String BrokerIp= Inet4Address.getLocalHost().getHostAddress();
-    Socket socket= null;
-    ObjectInputStream in = null;
-    ObjectOutputStream out = null;
     public String getBrokerRange(){
         return BrokerRange;
     }
     public Brocker() throws UnknownHostException {}
+    public Brocker(Socket socket) throws UnknownHostException {
+        this.socket=socket;
+    }
     public Brocker(int BrokerId,String BrokerIp, int BrokerPort) throws UnknownHostException {
         //todo super();
         this.BrokerId=BrokerId;
         this.BrokerIp=BrokerIp;
         this.BrokerPort=BrokerPort;
     }
-    /**this function will activate the broker for the first time and make
-     * it ready to be connected will open an thread to listen to
-     * this means to make the Broker hear/Experiment.Server to accept traffic
-     * **/
-    //todo no need hire
-/*    @Override
-    public void initialize(int listeningPort) throws IOException, ClassNotFoundException {
-        BrokerIp  = Inet4Address.getLocalHost().getHostAddress();
-        Port=listeningPort;
-        calculateKeys();
-        ServerSocket listenerSocket= null;
-        Socket connection = null;
-        System.out.println("Broker Initialization");
-        listenerSocket= new ServerSocket(listeningPort);
-        *//**adds a broker to the list if **//*
-        Node node = new Node();
-        //node.setBrokerList(this);
-        while (true){
-            System.out.println("Broker is up ");
-            connection=listenerSocket.accept();
-            ObjectOutputStream out = new ObjectOutputStream(connection.getOutputStream());
-            ObjectInputStream in = new ObjectInputStream(connection.getInputStream());
-            System.out.println((NodeImple)in.readObject());
-            in.close();
+    public void run(){
+        readHash(socket);
+    }
+    public void readHash(Socket socket1){
+        try {
+            ObjectOutputStream out = new ObjectOutputStream(socket1.getOutputStream());
+            ObjectInputStream in = new ObjectInputStream(socket1.getInputStream());
+            out.writeUTF("Server--> Connection Successful ");
+            out.flush();
+            String clientHash=in.readUTF();
+            System.out.println(clientHash);
+            out.writeUTF("Server--> Closing connection");
+            out.flush();
             out.close();
-            connection.close();
-            System.out.println("Connection closed");
-            //listenerSocket.close();
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    }//end initialize*/
-
+    }
     /**calculates the ip + port --> md5 hash**/
     //todo calculate for which key the broker is responsible
     public void calculateKeys() throws UnknownHostException {
@@ -80,6 +69,7 @@ public class Brocker extends Node {
         BrokerRange = md5.HASH(BrokerIp+Integer.toString(BrokerPort));
         System.out.println("BrokerRange: "+BrokerRange);
     }
+
     /**will accept a connection if the Publisher's hash is with in the
      * range of the keys that he can accept**/
     public Publisher acceptConnection(Publisher pub){

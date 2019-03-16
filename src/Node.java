@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.net.Inet4Address;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -19,13 +17,10 @@ public class Node implements Serializable ,Runnable {
     private int Port;
     private String Hash;
     public Node(){}
-    public Node(ArrayList<Brocker> brokerList, String name, String ipAddress, String type, int port, String hash) {
-        BrokerList = brokerList;
-        Name = name;
+    public Node(String ipAddress, String type, int port) {
         IpAddress = ipAddress;
         Type = type;
         Port = port;
-        Hash = hash;
     }
 
     public void setBrokerList(ArrayList<Brocker> brokerList) {
@@ -59,9 +54,10 @@ public class Node implements Serializable ,Runnable {
         while(true){
             /**the connection is accepted that means a new socket and now a new port
              * has been created for the communication **/
+            System.out.println("Server connecton wating");
             connection =listenerSocket.accept();
             //todo make a thread to make the connection or to save something
-            //Thread t1 = new Experiment.myThread(connection);
+            new Thread(new Brocker(connection)).start();
         }//end while
     }//end Initialize
 
@@ -69,27 +65,31 @@ public class Node implements Serializable ,Runnable {
      * broker.setBrokerList
      * broker --> object type broker
      * connection --> a socket in order to send the object via tcp**/
-    public void setBrokerList(Brocker brocker, Socket connection) {
-        try {
-            ObjectOutputStream out = new ObjectOutputStream(connection.getOutputStream());
-            ObjectInputStream in = new ObjectInputStream(connection.getInputStream());
-            BrokerList.add((Brocker)in.readObject());
-            in.close();
-            out.close();
-            connection.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+    public void setBrokerList(Brocker brocker) {
+            BrokerList.add(brocker);
     }//end setBrokerList
     /**will perform a complete connection whit the other node**/
-    public  void connect(String ip ,int port){
-
+    public  Socket connect(String ip ,int port){
+        try {
+            InetAddress host = Inet4Address.getByName(ip);
+            Socket socket = new Socket(host,port);
+            return socket;
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("No socket could be returned");
+        return null;
     }
-    public void Disconect(){
-
+    public void Disconnect(Socket socket){
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+    /**informs the other node for the system instance **/
     public void UpdateNodes(){
 
     }
