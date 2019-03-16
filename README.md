@@ -2,16 +2,14 @@
 A Java/android based project focused on distributed Systems implementing the publish subscribe Model
 This is a university project developed for the course distributed systems. With the idea of creating an android client application that will be able to suggest the appropriate route for the given location the current time.
 As far as the backend system is concerned, it will be implemented / created using the publish/subscribe model, in which the broker nodes and publisher nodes will be created.
-# How to use
+## How to use
 * please fill me
-# How its build 
+## How its build 
 * please fill me
 # Actuall project (greek)
-## ΟΙΚΟΝΟΜΙΚΟ ΠΑΝΕΠΙΣΤΗΜΙΟ ΑΘΗΝΩΝ
-
-## ΤΜΗΜΑ ΠΛΗΡΟΦΟΡΙΚΗΣ
-
-## ΚΑΤΑΝΕΜΗΜΕΝΑ ΣΥΣΤΗΜΑΤΑ
+### ΟΙΚΟΝΟΜΙΚΟ ΠΑΝΕΠΙΣΤΗΜΙΟ ΑΘΗΝΩΝ
+### ΤΜΗΜΑ ΠΛΗΡΟΦΟΡΙΚΗΣ
+### ΚΑΤΑΝΕΜΗΜΕΝΑ ΣΥΣΤΗΜΑΤΑ
 ```
 Εαρινό Εξάμηνο 201 8 - 2019
 Καθ. Βάνα Καλογεράκη
