@@ -45,6 +45,7 @@ public class Brocker extends Node implements Runnable{
     }
     public void run(){
         readHash(socket);
+        System.out.println(socket.getInetAddress());
     }
     public void readHash(Socket socket1){
         try {

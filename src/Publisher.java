@@ -65,8 +65,6 @@ public class Publisher extends Node{
                 out.writeUTF(getMyHash());
                 out.flush();
                 System.out.println(in.readUTF());
-
-
                 in.close();
                 out.close();
 

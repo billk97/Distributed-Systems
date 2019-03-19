@@ -17,9 +17,8 @@ public class Node implements Serializable ,Runnable {
     private int Port;
     private String Hash;
     public Node(){}
-    public Node(String ipAddress, String type, int port) {
+    public Node(String ipAddress,  int port) {
         IpAddress = ipAddress;
-        Type = type;
         Port = port;
     }
 
