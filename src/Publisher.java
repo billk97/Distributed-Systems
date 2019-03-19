@@ -4,17 +4,16 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Inet4Address;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 public class Publisher extends Node{
     private String myHash=null;
     Md5 md5= new Md5();
+    private String brokerIp = "192.168.1.65";
+    private int brokerPort = 4202;
 
-    public Publisher(int port,String ip){
+    public Publisher(int port, String ip){
         super(port,ip);
     }
 
@@ -37,7 +36,7 @@ public class Publisher extends Node{
 
     public String getMyHash(){
         Md5 md5 =new Md5();
-        myHash=md5.HASH("localhost"+Integer.toString(4202));
+        myHash=md5.HASH(brokerIp+Integer.toString(brokerPort));
         return myHash;
     }
 
@@ -59,7 +58,7 @@ public class Publisher extends Node{
         return null;
     }
     public void send(){
-        Socket socket=connect("localhost",4202);
+        Socket socket=connect(brokerIp, brokerPort);
         try {
                 ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
@@ -81,7 +80,7 @@ public class Publisher extends Node{
     }
 
     public void push (Value value ,Topic topic) throws IOException {
-        Socket socket=super.connect("localhost",4201);
+        Socket socket=connect(brokerIp, brokerPort);
         ObjectOutputStream out = null;
        // socket= new Socket(InetAddress.getByName(ip),port);
         out= new ObjectOutputStream(socket.getOutputStream());
@@ -92,5 +91,24 @@ public class Publisher extends Node{
 
     public void notitfyFailure(Brocker  broker){
 
+    }
+    public void setMyHash(String myHash) {
+        this.myHash = myHash;
+    }
+
+    public String getBrokerIp() {
+        return brokerIp;
+    }
+
+    public void setBrokerIp(String brokerIp) {
+        this.brokerIp = brokerIp;
+    }
+
+    public int getBrokerPort() {
+        return brokerPort;
+    }
+
+    public void setBrokerPort(int brokerPort) {
+        this.brokerPort = brokerPort;
     }
 }
