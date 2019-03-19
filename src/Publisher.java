@@ -12,8 +12,11 @@ import java.util.concurrent.TimeUnit;
 
 public class Publisher extends Node{
     private String myHash=null;
-    private Node node = null;
     Md5 md5= new Md5();
+
+    public Publisher(int port,String ip){
+        super(port,ip);
+    }
 
     /**hashes the DataTypes.Topic it recives and compairs it with the
      * hashes that exist in the BrokerList **/
@@ -56,13 +59,14 @@ public class Publisher extends Node{
         return null;
     }
     public void send(){
-        Socket socket=connect("localhost",4201);
+        Socket socket=connect("localhost",4202);
         try {
                 ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
                 String anser = in.readUTF();
                 System.out.println(anser);
                 out.writeUTF(getMyHash());
+                out.writeUTF(Integer.toString(socket.getPort()));
                 out.flush();
                 System.out.println(in.readUTF());
                 in.close();
