@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Publisher extends Node{
     private String myHash=null;
     Md5 md5= new Md5();
-    private String brokerIp = "192.168.1.65";
+    private String brokerIp = "172.16.2.25";
     private int brokerPort = 4202;
     private ArrayList<Brocker> localBrockerList= null;
 
