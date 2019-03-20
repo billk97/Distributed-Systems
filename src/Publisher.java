@@ -50,7 +50,7 @@ public class Publisher extends Node{
         try {
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-            in.readUTF();
+            System.out.println(in.readUTF());
             out.writeUTF("BrokerList");
             out.flush();
             localBrockerList=new ArrayList<Brocker>();
