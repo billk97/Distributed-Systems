@@ -54,16 +54,25 @@ public class Brocker extends Node implements Runnable{
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }//end startServer
+
     public void readHash(Socket socket1){
         try {
             ObjectOutputStream out = new ObjectOutputStream(socket1.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket1.getInputStream());
             out.writeUTF("Server: Connection Successful ");
+            String client=socket1.getInetAddress().getHostName();
+            System.out.println("client:" +client+" connected ");
             out.flush();
             String clientHash=in.readUTF();
-            out.writeUTF("buy");
-            out.flush();
+            String request =in.readUTF();
+            if(request.equals("BrokerList")){
+                out.writeObject(BrokerList);
+            }
+            request=in.readUTF();
+            if(!request.equals("received")){
+                out.writeObject(BrokerList);
+            }
             System.out.println(clientHash);
             out.writeUTF("Server--> Closing connection");
             out.flush();

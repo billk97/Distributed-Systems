@@ -17,7 +17,7 @@ public class Node  {
         this.port=port;
         this.ipAddress=ipAddress;
     }
-    public void printpORT(){
+    public void printNodeInfo(){
         System.out.println("ad "+ ipAddress);
         System.out.println("ad "+ port);
     }
@@ -25,12 +25,7 @@ public class Node  {
     public void setBrokerList(ArrayList<Brocker> brokerList) {
         BrokerList = brokerList;
     }
-    public ArrayList<Brocker> getBrokerList(){
-        return BrokerList;
-    }
-
     //todo for the thread put inside hire the functions
-
     /**allows each subclass Broker,Publisher,Subscriber to call this method
      * broker.setBrokerList
      * broker --> object type broker
@@ -78,30 +73,4 @@ public class Node  {
     public void setPort(int port) {
         this.port = port;
     }
-    //lathos
-    /**this function will activate the node  for the first time and make
-     * it ready (up) it will start listening in a specific port to accept
-     * traffic
-     * **/
-//    public void initialize(int NodeListenerPort) throws IOException, ClassNotFoundException{
-//        /**the nodes ip**/
-//        String NodeIp = Inet4Address.getLocalHost().getHostAddress();
-//        /**A socket is not a port!!!!  you open a socket to listen and when a connection request
-//         * is send then a new Socket each time gets created and listen in the same port!!!!
-//         * **/
-//        ServerSocket listenerSocket= null;
-//        Socket connection = null;
-//        /**a new Socket is created for the specific port**/
-//        listenerSocket=new ServerSocket(NodeListenerPort);
-//        /**just waiting for ever**/
-//        while(true){
-//            /**the connection is accepted that means a new socket and now a new port
-//             * has been created for the communication **/
-//            System.out.println("Server connecton wating");
-//            connection =listenerSocket.accept();
-//            //todo make a thread to make the connection or to save something
-//            new Thread(new Brocker(connection)).start();
-//        }//end while
-//    }//end Initialize
-
 }
