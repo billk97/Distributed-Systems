@@ -22,8 +22,9 @@ public class Node  {
         System.out.println("nodeport "+ port);
     }
 
-    public void setBrokerList(ArrayList<Brocker> brokerList) {
-        BrokerList = brokerList;
+
+    public ArrayList<Brocker> getBrokerList() {
+        return BrokerList;
     }
     //todo for the thread put inside hire the functions
     /**allows each subclass Broker,Publisher,Subscriber to call this method

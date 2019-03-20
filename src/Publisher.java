@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Publisher extends Node{
     private String myHash=null;
     Md5 md5= new Md5();
-    private String brokerIp = "172.16.2.25";
+    private String brokerIp = "192.168.1.65";
     private int brokerPort = 4202;
     private ArrayList<Brocker> localBrockerList= null;
 
@@ -45,20 +45,17 @@ public class Publisher extends Node{
     }
 
     /**this function gets the list of all Brokers via tcp connection **/
-    public void getBrokerList(){
+    public void getMyBrokerList(){
         Socket socket = connect(brokerIp,brokerPort);
+
         try {
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             System.out.println(in.readUTF());
             out.writeUTF("BrokerList");
             out.flush();
-            localBrockerList=new ArrayList<Brocker>();
-            localBrockerList=(ArrayList<Brocker>) in.readObject();
-            out.writeUTF("received");
-            System.out.println("broker1: " + localBrockerList.get(0).port);
-            System.out.println(in.readUTF());
-            out.flush();
+            localBrockerList=new ArrayList<Brocker>((ArrayList<Brocker>)in.readObject());
+            System.out.println("broker1: " + localBrockerList.get(0).ipAddress);
             in.close();
             out.close();
         } catch (IOException e) {
