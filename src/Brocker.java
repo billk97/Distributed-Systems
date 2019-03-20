@@ -66,8 +66,9 @@ public class Brocker extends Node implements Runnable{
             System.out.println("client:" +client+" connected ");
             String request =in.readUTF();
             System.out.println("request for: "+ request);
-            if(request.equals("BrokerList")){
+            if(request.equals("BrokerList")&& BrokerList!=null){
                 out.writeObject(BrokerList);
+                System.out.println("sending");
             }
             System.out.println("request Successful");
 //            request=in.readUTF();
