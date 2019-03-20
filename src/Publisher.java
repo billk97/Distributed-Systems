@@ -56,7 +56,7 @@ public class Publisher extends Node{
             localBrockerList=new ArrayList<Brocker>();
             localBrockerList=(ArrayList<Brocker>) in.readObject();
             out.writeUTF("received");
-            System.out.println("broker1: " + localBrockerList.get(1).port);
+            System.out.println("broker1: " + localBrockerList.get(0).port);
             System.out.println(in.readUTF());
             out.flush();
             in.close();
