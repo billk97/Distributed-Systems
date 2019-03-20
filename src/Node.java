@@ -18,8 +18,8 @@ public class Node  {
         this.ipAddress=ipAddress;
     }
     public void printNodeInfo(){
-        System.out.println("ad "+ ipAddress);
-        System.out.println("ad "+ port);
+        System.out.println("nodeip "+ ipAddress);
+        System.out.println("nodeport "+ port);
     }
 
     public void setBrokerList(ArrayList<Brocker> brokerList) {

@@ -63,8 +63,6 @@ public class Brocker extends Node implements Runnable{
             out.writeUTF("Server: Connection Successful ");
             String client=socket1.getInetAddress().getHostName();
             System.out.println("client:" +client+" connected ");
-            out.flush();
-            String clientHash=in.readUTF();
             String request =in.readUTF();
             if(request.equals("BrokerList")){
                 out.writeObject(BrokerList);
@@ -73,7 +71,7 @@ public class Brocker extends Node implements Runnable{
             if(!request.equals("received")){
                 out.writeObject(BrokerList);
             }
-            System.out.println(clientHash);
+
             out.writeUTF("Server--> Closing connection");
             out.flush();
             out.close();
