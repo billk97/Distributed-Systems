@@ -32,6 +32,10 @@ public class Read {
         }
     }
 
+    public String[][] getBusLinesTable(){
+        return busLineTable;
+    }
+
     public void readBusPosition() throws IOException {
         FileReader fileReader= new FileReader(busPositionsPath);
         String word="";

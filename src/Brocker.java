@@ -4,6 +4,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**A broker will:
  * --- Initialization/System Image ---
@@ -24,7 +25,9 @@ public class Brocker extends Node implements Runnable , Serializable {
     private ArrayList<Subscriber> registeredSubscribers = new ArrayList<Subscriber>();
     private ArrayList<Publisher> registerPublisher= new ArrayList<Publisher>();
     private String brokerRange =null;
+    private HashMap<Brocker, ArrayList> BrokerRangeMap = new HashMap<>();
     private Socket socket;
+    private String brokerHash;
     public String getBrokerRange(){
         return brokerRange;
     }
@@ -85,13 +88,45 @@ public class Brocker extends Node implements Runnable , Serializable {
             e.printStackTrace();
         }
     }
+
+    public String calculateBrokerHash(){
+        Md5 md5 = new Md5();
+        brokerHash = md5.HASH(ipAddress +Integer.toString(port));
+        System.out.println("brokerRange: "+ brokerRange);
+        return brokerHash;
+    }
     /**calculates the ip + port + BUS ID  --> md5 hash**/
     //todo calculate for which key the broker is responsible
     //BUS ID
-    public void calculateKeys() throws UnknownHostException {
+    public void calculateKeys() throws IOException {
         Md5 md5 = new Md5();
-        brokerRange = md5.HASH(ipAddress +Integer.toString(port));
-        System.out.println("brokerRange: "+ brokerRange);
+        String hashLine;
+        Read r = new Read();
+        r.readBusLines();
+        String [][] busLinesTable = r.getBusLinesTable();
+        String [] busLineIdHashTable = new String[20];
+        //pernaw ta lineid apo to source,ta hasharw kai bazw ta hash sto busLineHashTable
+        for(int i=0;i<busLinesTable.length;i++){
+            hashLine = md5.HASH(busLinesTable[i][1]);
+            busLineIdHashTable[i]= hashLine;
+        }
+        //just print tables
+        for(int i=0;i<busLinesTable.length;i++){
+            //System.out.println(busLinesTable[i][0]+" "+busLinesTable[i][1]+" "+busLinesTable[i][2]+" "+busLinesTable[i][3]);
+            System.out.println("linehash= "+busLineIdHashTable[i]);
+        }
+
+        //sigrinw ta brokerhashes me ta buslinehashes kai ta bazw sto hashmap
+        for(Brocker b:BrokerList){
+            for(int i=0;i<busLineIdHashTable.length;i++){
+                if(b.calculateBrokerHash().compareTo(busLineIdHashTable[i])<0){
+                    BrokerRangeMap.put(b,new ArrayList());
+                    BrokerRangeMap.get(b).add(busLineIdHashTable[i]);
+                }
+            }
+        }
+
+
     }
 
     /**will accept a connection if the Publisher's hash is with in the
