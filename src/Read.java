@@ -1,25 +1,15 @@
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Scanner;
 
 public class Read {
     private String busLinesPath= "src\\DS_project_dataset\\busLines.txt";
+    private String busPositionsPath = "src\\DS_project_dataset\\busPositions.txt";
+    private String routeCodesPath = "src\\DS_project_dataset\\RouteCodes.txt";
     private String busLineTable[][] = new String[20][4];
 
-//    public void ReadBusLine() throws FileNotFoundException {
-//        File file = new File(busLinesPath);
-//        Scanner scanner = new Scanner(file);
-//        while(scanner.hasNextByte()){
-//            Character word = (char)scanner.nextByte();
-//            System.out.println(" "+word);
-//        }
-//        scanner.close();
-//    }
 
 
-    public void ReadBusLines() throws IOException {
+    public void readBusLines() throws IOException {
         FileReader fr = new FileReader(busLinesPath);
         String word = "";
         int i;
@@ -42,6 +32,61 @@ public class Read {
         }
     }
 
+    public void readBusPosition() throws IOException {
+        FileReader fileReader= new FileReader(busPositionsPath);
+        String word="";
+        String busPositionTable[]= new String[6];
+        int i;
+        int k=0;
+        int stop=0;
+        while ((i = fileReader.read()) != -1) {
+            //System.out.print(i+" ");
+            if (i == 44) {
+                busPositionTable[k]=word;
+                word = "";
+                k=k+1;
+            } else if(i == 10) {
+                busPositionTable[k]=word;
+                k=0;
+                word= "";
+                System.out.println("lineid: "+busPositionTable[0]+" routecode: "+busPositionTable[1]+" vehicleid: "+busPositionTable[2]+" latitude: "+busPositionTable[3]+" longtitude: "+busPositionTable[4]+" timestamp: "+busPositionTable[5]);
+                stop=stop+1;
+            } else {
+                word = word + (char)i;
+            }
+        }
+
+    }
+
+    public void readRouteCodes() throws IOException {
+        FileReader fileReader= new FileReader(routeCodesPath);
+        String word="";
+        String routeCodesTable[]= new String[5];
+        int i;
+        int k=0;
+        int stop=0;
+        while ((i = fileReader.read()) != -1) {
+            //System.out.print(i+" ");
+            if (i == 44) {
+                routeCodesTable[k]=word;
+                word = "";
+                k=k+1;
+            } else if(i == 10) {
+                routeCodesTable[k]=word;
+                k=0;
+                word= "";
+                System.out.println("routecode: "+routeCodesTable[0]+" linecode: "+routeCodesTable[1]+" routetype: "+routeCodesTable[2]+" descriptiongreek: "+routeCodesTable[3]+" descriptionenglish: "+routeCodesTable[4]);
+                stop=stop+1;
+            } else {
+                word = word + (char)i;
+            }
+            if(stop==10){
+                break;
+            }
+        }
+
+    }
+
 
     public void printBusLineTable(){
         for(int i=0;i<busLineTable.length;i++){
@@ -53,7 +98,9 @@ public class Read {
 
     public static void main(String[] args) throws IOException {
         Read r = new Read();
-        r.ReadBusLines();
-        r.printBusLineTable();
+        //r.readBusLines();
+        //r.printBusLineTable();
+        //r.readBusPosition();
+        r.readRouteCodes();
     }
 }
