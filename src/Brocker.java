@@ -125,8 +125,6 @@ public class Brocker extends Node implements Runnable , Serializable {
                 }
             }
         }
-
-
     }
 
     /**will accept a connection if the Publisher's hash is with in the

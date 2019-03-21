@@ -8,7 +8,6 @@ public class Read {
     private String busLineTable[][] = new String[20][4];
 
 
-
     public void readBusLines() throws IOException {
         FileReader fr = new FileReader(busLinesPath);
         String word = "";

@@ -8,7 +8,8 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class Node  {
+public class Node implements Serializable {
+    private static final long serialVersionUID = -304193945227516524L;
     public ArrayList<Brocker> BrokerList = new ArrayList<Brocker>();
     protected String ipAddress ;
     protected int port;
