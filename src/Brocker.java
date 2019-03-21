@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.*;
 import java.util.ArrayList;
 
@@ -18,7 +19,8 @@ import java.util.ArrayList;
  * 3) send it to al consumers in the same time
  *
  * **/
-public class Brocker extends Node implements Runnable{
+public class Brocker extends Node implements Runnable , Serializable {
+    private static final long serialVersionUID = -1799537022412025503L;
     private ArrayList<Subscriber> registeredSubscribers = new ArrayList<Subscriber>();
     private ArrayList<Publisher> registerPublisher= new ArrayList<Publisher>();
     private String brokerRange =null;
@@ -29,11 +31,13 @@ public class Brocker extends Node implements Runnable{
     public Brocker(int port,String ip){
         super(port,ip);
     }
-    public Brocker(Socket socket){
+    public Brocker(Socket socket,ArrayList<Brocker> BrokerList){
         this.socket=socket;
+        this.BrokerList=BrokerList;
     }
 
     public void run(){
+        System.out.println("broker1: " + BrokerList.get(0).ipAddress);
         readHash(socket);
         System.out.println(socket.getInetAddress());
     }
@@ -42,6 +46,7 @@ public class Brocker extends Node implements Runnable{
     public void startServer(){
         ServerSocket listenerSocket =null;
         Socket connection=null;
+        setBrokerList(this,0);
         try {
             listenerSocket= new ServerSocket(port);//a new Socket is created for the specific port
             while (true){
@@ -49,22 +54,29 @@ public class Brocker extends Node implements Runnable{
                  * has been created for the communication **/
                 System.out.println("Server up and  waiting");
                 connection =listenerSocket.accept();
-                new Thread(new Brocker(connection)).start();
+                new Thread(new Brocker(connection,getBrokerList())).start();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }//end startServer
+
     public void readHash(Socket socket1){
         try {
             ObjectOutputStream out = new ObjectOutputStream(socket1.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket1.getInputStream());
             out.writeUTF("Server: Connection Successful ");
             out.flush();
-            String clientHash=in.readUTF();
-            out.writeUTF("buy");
-            out.flush();
-            System.out.println(clientHash);
+            String client=socket1.getInetAddress().getHostName();
+            System.out.println("client:" +client+" connected ");
+            String request =in.readUTF();
+            System.out.println("request for: "+ request);
+            if(request.equals("BrokerList")&& BrokerList!=null){
+                out.writeObject(BrokerList);
+                System.out.println("sending");
+            }
+            System.out.println("request Successful");
+
             out.writeUTF("Server--> Closing connection");
             out.flush();
             out.close();
