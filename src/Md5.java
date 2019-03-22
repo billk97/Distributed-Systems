@@ -8,7 +8,7 @@ public class Md5 {
     private MessageDigest md;
     private String BusLine;
     /**this function returns the hash of a string**/
-    public String HASH(String StringToHash)  {
+    public int HASH(String StringToHash)  {
         try {
             md = MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e) {
@@ -19,7 +19,7 @@ public class Md5 {
         byte[] digest = md.digest();
         String myHash = DatatypeConverter.printHexBinary(digest).toUpperCase();
         //System.out.println(myHash);
-        return myHash;
+        return Integer.parseInt(myHash);
     }//end HASH
     /**compares two hashes and returns the bigger one **/
     public String CompareHashes(String Hash1, String Hash2){
