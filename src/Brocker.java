@@ -46,7 +46,7 @@ public class Brocker extends Node implements Runnable , Serializable {
     }
 
     public void run(){
-        readHash(socket);
+        brokerListener(socket);
         System.out.println(socket.getInetAddress());
     }
     /**A socket is not a port!!!!  you open a socket to listen and when a connection request
@@ -69,7 +69,7 @@ public class Brocker extends Node implements Runnable , Serializable {
         }
     }//end startServer
 
-    public void readHash(Socket socket1){
+    public void brokerListener(Socket socket1){
         try {
             ObjectOutputStream out = new ObjectOutputStream(socket1.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket1.getInputStream());
@@ -87,7 +87,6 @@ public class Brocker extends Node implements Runnable , Serializable {
             else if(request.equals("Push")){
                 Topic localTopic = (Topic) in.readObject();
                 Value localvalue = (Value)in.readObject();
-                System.out.println(localTopic.getBusLine());
             }
             System.out.println("request Successful");
             out.close();
@@ -98,7 +97,7 @@ public class Brocker extends Node implements Runnable , Serializable {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-    }//end readHash
+    }//end brokerListener
 
     public String calculateBrokerHash(){
         Md5 md5 = new Md5();
