@@ -18,7 +18,7 @@ public class Md5 {
         md.update(StringToHash.getBytes());
         byte[] digest = md.digest();
         String myHash = DatatypeConverter.printHexBinary(digest).toUpperCase();
-        System.out.println(myHash);
+        //System.out.println(myHash);
         return myHash;
     }//end HASH
     /**compares two hashes and returns the bigger one **/

@@ -25,14 +25,17 @@ public class Brocker extends Node implements Runnable , Serializable {
     private ArrayList<Subscriber> registeredSubscribers = new ArrayList<Subscriber>();
     private ArrayList<Publisher> registerPublisher= new ArrayList<Publisher>();
     private String brokerRange =null;
-    private HashMap<Brocker, ArrayList> BrokerRangeMap = new HashMap<>();
+    private HashMap<Brocker, ArrayList<String>> BrokerRangeMap = new HashMap<>();
     private Socket socket;
+    private int brokerId;
     private String brokerHash;
     public String getBrokerRange(){
         return brokerRange;
     }
-    public Brocker(int port,String ip){
+    public Brocker(int port,String ip,int id){
         super(port,ip);
+        brokerId=id;
+        super.BrokerList.add(this);
     }
     public Brocker(Socket socket,ArrayList<Brocker> BrokerList){
         this.socket=socket;
@@ -92,7 +95,7 @@ public class Brocker extends Node implements Runnable , Serializable {
     public String calculateBrokerHash(){
         Md5 md5 = new Md5();
         brokerHash = md5.HASH(ipAddress +Integer.toString(port));
-        System.out.println("brokerRange: "+ brokerRange);
+        //System.out.println("brokerRange: "+ brokerHash);
         return brokerHash;
     }
     /**calculates the ip + port + BUS ID  --> md5 hash**/
@@ -111,21 +114,45 @@ public class Brocker extends Node implements Runnable , Serializable {
             busLineIdHashTable[i]= hashLine;
         }
         //just print tables
-        for(int i=0;i<busLinesTable.length;i++){
-            //System.out.println(busLinesTable[i][0]+" "+busLinesTable[i][1]+" "+busLinesTable[i][2]+" "+busLinesTable[i][3]);
-            System.out.println("linehash= "+busLineIdHashTable[i]);
-        }
+//        for(int i=0;i<busLinesTable.length;i++){
+//            //System.out.println(busLinesTable[i][0]+" "+busLinesTable[i][1]+" "+busLinesTable[i][2]+" "+busLinesTable[i][3]);
+//            System.out.println("linehash= "+busLineIdHashTable[i]);
+//        }
 
         //sigrinw ta brokerhashes me ta buslinehashes kai ta bazw sto hashmap
-        for(Brocker b:BrokerList){
-            for(int i=0;i<busLineIdHashTable.length;i++){
-                if(b.calculateBrokerHash().compareTo(busLineIdHashTable[i])<0){
-                    BrokerRangeMap.put(b,new ArrayList());
-                    BrokerRangeMap.get(b).add(busLineIdHashTable[i]);
+
+            float brokHash;//temporary metablites gia tis sigriseis mes to if
+            float lineHash;//temporary metablites gia tis sigriseis mes to if
+            for(Brocker b:BrokerList){
+                for(int i=0;i<busLineIdHashTable.length;i++){
+                    brokHash= Float.parseFloat(b.calculateBrokerHash());
+                    lineHash= Float.parseFloat(busLineIdHashTable[i]);
+                    if( (brokHash>lineHash) || brokHash>(lineHash%brokHash) ){
+                        BrokerRangeMap.put(b,new ArrayList());
+                        BrokerRangeMap.get(b).add(busLineIdHashTable[i]);
+                    }
                 }
             }
+    }
+
+    public void printBrokerRangeMap(){
+        for(Brocker b: BrokerRangeMap.keySet()){
+            int key = b.brokerId;
+            System.out.println("Broker "+key+"has lines: ");
+            ArrayList<String> arrayList= BrokerRangeMap.get(b);
+//            for(int i=0;i<arrayList.size();i++){
+//                System.out.println(arrayList.get(i));
+//            }
+
         }
     }
+
+    public void printBrokerList(){
+        for(Brocker b: BrokerList){
+            System.out.println("Brocker"+b.brokerId);
+        }
+    }
+
 
     /**will accept a connection if the Publisher's hash is with in the
      * range of the keys that he can accept**/
