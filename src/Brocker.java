@@ -1,3 +1,6 @@
+import DataTypes.Topic;
+import DataTypes.Value;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -43,7 +46,6 @@ public class Brocker extends Node implements Runnable , Serializable {
     }
 
     public void run(){
-        System.out.println("broker1: " + BrokerList.get(0).ipAddress);
         readHash(socket);
         System.out.println(socket.getInetAddress());
     }
@@ -74,23 +76,29 @@ public class Brocker extends Node implements Runnable , Serializable {
             out.writeUTF("Server: Connection Successful ");
             out.flush();
             String client=socket1.getInetAddress().getHostName();
-            System.out.println("client:" +client+" connected ");
+            System.out.println("connected client: " +client);
             String request =in.readUTF();
             System.out.println("request for: "+ request);
+            /**returns the List of the brokers**/
             if(request.equals("BrokerList")&& BrokerList!=null){
                 out.writeObject(BrokerList);
-                System.out.println("sending");
+            }
+            /**receives the object of push**/
+            else if(request.equals("Push")){
+                Topic localTopic = (Topic) in.readObject();
+                Value localvalue = (Value)in.readObject();
+                System.out.println(localTopic.getBusLine());
             }
             System.out.println("request Successful");
-
-            out.writeUTF("Server--> Closing connection");
-            out.flush();
             out.close();
             in.close();
+            System.out.println("connection closed");
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
-    }
+    }//end readHash
 
     public String calculateBrokerHash(){
         Md5 md5 = new Md5();
@@ -121,16 +129,18 @@ public class Brocker extends Node implements Runnable , Serializable {
 
         //sigrinw ta brokerhashes me ta buslinehashes kai ta bazw sto hashmap
 
-            float brokHash;//temporary metablites gia tis sigriseis mes to if
+            int brokHash;//temporary metablites gia tis sigriseis mes to if
             float lineHash;//temporary metablites gia tis sigriseis mes to if
             for(Brocker b:BrokerList){
                 for(int i=0;i<busLineIdHashTable.length;i++){
-                    brokHash= Float.parseFloat(b.calculateBrokerHash());
-                    lineHash= Float.parseFloat(busLineIdHashTable[i]);
-                    if( (brokHash>lineHash) || brokHash>(lineHash%brokHash) ){
-                        BrokerRangeMap.put(b,new ArrayList());
-                        BrokerRangeMap.get(b).add(busLineIdHashTable[i]);
-                    }
+                        String bill = b.calculateBrokerHash();
+                    System.out.println(bill);
+                        brokHash= Integer.parseInt(bill);
+                        lineHash= Float.parseFloat(busLineIdHashTable[i]);
+                        if( (brokHash>lineHash) || brokHash>(lineHash%brokHash) ){
+                            BrokerRangeMap.put(b,new ArrayList());
+                            BrokerRangeMap.get(b).add(busLineIdHashTable[i]);
+                        }
                 }
             }
     }

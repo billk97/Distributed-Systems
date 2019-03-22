@@ -1,6 +1,9 @@
 package DataTypes;
 
-public class Topic {
+import java.io.Serializable;
+
+public class Topic implements Serializable {
+    private static final long serialVersionUID= -7640567997349948895L;
     private String busLine;
 
     public Topic(String busLine) {

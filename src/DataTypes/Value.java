@@ -2,7 +2,10 @@ package DataTypes;
 
 import DataTypes.Bus;
 
-public class Value {
+import java.io.Serializable;
+
+public class Value implements Serializable {
+    private static final long serialVersionUID = -124536036869583737L;
     private Bus bus;
     private  double latidude;
     private double longtitude;

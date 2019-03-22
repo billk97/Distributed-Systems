@@ -1,3 +1,4 @@
+import DataTypes.Bus;
 import DataTypes.Topic;
 import DataTypes.Value;
 import java.io.IOException;
@@ -63,39 +64,36 @@ public class Publisher extends Node{
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+        finally {
+            Disconnect(socket);
+        }
     }//end getBrokerList
-
-    public void send(){
+    /**takes 2 Objects as arguments
+     * value(bus,latitude,lontitude)
+     * topic(busLine)
+     * and sends them to the broker**/
+    public void push (Value value ,Topic topic)  {
         Socket socket=connect(brokerIp, brokerPort);
+        ObjectOutputStream out = null;
         try {
-                ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-                ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-                String anser = in.readUTF();
-                System.out.println(anser);
-                out.writeUTF(getMyHash());
-                out.writeUTF(Integer.toString(socket.getPort()));
-                out.flush();
-                System.out.println(in.readUTF());
-                in.close();
-                out.close();
-
+            out = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+            System.out.println(in.readUTF());
+            out.writeUTF("Push");
+            out.flush();
+            out.writeObject(topic);
+            out.flush();
+            out.writeObject(value);
+            out.flush();
+            out.close();
+            in.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
         finally {
             Disconnect(socket);
         }
-    }
-
-    public void push (Value value ,Topic topic) throws IOException {
-        Socket socket=connect(brokerIp, brokerPort);
-        ObjectOutputStream out = null;
-       // socket= new Socket(InetAddress.getByName(ip),port);
-        out= new ObjectOutputStream(socket.getOutputStream());
-        out.writeObject(topic);
-        out.flush();
-        out.close();
-    }
+    }//end push
 
     public void notitfyFailure(Brocker  broker){
 
