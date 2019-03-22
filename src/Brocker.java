@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -128,20 +129,18 @@ public class Brocker extends Node implements Runnable , Serializable {
 
         //sigrinw ta brokerhashes me ta buslinehashes kai ta bazw sto hashmap
 
-            int brokHash;//temporary metablites gia tis sigriseis mes to if
-            float lineHash;//temporary metablites gia tis sigriseis mes to if
-            for(Brocker b:BrokerList){
-                for(int i=0;i<busLineIdHashTable.length;i++){
-                        String bill = b.calculateBrokerHash();
-                    System.out.println(bill);
-                        brokHash= Integer.parseInt(bill);
-                        lineHash= Float.parseFloat(busLineIdHashTable[i]);
-                        if( (brokHash>lineHash) || brokHash>(lineHash%brokHash) ){
-                            BrokerRangeMap.put(b,new ArrayList());
-                            BrokerRangeMap.get(b).add(busLineIdHashTable[i]);
-                        }
+        BigInteger brokHash;//temporary metablites gia tis sigriseis mes to if
+        BigInteger lineHash;//temporary metablites gia tis sigriseis mes to if
+        for(Brocker b:BrokerList){
+            for(int i=0;i<busLineIdHashTable.length;i++){
+                brokHash= new BigInteger(b.calculateBrokerHash(),16);
+                lineHash= new BigInteger(busLineIdHashTable[i],16);
+                if( (brokHash.compareTo(lineHash))>0 || brokHash.mod(lineHash).compareTo(brokHash)<0 ){
+                    BrokerRangeMap.put(b,new ArrayList());
+                    BrokerRangeMap.get(b).add(busLineIdHashTable[i]);
                 }
             }
+        }
     }
 
     public void printBrokerRangeMap(){
@@ -149,9 +148,9 @@ public class Brocker extends Node implements Runnable , Serializable {
             int key = b.brokerId;
             System.out.println("Broker "+key+"has lines: ");
             ArrayList<String> arrayList= BrokerRangeMap.get(b);
-//            for(int i=0;i<arrayList.size();i++){
-//                System.out.println(arrayList.get(i));
-//            }
+            for(int i=0;i<arrayList.size();i++){
+                System.out.println(arrayList.get(i));
+            }
 
         }
     }
