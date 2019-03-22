@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 /**A broker will:
@@ -129,24 +130,29 @@ public class Brocker extends Node implements Runnable , Serializable {
 
         //sigrinw ta brokerhashes me ta buslinehashes kai ta bazw sto hashmap
 
+
         BigInteger brokHash;//temporary metablites gia tis sigriseis mes to if
         BigInteger lineHash;//temporary metablites gia tis sigriseis mes to if
         for(Brocker b:BrokerList){
+            BrokerRangeMap.put(b,new ArrayList());
+            brokHash= new BigInteger(b.calculateBrokerHash(),16);
             for(int i=0;i<busLineIdHashTable.length;i++){
-                brokHash= new BigInteger(b.calculateBrokerHash(),16);
                 lineHash= new BigInteger(busLineIdHashTable[i],16);
-                if( (brokHash.compareTo(lineHash))>0 || brokHash.mod(lineHash).compareTo(brokHash)<0 ){
-                    BrokerRangeMap.put(b,new ArrayList());
+                if( (brokHash.compareTo(lineHash))>0 || lineHash.mod(brokHash).compareTo(brokHash)<0 ){
                     BrokerRangeMap.get(b).add(busLineIdHashTable[i]);
                 }
             }
         }
     }
 
+    public void sortBrokerList(){
+        
+    }
+
     public void printBrokerRangeMap(){
         for(Brocker b: BrokerRangeMap.keySet()){
             int key = b.brokerId;
-            System.out.println("Broker "+key+"has lines: ");
+            System.out.println("Broker "+key+" has linehashes: ");
             ArrayList<String> arrayList= BrokerRangeMap.get(b);
             for(int i=0;i<arrayList.size();i++){
                 System.out.println(arrayList.get(i));
