@@ -2,10 +2,10 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class Read {
-    private String busLinesPath= "src\\DS_project_dataset\\busLines.txt";
-    private String busPositionsPath = "src\\DS_project_dataset\\busPositions.txt";
-    private String routeCodesPath = "src\\DS_project_dataset\\RouteCodes.txt";
-    private String busLineTable[][] = new String[20][4];
+    private String busLinesPath= "src\\DS_project_dataset\\busLinesNew.txt";
+    private String busPositionsPath = "src\\DS_project_dataset\\busPositionsNew.txt";
+    private String routeCodesPath = "src\\DS_project_dataset\\RouteCodesNew.txt";
+    private String busLineTable[][] = new String[20][3];
 
 
     public void readBusLines() throws IOException {
@@ -64,7 +64,7 @@ public class Read {
     public void readRouteCodes() throws IOException {
         FileReader fileReader= new FileReader(routeCodesPath);
         String word="";
-        String routeCodesTable[]= new String[5];
+        String routeCodesTable[]= new String[4];
         int i;
         int k=0;
         int stop=0;
@@ -78,7 +78,7 @@ public class Read {
                 routeCodesTable[k]=word;
                 k=0;
                 word= "";
-                System.out.println("routecode: "+routeCodesTable[0]+" linecode: "+routeCodesTable[1]+" routetype: "+routeCodesTable[2]+" descriptiongreek: "+routeCodesTable[3]+" descriptionenglish: "+routeCodesTable[4]);
+                System.out.println("routecode: "+routeCodesTable[0]+" linecode: "+routeCodesTable[1]+" routetype: "+routeCodesTable[2]+" descriptionenglish: "+routeCodesTable[3]);
                 stop=stop+1;
             } else {
                 word = word + (char)i;
@@ -93,7 +93,7 @@ public class Read {
 
     public void printBusLineTable(){
         for(int i=0;i<busLineTable.length;i++){
-                System.out.println(busLineTable[i][0]+" "+busLineTable[i][1]+" "+busLineTable[i][2]+" "+busLineTable[i][3]);
+                System.out.println(busLineTable[i][0]+" "+busLineTable[i][1]+" "+busLineTable[i][2]);
         }
         //System.out.println("line leoforiou= "+busLineTable[2][0]+"perioxi leof= "+busLineTable[2][3]);
 
@@ -101,9 +101,9 @@ public class Read {
 
     public static void main(String[] args) throws IOException {
         Read r = new Read();
-        //r.readBusLines();
-        //r.printBusLineTable();
-        //r.readBusPosition();
+//        r.readBusLines();
+//        r.printBusLineTable();
+//        r.readBusPosition();
         r.readRouteCodes();
     }
 }
