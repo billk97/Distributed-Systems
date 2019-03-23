@@ -11,8 +11,8 @@ import java.util.ArrayList;
 public class Publisher extends Node{
     private String myHash=null;
     Md5 md5= new Md5();
-    private String brokerIp = "192.168.1.65";
-    private int brokerPort = 4202;
+    private String brokerIp ;
+    private int brokerPort ;
     private ArrayList<Brocker> localBrockerList= null;
 
     public Publisher(int port, String ip){
@@ -61,10 +61,12 @@ public class Publisher extends Node{
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
+            System.out.println("Server sims down");
             e.printStackTrace();
         }
         finally {
             Disconnect(socket);
+
         }
     }//end getBrokerList
     /**takes 2 Objects as arguments

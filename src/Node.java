@@ -6,8 +6,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.*;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.concurrent.TimeUnit;
 
 public class Node implements Serializable {
     private static final long serialVersionUID = -304193945227516524L;
@@ -39,18 +41,30 @@ public class Node implements Serializable {
     }//end setBrokerList
     /**will perform a complete connection whit the other node**/
     public  Socket connect(String ip ,int port){
-        try {
-            InetAddress host = Inet4Address.getByName(ip);
-            Socket socket = new Socket(host,port);
-            return socket;
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        boolean scanning=true;
+        while (scanning){
+            try {
+                InetAddress host = Inet4Address.getByName(ip);
+                Socket socket = new Socket(host,port);
+                scanning=false;
+                return socket;
+            } catch (UnknownHostException e) {
+
+                e.printStackTrace();
+            } catch (IOException e) {
+                System.out.println("Server seems down next try in 10 seconds");
+                try {
+                    TimeUnit.SECONDS.sleep(10);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+                // e.printStackTrace();
+            }
+            System.out.println("No socket could be returned");
         }
-        System.out.println("No socket could be returned");
         return null;
     }
+
     public void Disconnect(Socket socket){
         try {
             socket.close();
