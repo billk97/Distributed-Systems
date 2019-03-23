@@ -90,6 +90,17 @@ public class Brocker extends Node implements Runnable , Serializable {
                 Topic localTopic = (Topic) in.readObject();
                 Value localvalue = (Value)in.readObject();
             }
+            else if (request.equals("Subscriber")){
+                Topic localTopic =(Topic) in.readObject();
+                //todo search for the bus line
+                //todo send the Values back
+                //out.writeObject(value);
+            }
+            else if(request.equals("Unsubscribe")){
+                Topic localTopic = (Topic) in.readObject();
+                String subscriberIp = socket.getInetAddress().getHostName();
+                //Todo delete consumer for registeredSubscribers
+            }
             System.out.println("request Successful");
             out.close();
             in.close();
@@ -190,4 +201,4 @@ public class Brocker extends Node implements Runnable , Serializable {
     public void UpdateNodes() {
 
     }
-}//end class
+}//end class Broker
