@@ -1,4 +1,5 @@
 import com.sun.corba.se.pept.broker.Broker;
+import sun.swing.BakedArrayList;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -10,10 +11,11 @@ import java.util.HashSet;
 
 public class Node implements Serializable {
     private static final long serialVersionUID = -304193945227516524L;
-    public ArrayList<Brocker> BrokerList = new ArrayList<Brocker>();
+    public  static ArrayList<Brocker> BrokerList= new ArrayList<Brocker>();
     protected String ipAddress ;
     protected int port;
-    public Node(){}
+    public Node(){
+    }
     public Node(int port , String ipAddress)  {
         this.port=port;
         this.ipAddress=ipAddress;
@@ -75,4 +77,5 @@ public class Node implements Serializable {
     public void setPort(int port) {
         this.port = port;
     }
+
 }
