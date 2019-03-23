@@ -1,3 +1,4 @@
+import DataTypes.Bus;
 import DataTypes.Topic;
 import DataTypes.Value;
 
@@ -94,8 +95,13 @@ public class Brocker extends Node implements Runnable , Serializable {
                 Topic localTopic = (Topic) in.readObject();
                 Value localvalue = (Value)in.readObject();
             }
-            else if (request.equals("Subscriber")){
+            else if (request.equals("Subscribe")){
                 Topic localTopic =(Topic) in.readObject();
+                Bus b1 = new Bus();
+                Topic topic1 = new Topic("bill");
+                Value value1 = new Value(b1,0.0,10.0);
+                out.writeObject(value1);
+                out.flush();
                 //todo search for the bus line
                 //todo send the Values back
                 //out.writeObject(value);
@@ -131,60 +137,63 @@ public class Brocker extends Node implements Runnable , Serializable {
         Read r = new Read();
         r.readBusLines();
         String [][] busLinesTable = r.getBusLinesTable();
-        String [] busLineIdHashTable = new String[20];
         ArrayList<String> busLineHashList = new ArrayList<>(); //na to svisw
         //pernaw ta lineid apo to source,ta hasharw kai bazw ta hash sto busLineHashTable
         for(int i=0;i<busLinesTable.length;i++){
             hashLine = md5.HASH(busLinesTable[i][1]);
             busLineHashList.add(hashLine);
         }
-
-
-
-        //just print tables
-//        for(int i=0;i<busLinesTable.length;i++){
-//            //System.out.println(busLinesTable[i][0]+" "+busLinesTable[i][1]+" "+busLinesTable[i][2]+" "+busLinesTable[i][3]);
-//            System.out.println("linehash= "+busLineIdHashTable[i]);
-//        }
-
         //sigrinw ta brokerhashes me ta buslinehashes kai ta bazw sto hashmap
-
         sortBrokerList();
 
         BigInteger brokHash;//temporary metablites gia tis sigriseis mes to if
         BigInteger lineHash;//temporary metablites gia tis sigriseis mes to if
         BigInteger maxBrokHash=new BigInteger(BrokerList.get(BrokerList.size()-1).calculateBrokerHash(),16);
         for(Brocker b:BrokerList){
+
             brokHash= new BigInteger(b.calculateBrokerHash(),16);
+            //System.out.println(" Broker   = "+brokHash);
             ArrayList<String> tempList = new ArrayList();
+            System.out.println(busLineHashList.size());
             for(int i=0;i<busLineHashList.size();i++){
                 lineHash= new BigInteger(busLineHashList.get(i),16);
-                if( lineHash.mod(maxBrokHash).compareTo(brokHash)<0){
+                System.out.println(lineHash);
+                if( lineHash.mod(maxBrokHash).compareTo(brokHash)<=0){
+                    //System.out.println("--> "+lineHash.mod(maxBrokHash));
                     tempList.add(busLineHashList.get(i));
                     busLineHashList.remove(i);
                 }
             }
             BrokerRangeMap.put(b,tempList);
         }
+        System.out.println("maxbrokerhash = "+maxBrokHash);
+//        for(String h:busLineHashList){
+//            System.out.println("remaining: "+h);
+//        }
     }
+
 
     //taksinomei ta brokerHashes apo to mikrotero sto megalitero
     public void sortBrokerList(){
         int n = BrokerList.size();
+        BigInteger temp1;
+        BigInteger temp2;
         for (int i = 0; i < n-1; i++) {
-            for (int j = 0; j < n - i - 1; j++)
-                if (BrokerList.get(j).calculateBrokerHash().compareTo(BrokerList.get(j + 1).calculateBrokerHash()) > 0) {
+            for (int j = 0; j < n - i - 1; j++){
+                 temp1= new BigInteger(BrokerList.get(j).calculateBrokerHash(),16);
+                 temp2= new BigInteger(BrokerList.get(j + 1).calculateBrokerHash(),16);
+                if (temp1.compareTo(temp2) > 0) {
                     // swap brocker elements in the arraylist
                     Brocker temp = BrokerList.get(j);
                     BrokerList.set(j, BrokerList.get(j + 1));
                     BrokerList.set(j + 1, temp);
                 }
+            }
         }
         //print list
-        for(Brocker b: BrokerList){
-            System.out.println("Brocker"+b.brokerId+" hash: "+b.calculateBrokerHash());
-        }
-
+//        for(Brocker b: BrokerList){
+//            System.out.println("Brocker"+b.brokerId+" hash: "+b.calculateBrokerHash());
+//        }
     }
 
     public void printBrokerRangeMap(){

@@ -16,13 +16,13 @@ public class Subscriber extends Node implements Serializable {
         super(port,ip);
     }
     /**register for the first time for a topic**/
-    private void register(Topic topic){
+    public void register(Topic topic){
         Socket socket = connect(brokerIp,brokerport);
         try {
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             System.out.println(in.readUTF());
-            out.writeUTF("Subscriber");
+            out.writeUTF("Subscribe");
             out.flush();
             out.writeObject(topic);
             out.flush();

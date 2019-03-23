@@ -48,7 +48,6 @@ public class Publisher extends Node{
     /**this function gets the list of all Brokers via tcp connection **/
     public void getMyBrokerList(){
         Socket socket = connect(brokerIp,brokerPort);
-
         try {
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
