@@ -154,22 +154,21 @@ public class Brocker extends Node implements Runnable , Serializable {
             brokHash= new BigInteger(b.calculateBrokerHash(),16);
             //System.out.println(" Broker   = "+brokHash);
             ArrayList<String> tempList = new ArrayList();
-            System.out.println(busLineHashList.size());
+            //System.out.println(busLineHashList.size());
             for(int i=0;i<busLineHashList.size();i++){
-                lineHash= new BigInteger(busLineHashList.get(i),16);
-                System.out.println(lineHash);
-                if( lineHash.mod(maxBrokHash).compareTo(brokHash)<=0){
-                    //System.out.println("--> "+lineHash.mod(maxBrokHash));
-                    tempList.add(busLineHashList.get(i));
-                    busLineHashList.remove(i);
+                if(busLineHashList.get(i)!="0") {
+                    lineHash = new BigInteger(busLineHashList.get(i), 16);
+                    //System.out.println(lineHash);
+                    if (lineHash.mod(maxBrokHash).compareTo(brokHash) <= 0) {
+                        //System.out.println("--> "+lineHash.mod(maxBrokHash));
+                        tempList.add(busLineHashList.get(i));
+                        busLineHashList.set(i, "0");
+                    }
                 }
             }
             BrokerRangeMap.put(b,tempList);
+            //System.out.println(tempList);
         }
-        System.out.println("maxbrokerhash = "+maxBrokHash);
-//        for(String h:busLineHashList){
-//            System.out.println("remaining: "+h);
-//        }
     }
 
 
