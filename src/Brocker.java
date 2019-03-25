@@ -38,6 +38,7 @@ public class Brocker extends Node implements Runnable , Serializable {
     public String getBrokerRange(){
         return brokerRange;
     }
+
     public Brocker(int port,String ip,int id){
         super(port,ip);
         brokerId=id;
@@ -50,6 +51,27 @@ public class Brocker extends Node implements Runnable , Serializable {
 
     public void addToList(){
         BrokerList.add(this);
+    }
+
+    public void connectToBroker(){
+        Socket socket =connect("192.168.1.65",4204);
+        try {
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            System.out.println(in.readUTF());
+            out.writeUTF("BrokerList");
+            out.flush();
+            //todo warning needs to add the extra
+            BrokerList=(ArrayList<Brocker>) in.readObject();
+            in.close();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }finally {
+            Disconnect(socket);
+        }
     }
 
     public void run(){
