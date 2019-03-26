@@ -9,7 +9,7 @@ public class Read {
     private String routeCodesPath = "src\\DS_project_dataset\\RouteCodesNew.txt";
     private String busLineTable[][] = new String[20][3];
 
-    public void readBusLines() throws IOException {
+    public String[][] readBusLines() throws IOException {
         FileReader fr = new FileReader(busLinesPath);
         String word = "";
         int i;
@@ -30,6 +30,7 @@ public class Read {
                 word = word + (char)i;
             }
         }
+        return busLineTable;
     }//end readBusLines
 
     public String[][] getBusLinesTable(){

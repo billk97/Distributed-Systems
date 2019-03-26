@@ -11,6 +11,7 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 /**A broker will:
  * --- Initialization/System Image ---
@@ -53,26 +54,34 @@ public class Brocker extends Node implements Runnable , Serializable {
         BrokerList.add(this);
     }
 
-    public void connectToBroker(String NewBrokerPp , int NewBrokerPort ){
-        Socket socket =connect(NewBrokerPp,NewBrokerPort);
-        try {
-            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-            System.out.println(in.readUTF());
-            out.writeUTF("BrokerList");
-            out.flush();
-            //todo warning needs to add the extra
-            BrokerList=(ArrayList<Brocker>) in.readObject();
-            in.close();
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }finally {
-            Disconnect(socket);
-        }
-    }
+    public void connectToBroker(String NewBrokerIp , int NewBrokerPort ){
+        int i=0;
+        System.out.println("searching for other broker:");
+        while (i<5){
+            try {
+                InetAddress host = Inet4Address.getByName(NewBrokerIp);
+                Socket socket = new Socket(host,NewBrokerPort);
+                System.out.println("Found server connecting");
+                ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+                ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+                System.out.println(in.readUTF());
+                out.writeUTF("BrokerList");
+                out.flush();
+                //todo warning needs to add the extra
+                BrokerList=(ArrayList<Brocker>) in.readObject();
+                in.close();
+                out.close();
+            } catch (IOException e) {
+                System.out.println("searching for other broker:");
+                    i++;
+                System.out.println("Broker Not found");
+               // e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                System.out.println("timeout:");
+                e.printStackTrace();
+            }
+        }//end while
+    }//end connectToBroker
 
     public void run(){
         //connectToBroker("192.168.1.65",4204);
@@ -82,6 +91,8 @@ public class Brocker extends Node implements Runnable , Serializable {
     /**A socket is not a port!!!!  you open a socket to listen and when a connection request
      * is send then a new Socket each time gets created and listen in the same port!!!!**/
     public void startServer(){
+        //read Initialize (reads txt and default ip and ports from broker)
+        connectToBroker("192.168.1.68",4204);
         ServerSocket listenerSocket =null;
         Socket connection=null;
         setBrokerList(this,0);

@@ -30,16 +30,17 @@ public class Node implements Serializable {
     public void initialize(){
         Read read = new Read();
         localeRouteCodesList=read.readRouteCodes();
-        read.readBusPosition();
-        System.out.println(localeRouteCodesList.get(3)[3]);
-        //System.out.println(read.readBusPosition().get(3)[1]);
+        //read.readBusPosition();
+        //todo how to select a specific route example 816
+        //ose other type of list
+        System.out.println(localeRouteCodesList.get(0)[0]);
+        System.out.println(read.readBusPosition().size());
     }
 
     public static void main(String[] args) {
         Node node= new Node();
         node.initialize();
     }
-
 
     public ArrayList<Brocker> getBrokerList() {
         return BrokerList;
