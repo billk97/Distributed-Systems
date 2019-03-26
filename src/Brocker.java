@@ -132,6 +132,8 @@ public class Brocker extends Node implements Runnable , Serializable {
                 BrokerList.add(new Brocker(newBrokerPort,newBrokerIp));
                 System.out.println("hiear");
                 System.out.println(BrokerList.size());
+                out.writeObject(BrokerList);
+                out.flush();
             }
             /**receives the object of push**/
             else if(request.equals("Push")){
