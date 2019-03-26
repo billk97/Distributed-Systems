@@ -56,7 +56,7 @@ public class Brocker extends Node implements Runnable , Serializable {
     public void connectToBroker(String NewBrokerIp , int NewBrokerPort ){
         int i=0;
         System.out.println("searching for other broker:");
-        while (i<5){
+        while (i<1){
             try {
                 InetAddress host = Inet4Address.getByName(NewBrokerIp);
                 Socket socket = new Socket(host,NewBrokerPort);
@@ -66,7 +66,9 @@ public class Brocker extends Node implements Runnable , Serializable {
                 System.out.println(in.readUTF());
                 out.writeUTF("Broker:BrokerList");
                 out.flush();
+                System.out.println("port"+port);
                 out.writeUTF(Integer.toString(port));
+                out.flush();
                 //todo warning needs to add the extra
                 BrokerList=(ArrayList<Brocker>) in.readObject();
                 in.close();
@@ -84,7 +86,6 @@ public class Brocker extends Node implements Runnable , Serializable {
     }//end connectToBroker
 
     public void run(){
-        //connectToBroker("192.168.1.65",4204);
         brokerListener(socket);
         System.out.println(socket.getInetAddress());
     }
@@ -92,7 +93,7 @@ public class Brocker extends Node implements Runnable , Serializable {
      * is send then a new Socket each time gets created and listen in the same port!!!!**/
     public void startServer(){
         //read Initialize (reads txt and default ip and ports from broker)
-        connectToBroker("192.168.1.68",4204);
+        connectToBroker("192.168.1.65",4202);
         ServerSocket listenerSocket =null;
         Socket connection=null;
         setBrokerList(this,0);
@@ -111,6 +112,7 @@ public class Brocker extends Node implements Runnable , Serializable {
     }//end startServer
 
     public void brokerListener(Socket socket1){
+        int newBrokerPort =0;
         try {
             ObjectOutputStream out = new ObjectOutputStream(socket1.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket1.getInputStream());
@@ -125,11 +127,11 @@ public class Brocker extends Node implements Runnable , Serializable {
                 out.writeObject(BrokerList);
             }
             else if(request.equals("Broker:BrokerList")){
-                int newBrokerPort =0;
                 String newBrokerIp = socket.getInetAddress().getHostName();
                 newBrokerPort=Integer.parseInt(in.readUTF());
-                Brocker brocker =new Brocker(newBrokerPort,newBrokerIp);
-                BrokerList.add(brocker);
+                BrokerList.add(new Brocker(newBrokerPort,newBrokerIp));
+                System.out.println("hiear");
+                System.out.println(BrokerList.size());
             }
             /**receives the object of push**/
             else if(request.equals("Push")){
