@@ -43,12 +43,10 @@ public class Read {
         ArrayList<String[]> busPositioonList =new ArrayList<String[]>();
         try {
             fileReader = new FileReader(busPositionsPath);
-
             int i;
             int k=0;
             int stop=0;
             while ((i = fileReader.read()) != -1) {
-                //busPositionTable= new String[6];
                 //System.out.print(i+" ");
                 if (i == 44) {
                     busPositionTable[k]=word;
@@ -60,11 +58,13 @@ public class Read {
                     word= "";
                     System.out.println("lineid: "+busPositionTable[0]+" routecode: "+busPositionTable[1]+" vehicleid: "+busPositionTable[2]+" latitude: "+busPositionTable[3]+" longtitude: "+busPositionTable[4]+" timestamp: "+busPositionTable[5]);
                     busPositioonList.add(busPositionTable);
+                    busPositionTable= new String[6];
                     stop=stop+1;
                 } else {
                     word = word + (char)i;
                 }
-            }
+
+            }//end While
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
