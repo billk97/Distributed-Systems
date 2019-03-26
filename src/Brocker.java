@@ -183,7 +183,7 @@ public class Brocker extends Node implements Runnable , Serializable {
                     //System.out.println(lineHash);
                     if (lineHash.mod(maxBrokHash).compareTo(brokHash) <= 0) {
                         //System.out.println("--> "+lineHash.mod(maxBrokHash));
-                        tempList.add(busLineHashList.get(i));
+                        tempList.add(busLinesTable[i][1]);
                         busLineHashList.set(i, "0");
                     }
                 }
@@ -192,7 +192,7 @@ public class Brocker extends Node implements Runnable , Serializable {
             //System.out.println(tempList);
         }
     }
-
+    
 
     //taksinomei ta brokerHashes apo to mikrotero sto megalitero
     public void sortBrokerList(){
