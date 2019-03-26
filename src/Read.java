@@ -41,7 +41,7 @@ public class Read {
         FileReader fileReader= null;
         String word="";
         String busPositionTable[]= new String[6];
-        ArrayList<String[]> busPositioonList =new ArrayList<String[]>();
+        ArrayList<String[]> busPositionList =new ArrayList<String[]>();
         try {
             fileReader = new FileReader(busPositionsPath);
             int i;
@@ -57,8 +57,8 @@ public class Read {
                     busPositionTable[k]=word;
                     k=0;
                     word= "";
-                    System.out.println("lineid: "+busPositionTable[0]+" routecode: "+busPositionTable[1]+" vehicleid: "+busPositionTable[2]+" latitude: "+busPositionTable[3]+" longtitude: "+busPositionTable[4]+" timestamp: "+busPositionTable[5]);
-                    busPositioonList.add(busPositionTable);
+                    //System.out.println("lineid: "+busPositionTable[0]+" routecode: "+busPositionTable[1]+" vehicleid: "+busPositionTable[2]+" latitude: "+busPositionTable[3]+" longtitude: "+busPositionTable[4]+" timestamp: "+busPositionTable[5]);
+                    busPositionList.add(busPositionTable);
                     busPositionTable= new String[6];
                     stop=stop+1;
                 } else {
@@ -71,21 +71,20 @@ public class Read {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return busPositioonList;
+        return busPositionList;
     }//end readBusPosition
-    ArrayList<String[]> routeCodesList= new ArrayList<String[]>();
-    public ArrayList readRouteCodes()  {
+
+    public ArrayList<String []> readRouteCodes()  {
         FileReader fileReader= null;
         String word="";
-        String routeCodesTable[];
+        ArrayList<String[]> routeCodesList= new ArrayList<String[]>();
+        String routeCodesTable[]= new String[4];
 
         try {
             fileReader = new FileReader(routeCodesPath);
             int i;
             int k=0;
-            int count=0;
             while ((i = fileReader.read()) != -1) {
-                routeCodesTable= new String[4];
                 //System.out.print(i+" ");
                 if (i == 44) {
                     routeCodesTable[k]=word;
@@ -95,9 +94,9 @@ public class Read {
                     routeCodesTable[k]=word;
                     k=0;
                     word= "";
-                    System.out.println("routecode: "+routeCodesTable[0]+" linecode: "+routeCodesTable[1]+" routetype: "+routeCodesTable[2]+" descriptionenglish: "+routeCodesTable[3]);
-                    routeCodesList.add(count,routeCodesTable);
-                    count++;
+                    //System.out.println("routecode: "+routeCodesTable[0]+" linecode: "+routeCodesTable[1]+" routetype: "+routeCodesTable[2]+" descriptionenglish: "+routeCodesTable[3]);
+                    routeCodesList.add(routeCodesTable);
+                    routeCodesTable= new String[4];
                 } else {
                     word = word + (char)i;
                 }
@@ -116,14 +115,28 @@ public class Read {
                 System.out.println(busLineTable[i][0]+" "+busLineTable[i][1]+" "+busLineTable[i][2]);
         }
         //System.out.println("line leoforiou= "+busLineTable[2][0]+"perioxi leof= "+busLineTable[2][3]);
+    }
 
+    public void printRouteCodeList(){
+        for(int i=0;i<=20;i++){
+            System.out.println(readRouteCodes().get(i)[0]+" "+readRouteCodes().get(i)[1]+" "+readRouteCodes().get(i)[2]+" "+readRouteCodes().get(i)[3]);
+        }
+        //System.out.println("line leoforiou= "+busLineTable[2][0]+"perioxi leof= "+busLineTable[2][3]);
+    }
+
+    public void printBusPosition(){
+        for(int i=0;i<=20;i++){
+            System.out.println(readBusPosition().get(i)[0]+" "+readBusPosition().get(i)[1]+" "+readBusPosition().get(i)[2]+" "+readBusPosition().get(i)[3]+" "+readBusPosition().get(i)[4]+" "+readBusPosition().get(i)[5]);
+        }
     }
 
     public static void main(String[] args) throws IOException {
         Read r = new Read();
 //        r.readBusLines();
-         r.printBusLineTable();
-//        r.readBusPosition();
-        r.readRouteCodes();
+         //r.printBusLineTable();
+        r.readBusPosition();
+        r.printBusPosition();
+        //r.readRouteCodes();
+        //r.printRouteCodeList();
     }
 }
