@@ -30,7 +30,9 @@ public class Node implements Serializable {
     public void initialize(){
         Read read = new Read();
         localeRouteCodesList=read.readRouteCodes();
+        read.readBusPosition();
         System.out.println(localeRouteCodesList.get(3)[3]);
+        //System.out.println(read.readBusPosition().get(3)[1]);
     }
 
     public static void main(String[] args) {
