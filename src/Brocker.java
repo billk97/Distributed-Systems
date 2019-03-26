@@ -40,9 +40,8 @@ public class Brocker extends Node implements Runnable , Serializable {
         return brokerRange;
     }
 
-    public Brocker(int port,String ip,int id){
+    public Brocker(int port,String ip){
         super(port,ip);
-        brokerId=id;
         getBrokerList().add(this);
     }
     public Brocker(Socket socket,ArrayList<Brocker> BrokerList){
@@ -65,8 +64,9 @@ public class Brocker extends Node implements Runnable , Serializable {
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
                 ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
                 System.out.println(in.readUTF());
-                out.writeUTF("BrokerList");
+                out.writeUTF("Broker:BrokerList");
                 out.flush();
+                out.writeUTF(Integer.toString(port));
                 //todo warning needs to add the extra
                 BrokerList=(ArrayList<Brocker>) in.readObject();
                 in.close();
@@ -123,6 +123,13 @@ public class Brocker extends Node implements Runnable , Serializable {
             /**returns the List of the brokers**/
             if(request.equals("BrokerList")&& BrokerList!=null){
                 out.writeObject(BrokerList);
+            }
+            else if(request.equals("Broker:BrokerList")){
+                int newBrokerPort =0;
+                String newBrokerIp = socket.getInetAddress().getHostName();
+                newBrokerPort=Integer.parseInt(in.readUTF());
+                Brocker brocker =new Brocker(newBrokerPort,newBrokerIp);
+                BrokerList.add(brocker);
             }
             /**receives the object of push**/
             else if(request.equals("Push")){
