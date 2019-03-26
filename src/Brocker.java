@@ -53,8 +53,8 @@ public class Brocker extends Node implements Runnable , Serializable {
         BrokerList.add(this);
     }
 
-    public void connectToBroker(){
-        Socket socket =connect("192.168.1.65",4204);
+    public void connectToBroker(String NewBrokerPp , int NewBrokerPort ){
+        Socket socket =connect(NewBrokerPp,NewBrokerPort);
         try {
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
@@ -75,6 +75,7 @@ public class Brocker extends Node implements Runnable , Serializable {
     }
 
     public void run(){
+        //connectToBroker("192.168.1.65",4204);
         brokerListener(socket);
         System.out.println(socket.getInetAddress());
     }
@@ -238,17 +239,17 @@ public class Brocker extends Node implements Runnable , Serializable {
 
     /**will accept a connection if the Publisher's hash is with in the
      * range of the keys that he can accept**/
-    public Publisher acceptConnection(Publisher pub){
-        if(Integer.parseInt(pub.getMyHash() )< Integer.parseInt(brokerRange)){
-            registerPublisher.add(pub);
-            return pub;
-        }
-        else if(Integer.parseInt(pub.getMyHash())%Integer.parseInt(brokerRange)<Integer.parseInt(brokerRange)){
-            registerPublisher.add(pub);
-            return pub;
-        }
-        return null;
-    }
+//    public Publisher acceptConnection(Publisher pub){
+//        if(Integer.parseInt(pub.getMyHash() )< Integer.parseInt(brokerRange)){
+//            registerPublisher.add(pub);
+//            return pub;
+//        }
+//        else if(Integer.parseInt(pub.getMyHash())%Integer.parseInt(brokerRange)<Integer.parseInt(brokerRange)){
+//            registerPublisher.add(pub);
+//            return pub;
+//        }
+//        return null;
+//    }
 
     //todo
     /**this function will be responsible to update the other hosts

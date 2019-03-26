@@ -22,28 +22,6 @@ public class Publisher extends Node{
     public void startPublisher(){
         getBrokerList();
     }
-    /**hashes the DataTypes.Topic it recives and compairs it with the
-     * hashes that exist in the BrokerList **/
-//    public Brocker hashTopic(Topic topic){
-//        Md5 md5 = new Md5();
-//        myHash=md5.HASH(topic.getBusLine());
-//        for (String brocker : localBrockerList){
-//            if(myHash.compareTo(brocker.getBrokerRange())==-1){
-//                return brocker;
-//            }
-//            else if(Integer.parseInt(myHash)%Integer.parseInt(brocker.getBrokerRange())< Integer.parseInt(brocker.getBrokerRange())){
-//                return brocker;
-//            }
-//        }
-//        System.out.println("Broker does not exists");
-//        return null;
-//    }
-
-    public String getMyHash(){
-        Md5 md5 =new Md5();
-        myHash=md5.HASH(brokerIp+Integer.toString(brokerPort));
-        return myHash;
-    }
 
     /**this function gets the list of all Brokers via tcp connection **/
     public void getMyBrokerList(){

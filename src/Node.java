@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class Node implements Serializable {
     private static final long serialVersionUID = -304193945227516524L;
     public  static ArrayList<Brocker> BrokerList= new ArrayList<Brocker>();
+    public ArrayList<String []> localeRouteCodesList;
     protected String ipAddress ;
     protected int port;
     public Node(){
@@ -25,6 +26,16 @@ public class Node implements Serializable {
     public void printNodeInfo(){
         System.out.println("nodeip "+ ipAddress);
         System.out.println("nodeport "+ port);
+    }
+    public void initialize(){
+        Read read = new Read();
+        localeRouteCodesList=read.readRouteCodes();
+        System.out.println(localeRouteCodesList.get(3)[3]);
+    }
+
+    public static void main(String[] args) {
+        Node node= new Node();
+        node.initialize();
     }
 
 
