@@ -32,7 +32,7 @@ public class Brocker extends Node implements Runnable , Serializable {
     private ArrayList<Subscriber> registeredSubscribers = new ArrayList<Subscriber>();
     private ArrayList<Publisher> registerPublisher= new ArrayList<Publisher>();
     private String brokerRange =null;
-    private HashMap<Brocker, ArrayList<String>> BrokerRangeMap = new HashMap<>();
+    private HashMap<Brocker, ArrayList<String []>> BrokerRangeMap = new HashMap<>();
     private Socket socket;
     private int brokerId;
     private String brokerHash;
@@ -177,11 +177,11 @@ public class Brocker extends Node implements Runnable , Serializable {
         String hashLine;
         Read r = new Read();
         r.readBusLines();
-        String [][] busLinesTable = r.getBusLinesTable();
+        ArrayList<String []> busLinesList = r.readBusLines();
         ArrayList<String> busLineHashList = new ArrayList<>(); //na to svisw
         //pernaw ta lineid apo to source,ta hasharw kai bazw ta hash sto busLineHashTable
-        for(int i=0;i<busLinesTable.length;i++){
-            hashLine = md5.HASH(busLinesTable[i][1]);
+        for(int i=0;i<busLinesList.size();i++){
+            hashLine = md5.HASH(busLinesList.get(i)[1]);
             busLineHashList.add(hashLine);
         }
         //sigrinw ta brokerhashes me ta buslinehashes kai ta bazw sto hashmap
@@ -194,7 +194,7 @@ public class Brocker extends Node implements Runnable , Serializable {
 
             brokHash= new BigInteger(b.calculateBrokerHash(),16);
             //System.out.println(" Broker   = "+brokHash);
-            ArrayList<String> tempList = new ArrayList();
+            ArrayList<String []> tempList = new ArrayList();
             //System.out.println(busLineHashList.size());
             for(int i=0;i<busLineHashList.size();i++){
                 if(busLineHashList.get(i)!="0") {
@@ -202,7 +202,7 @@ public class Brocker extends Node implements Runnable , Serializable {
                     //System.out.println(lineHash);
                     if (lineHash.mod(maxBrokHash).compareTo(brokHash) <= 0) {
                         //System.out.println("--> "+lineHash.mod(maxBrokHash));
-                        tempList.add(busLinesTable[i][1]);
+                        tempList.add(busLinesList.get(i));
                         busLineHashList.set(i, "0");
                     }
                 }
@@ -241,7 +241,7 @@ public class Brocker extends Node implements Runnable , Serializable {
             int key = b.brokerId;
             System.out.println("Broker "+key+" has linehashes: ");
             for(int i=0;i<BrokerRangeMap.get(b).size();i++){
-                System.out.println(BrokerRangeMap.get(b).get(i));
+                System.out.println(BrokerRangeMap.get(b).get(i)[0]+" "+BrokerRangeMap.get(b).get(i)[1]+" "+BrokerRangeMap.get(b).get(i)[2]);
             }
 
         }

@@ -11,8 +11,8 @@ public class Test {
 //        v1.setBrokerList(v1,0);
 //        v1.setBrokerList(v2,1);
 //        System.out.println("list: "+v1.BrokerList.get(0).ipAddress);
-        //v1.calculateKeys();
-        v1.startServer();
+        v1.calculateKeys();
+        //v1.startServer();
         v1.printBrokerRangeMap();
         //v1.printBrokerList();
         //v1.sortBrokerList();
