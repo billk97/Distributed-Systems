@@ -63,9 +63,7 @@ public class Brocker extends Node implements Runnable , Serializable {
         ServerSocket listenerSocket =null;
         Socket connection=null;
         //setBrokerList(this,0);
-        for(Brocker b1 : BrokerList){
-            System.out.println("Brokerlist"+b1.ipAddress);
-        }
+        System.out.println("Brocker:"+ BrokerList.size());
 
         try {
             listenerSocket= new ServerSocket(port);//a new Socket is created for the specific port
@@ -136,11 +134,12 @@ public class Brocker extends Node implements Runnable , Serializable {
             System.out.println("connection closed");
         } catch (IOException e) {
             System.out.println("Broker failed");
+            System.out.println("BrokerListSize: "+ BrokerList.size());
             for(int i=0; i<BrokerList.size(); i++){
                 if(BrokerList.get(i).getIpAddress().equals(socket1.getInetAddress().getHostName())){
                     System.out.println(BrokerList.get(i).ipAddress);
                     BrokerList.remove(i);
-
+                    System.out.println("BrokerListSize: "+ BrokerList.size());
                 }
             }
             //e.printStackTrace();
