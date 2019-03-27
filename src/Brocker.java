@@ -82,7 +82,6 @@ public class Brocker extends Node implements Runnable , Serializable {
     }//end startServer
 
     public void brokerListener(Socket socket1){
-        int newBrokerPort =0;
         try {
             ObjectOutputStream out = new ObjectOutputStream(socket1.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket1.getInputStream());
@@ -98,7 +97,7 @@ public class Brocker extends Node implements Runnable , Serializable {
             }
             else if(request.equals("BrokerAdd")){
                 String newBrokerIp = socket.getInetAddress().getHostName();
-                newBrokerPort=Integer.parseInt(in.readUTF());
+                int newBrokerPort=Integer.parseInt(in.readUTF());//kati paizei edo to bgazei o
                 BrokerList.add(new Brocker(newBrokerPort,newBrokerIp));
                 String temp = in.readUTF();
                 if(temp.equals("ping")){
