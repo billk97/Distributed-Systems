@@ -62,7 +62,7 @@ public class Brocker extends Node implements Runnable , Serializable {
     public void startServer(){
         ServerSocket listenerSocket =null;
         Socket connection=null;
-        setBrokerList(this,0);
+        //setBrokerList(this,0);
         for(Brocker b1 : BrokerList){
             System.out.println("Brokerlist"+b1.ipAddress);
         }
