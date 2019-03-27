@@ -24,7 +24,7 @@ public class BrokerConnect extends Node implements Runnable {
             System.out.println(in.readUTF());
             out.writeUTF("BrokerAdd");
             out.flush();
-            out.writeUTF(Integer.toString(port));
+            out.writeUTF(Integer.toString(port));//einai 0 prepei na perastei alios
             out.flush();
             BrokerList.add(new Brocker(RemoteBrokerPort,RemoteBrokerIp));
             while (true){

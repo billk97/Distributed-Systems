@@ -53,9 +53,6 @@ public class Node implements Serializable {
      * broker.setBrokerList
      * broker --> object type broker
      * connection --> a socket in order to send the object via tcp**/
-    public void setBrokerList(Brocker brocker, int i) {
-            BrokerList.add(i,brocker);
-    }//end setBrokerList
     /**will perform a complete connection whit the other node**/
     public  Socket connect(String ip ,int port){
         boolean scanning=true;

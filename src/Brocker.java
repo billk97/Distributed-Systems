@@ -42,16 +42,13 @@ public class Brocker extends Node implements Runnable , Serializable {
 
     public Brocker(int port,String ip){
         super(port,ip);
-        getBrokerList().add(this);
+        BrokerList.add(this);
     }
     public Brocker(Socket socket,ArrayList<Brocker> BrokerList){
         this.socket=socket;
         this.BrokerList=BrokerList;
     }
 
-    public void addToList(){
-        BrokerList.add(this);
-    }
 
     public void run(){
         brokerListener(socket);
