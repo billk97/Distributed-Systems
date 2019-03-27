@@ -63,7 +63,7 @@ public class Brocker extends Node implements Runnable , Serializable {
         Socket connection=null;
         BrokerList.add(this);
         System.out.println("Brocker:"+ BrokerList.size());
-        new Thread(new BrokerConnect("localhost",4203));
+        new Thread(new BrokerConnect("172.16.10.39",4202)).start();
         try {
             listenerSocket= new ServerSocket(port);//a new Socket is created for the specific port
             while (true){
