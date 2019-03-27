@@ -99,9 +99,9 @@ public class Brocker extends Node implements Runnable , Serializable {
                 String temp = in.readUTF();
                 if(temp.equals("ping")){
                     while(true) {
-                        System.out.println(in.readUTF());
                         out.writeUTF("ping");
                         out.flush();
+                        System.out.println(in.readUTF());
                     }
                 }
             }
