@@ -35,6 +35,7 @@ public class BrokerConnect extends Node implements Runnable {
             }
         } catch (IOException e) {
             System.out.println("No connection could be established");
+
             //e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
