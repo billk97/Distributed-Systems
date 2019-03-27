@@ -44,7 +44,7 @@ public class Read {
     }//end readBusLines
 
 
-    public ArrayList<String[]> readBusPosition() {
+    public ArrayList<String[]> readBusPosition(String lineCode) {
         FileReader fileReader= null;
         String word="";
         String busPositionTable[]= new String[6];
@@ -64,8 +64,11 @@ public class Read {
                     busPositionTable[k]=word;
                     k=0;
                     word= "";
-                    //System.out.println("lineid: "+busPositionTable[0]+" routecode: "+busPositionTable[1]+" vehicleid: "+busPositionTable[2]+" latitude: "+busPositionTable[3]+" longtitude: "+busPositionTable[4]+" timestamp: "+busPositionTable[5]);
-                    busPositionList.add(busPositionTable);
+
+                    if(lineCode.equals(busPositionTable[0])) {
+                        //System.out.println(busPositionTable[0]+" "+busPositionTable[1]+" "+busPositionTable[2]+" "+busPositionTable[3]+" "+busPositionTable[4]+" "+busPositionTable[5]);
+                        busPositionList.add(busPositionTable);
+                    }
                     busPositionTable= new String[6];
                     stop=stop+1;
                 } else {
@@ -131,16 +134,17 @@ public class Read {
     }
 
     public void printBusPosition(){
+        ArrayList<String []> array = readBusPosition("817");
         for(int i=0;i<=20;i++){
-            System.out.println(readBusPosition().get(i)[0]+" "+readBusPosition().get(i)[1]+" "+readBusPosition().get(i)[2]+" "+readBusPosition().get(i)[3]+" "+readBusPosition().get(i)[4]+" "+readBusPosition().get(i)[5]);
+            System.out.println(array.get(i)[0]+" "+array.get(i)[1]+" "+array.get(i)[2]+" "+array.get(i)[3]+" "+readBusPosition("817").get(i)[4]+" "+array.get(i)[5]);
         }
     }
 
     public static void main(String[] args) throws IOException {
         Read r = new Read();
-        r.readBusLines();
-        r.printBusLineList();
-        //r.readBusPosition();
+        //r.readBusLines();
+        //r.printBusLineList();
+        r.readBusPosition("817");
         //r.printBusPosition();
         //r.readRouteCodes();
         //r.printRouteCodeList();

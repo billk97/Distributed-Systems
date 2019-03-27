@@ -37,7 +37,7 @@ public class Node implements Serializable {
         for(int i=0;i<20;i++) {
             System.out.println(localeRouteCodesList.get(i)[0]);
         }
-        System.out.println("size of the list is = "+read.readBusPosition().size());
+        System.out.println("size of the list is = "+read.readBusPosition("817").size());
     }
 
     public static void main(String[] args) {

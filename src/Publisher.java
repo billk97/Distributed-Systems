@@ -7,17 +7,43 @@ import java.io.ObjectOutputStream;
 import java.net.Inet4Address;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Publisher extends Node{
     private String myHash=null;
     Md5 md5= new Md5();
     private String brokerIp ;
     private int brokerPort ;
+    private int PublisherRange=5;
+    private HashMap<String,ArrayList<String []>> busPositionsHash = new HashMap<>();
     private ArrayList<Brocker> localBrockerList= null;
 
     public Publisher(int port, String ip){
         super(port,ip);
     }
+
+    public void readBusInformation(){
+        Read r = new Read();
+        ArrayList<String []> BusLinesArray = r.readBusLines();
+        for(int i=0; i<PublisherRange;i++){
+            ArrayList<String []> tempArray = r.readBusPosition(BusLinesArray.get(i)[0]);
+            busPositionsHash.put(BusLinesArray.get(i)[1],tempArray);
+        }
+        //System.out.println("hashmap size ="+busPositionsHash.size());
+    }
+
+    public void printBusPostionHash(){
+        for(String key: busPositionsHash.keySet()){
+            System.out.println("Bus: "+key+" has linehashes: ");
+            for(int i=0;i<busPositionsHash.get(key).size();i++){
+                System.out.println(busPositionsHash.get(key).get(i)[0]+" "+busPositionsHash.get(key).get(i)[1]+" "+busPositionsHash.get(key).get(i)[2]+" "+busPositionsHash.get(key).get(i)[3]+" "+busPositionsHash.get(key).get(i)[4]+" "+busPositionsHash.get(key).get(i)[5]);
+            }
+
+        }
+    }
+
+
+
 
     public void startPublisher(){
         getBrokerList();
@@ -95,5 +121,11 @@ public class Publisher extends Node{
 
     public void setBrokerPort(int brokerPort) {
         this.brokerPort = brokerPort;
+    }
+
+    public static void main(String[] args) {
+        Publisher pub1= new Publisher(4402,"local host");
+        pub1.readBusInformation();
+        pub1.printBusPostionHash();
     }
 }//end Class Publisher
