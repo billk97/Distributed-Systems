@@ -131,10 +131,9 @@ public class Brocker extends Node implements Runnable , Serializable {
             in.close();
             System.out.println("connection closed");
         } catch (IOException e) {
-            System.out.println("this1");
-            e.printStackTrace();
+            System.out.println("Broker failed");
+            //e.printStackTrace();
         } catch (ClassNotFoundException e) {
-            System.out.println("this2");
             e.printStackTrace();
         }
     }//end brokerListener
