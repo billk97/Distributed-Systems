@@ -12,11 +12,12 @@ public class BrokerConnect extends Node implements Runnable {
         this.RemoteBrokerPort=RemoteBrokerPort;
     }
     public void run(){
-        //connection();
+        connection();
     }
     public void connection(){
         Socket socket = connect(RemoteBrokerIp,RemoteBrokerPort);
         try {
+            System.out.println("Connected");
             ObjectInputStream  in = new ObjectInputStream(socket.getInputStream());
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             System.out.println(in.readUTF());
@@ -29,6 +30,11 @@ public class BrokerConnect extends Node implements Runnable {
             System.out.println("No connection could be established");
             //e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        BrokerConnect b1 = new BrokerConnect("10.25.195.37",4202);
+        b1.connection();
     }
 
     /**geter seter **/
