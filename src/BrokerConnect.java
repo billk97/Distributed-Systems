@@ -43,7 +43,7 @@ public class BrokerConnect extends Node implements Runnable {
     }
 
     public static void main(String[] args) {
-        BrokerConnect b1 = new BrokerConnect("172.16.10.39",4202);
+        BrokerConnect b1 = new BrokerConnect("localhost",4202);
         b1.Myconnection();
     }
 

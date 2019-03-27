@@ -42,7 +42,7 @@ public class Brocker extends Node implements Runnable , Serializable {
 
     public Brocker(int port,String ip){
         super(port,ip);
-        BrokerList.add(this);
+        //BrokerList.add(this);
     }
     public Brocker(Socket socket,ArrayList<Brocker> BrokerList){
         this.socket=socket;
@@ -61,9 +61,9 @@ public class Brocker extends Node implements Runnable , Serializable {
     public void startServer(){
         ServerSocket listenerSocket =null;
         Socket connection=null;
-        //setBrokerList(this,0);
+        BrokerList.add(this);
         System.out.println("Brocker:"+ BrokerList.size());
-        new Thread(new BrokerConnect("172.16.2.25",4202));
+        new Thread(new BrokerConnect("localhost",4203));
         try {
             listenerSocket= new ServerSocket(port);//a new Socket is created for the specific port
             while (true){
@@ -95,8 +95,10 @@ public class Brocker extends Node implements Runnable , Serializable {
             else if(request.equals("BrokerAdd")){
                 String newBrokerIp = socket.getInetAddress().getHostName();
                 int newBrokerPort=Integer.parseInt(in.readUTF());//kati paizei edo to bgazei o
-                BrokerList.add(new Brocker(newBrokerPort,newBrokerIp));
+                Brocker b1 = new Brocker(newBrokerPort,newBrokerIp);
+                BrokerList.add(b1);
                 String temp = in.readUTF();
+                System.out.println("BrokerList.size: "+BrokerList.size());
                 if(temp.equals("ping")){
                     while(true) {
                         out.writeUTF("ping");
