@@ -33,6 +33,7 @@ public class Node implements Serializable {
         //read.readBusPosition();
         //todo how to select a specific route example 816
         //ose other type of list
+
         for(int i=0;i<20;i++) {
             System.out.println(localeRouteCodesList.get(i)[0]);
         }
