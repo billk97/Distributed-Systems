@@ -63,6 +63,10 @@ public class Brocker extends Node implements Runnable , Serializable {
         ServerSocket listenerSocket =null;
         Socket connection=null;
         setBrokerList(this,0);
+        for(Brocker b1 : BrokerList){
+            System.out.println("Brokerlist"+b1.ipAddress);
+        }
+
         try {
             listenerSocket= new ServerSocket(port);//a new Socket is created for the specific port
             while (true){
