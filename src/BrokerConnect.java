@@ -3,6 +3,7 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.concurrent.TimeUnit;
 
 public class BrokerConnect extends Node implements Runnable {
     private String RemoteBrokerIp;
@@ -12,9 +13,10 @@ public class BrokerConnect extends Node implements Runnable {
         this.RemoteBrokerPort=RemoteBrokerPort;
     }
     public void run(){
-        connection();
+        Myconnection();
     }
-    public void connection(){
+    public void Myconnection(){
+        System.out.println("this");
         Socket socket = connect(RemoteBrokerIp,RemoteBrokerPort);
         try {
             System.out.println("Connected");
@@ -24,17 +26,25 @@ public class BrokerConnect extends Node implements Runnable {
             out.writeUTF("BrokerAdd");
             out.flush();
             out.writeUTF(Integer.toString(port));
-            BrokerList.add(new Brocker(RemoteBrokerPort,RemoteBrokerIp));
             out.flush();
+            BrokerList.add(new Brocker(RemoteBrokerPort,RemoteBrokerIp));
+            while (true){
+                TimeUnit.SECONDS.sleep(5);
+                out.writeUTF("ping");
+                out.flush();
+                System.out.println(in.readUTF());
+            }
         } catch (IOException e) {
             System.out.println("No connection could be established");
             //e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
     public static void main(String[] args) {
-        BrokerConnect b1 = new BrokerConnect("10.25.195.37",4202);
-        b1.connection();
+        BrokerConnect b1 = new BrokerConnect("172.16.10.39",4202);
+        b1.Myconnection();
     }
 
     /**geter seter **/

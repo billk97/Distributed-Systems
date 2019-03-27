@@ -53,38 +53,6 @@ public class Brocker extends Node implements Runnable , Serializable {
         BrokerList.add(this);
     }
 
-    public void connectToBroker(String NewBrokerIp , int NewBrokerPort ){
-        int i=0;
-        System.out.println("searching for other broker:");
-        while (i<1){
-            try {
-                InetAddress host = Inet4Address.getByName(NewBrokerIp);
-                Socket socket = new Socket(host,NewBrokerPort);
-                System.out.println("Found server connecting");
-                ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-                ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-                System.out.println(in.readUTF());
-                out.writeUTF("Broker:BrokerList");
-                out.flush();
-                System.out.println("port"+port);
-                out.writeUTF(Integer.toString(port));
-                out.flush();
-                //todo warning needs to add the extra
-                BrokerList=(ArrayList<Brocker>) in.readObject();
-                in.close();
-                out.close();
-            } catch (IOException e) {
-                System.out.println("searching for other broker:");
-                    i++;
-                System.out.println("Broker Not found");
-               // e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                System.out.println("timeout:");
-                e.printStackTrace();
-            }
-        }//end while
-    }//end connectToBroker
-
     public void run(){
         brokerListener(socket);
         System.out.println(socket.getInetAddress());
@@ -92,8 +60,6 @@ public class Brocker extends Node implements Runnable , Serializable {
     /**A socket is not a port!!!!  you open a socket to listen and when a connection request
      * is send then a new Socket each time gets created and listen in the same port!!!!**/
     public void startServer(){
-        //read Initialize (reads txt and default ip and ports from broker)
-        connectToBroker("192.168.1.65",4202);
         ServerSocket listenerSocket =null;
         Socket connection=null;
         setBrokerList(this,0);
@@ -128,6 +94,11 @@ public class Brocker extends Node implements Runnable , Serializable {
             }
             else if (request.equals("BrokerAdd")){
                 System.out.println("hear");
+            }
+            else if(request.equals("ping")){
+                out.writeUTF("ping");
+                out.flush();
+
             }
             else if(request.equals("Broker:BrokerList")){
                 String newBrokerIp = socket.getInetAddress().getHostName();
