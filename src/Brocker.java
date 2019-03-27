@@ -33,8 +33,14 @@ public class Brocker extends Node implements Runnable , Serializable {
     private ArrayList<Publisher> registerPublisher= new ArrayList<Publisher>();
     private String brokerRange =null;
     private HashMap<Brocker, ArrayList<String []>> BrokerRangeMap = new HashMap<>();
+    private ArrayList<String[]> RemoteBrokers = new ArrayList<String[]>();
     private Socket socket;
     private int brokerId;
+
+    public void add(String[] temp){
+        RemoteBrokers.add(temp);
+    }
+
     private String brokerHash;
     public String getBrokerRange(){
         return brokerRange;
@@ -63,6 +69,8 @@ public class Brocker extends Node implements Runnable , Serializable {
         Socket connection=null;
         BrokerList.add(this);
         System.out.println("Brocker:"+ BrokerList.size());
+        //todo inside a for for each element in the arraylist
+        //new Thread(new BrokerConnect(RemoteBrokers.get(1)[0],Integer.parseInt(RemoteBrokers.get(1)[1])));
         new Thread(new BrokerConnect("172.16.10.39",4202)).start();
         try {
             listenerSocket= new ServerSocket(port);//a new Socket is created for the specific port
@@ -196,8 +204,7 @@ public class Brocker extends Node implements Runnable , Serializable {
             BrokerRangeMap.put(b,tempList);
             //System.out.println(tempList);
         }
-    }
-    
+    }//end calculateKeys
 
     //taksinomei ta brokerHashes apo to mikrotero sto megalitero
     public void sortBrokerList(){
