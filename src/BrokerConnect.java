@@ -16,7 +16,6 @@ public class BrokerConnect extends Node implements Runnable {
         Myconnection();
     }
     public void Myconnection(){
-        System.out.println("this");
         Socket socket = connect(RemoteBrokerIp,RemoteBrokerPort);
         try {
             System.out.println("Connected");

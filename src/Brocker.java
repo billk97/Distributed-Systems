@@ -92,22 +92,18 @@ public class Brocker extends Node implements Runnable , Serializable {
             if(request.equals("BrokerList")&& BrokerList!=null){
                 out.writeObject(BrokerList);
             }
-            else if (request.equals("BrokerAdd")){
-                System.out.println("hear");
-            }
-            else if(request.equals("ping")){
-                out.writeUTF("ping");
-                out.flush();
-
-            }
-            else if(request.equals("Broker:BrokerList")){
+            else if(request.equals("BrokerAdd")){
                 String newBrokerIp = socket.getInetAddress().getHostName();
                 newBrokerPort=Integer.parseInt(in.readUTF());
                 BrokerList.add(new Brocker(newBrokerPort,newBrokerIp));
-                System.out.println("hiear");
-                System.out.println(BrokerList.size());
-                out.writeObject(BrokerList);
-                out.flush();
+                String temp = in.readUTF();
+                if(temp.equals("ping")){
+                    while(true) {
+                        System.out.println(in.readUTF());
+                        out.writeUTF("ping");
+                        out.flush();
+                    }
+                }
             }
             /**receives the object of push**/
             else if(request.equals("Push")){
