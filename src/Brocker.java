@@ -59,12 +59,14 @@ public class Brocker extends Node implements Runnable , Serializable {
     }
     /**A socket is not a port!!!!  you open a socket to listen and when a connection request
      * is send then a new Socket each time gets created and listen in the same port!!!!**/
+    //todo find out why the BrokerList has more objects than it should
+
     public void startServer(){
         ServerSocket listenerSocket =null;
         Socket connection=null;
         //setBrokerList(this,0);
         System.out.println("Brocker:"+ BrokerList.size());
-
+        new Thread(new BrokerConnect("172.16.2.25",4202));
         try {
             listenerSocket= new ServerSocket(port);//a new Socket is created for the specific port
             while (true){
@@ -135,6 +137,7 @@ public class Brocker extends Node implements Runnable , Serializable {
         } catch (IOException e) {
             System.out.println("Broker failed");
             System.out.println("BrokerListSize: "+ BrokerList.size());
+            /**if a broker disconects for eny reason the other broker deletes th broker from the arraylist**/
             for(int i=0; i<BrokerList.size(); i++){
                 if(BrokerList.get(i).getIpAddress().equals(socket1.getInetAddress().getHostName())){
                     System.out.println(BrokerList.get(i).ipAddress);
