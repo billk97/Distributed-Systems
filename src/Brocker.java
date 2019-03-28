@@ -111,8 +111,7 @@ public class Brocker extends Node implements Runnable , Serializable {
             }
             /**receives the object of push**/
             else if(request.equals("Push")){
-                Topic localTopic = (Topic) in.readObject();
-                Value localvalue = (Value)in.readObject();
+                ArrayList<String []> positionList =(ArrayList<String []>) in.readObject();
             }
             else if (request.equals("Subscribe")){
                 Topic localTopic =(Topic) in.readObject();
@@ -232,6 +231,10 @@ public class Brocker extends Node implements Runnable , Serializable {
             }
 
         }
+    }
+
+    public HashMap<Brocker,ArrayList<String []>> getBrokerRangeMap(){
+        return BrokerRangeMap;
     }
 
     public void printBrokerList(){

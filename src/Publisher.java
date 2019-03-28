@@ -16,7 +16,7 @@ public class Publisher extends Node{
     //contains for each busLine id a table with all the positions
     private int rangeStart;
     private int rangeEnd;
-    private HashMap<String,ArrayList<String []>> busPositionsHash = new HashMap<>();
+    private HashMap<String,ArrayList<String []>> busPositionsHash = new HashMap<>(); //HashMap<busline,buspositions>
     //contains a local copy of the BrockerList
     private ArrayList<Brocker> localBrockerList= null;
     //constructor
@@ -40,7 +40,8 @@ public class Publisher extends Node{
         //PublisherRange= the range of busLines responsible
         for(int i=rangeStart; i<rangeEnd;i++){
             /**stores for the specific lineCode/LineId the positions on a ArrayList**/
-            ArrayList<String []> tempArray = r.readBusPosition(BusLinesArray.get(i)[0]);
+            String busLineId=BusLinesArray.get(i)[0];
+            ArrayList<String []> tempArray = r.readBusPosition(busLineId);
             /**adds busLineId and a table with positions**/
             busPositionsHash.put(BusLinesArray.get(i)[1],tempArray);
         }
@@ -86,27 +87,43 @@ public class Publisher extends Node{
      * value(bus,latitude,lontitude)
      * topic(busLine)
      * and sends them to the broker**/
-    public void push (Value value ,Topic topic)  {
-        Socket socket=connect(brokerIp, brokerPort);
-        ObjectOutputStream out = null;
-        try {
-            out = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-            System.out.println(in.readUTF());
-            out.writeUTF("Push");
-            out.flush();
-            out.writeObject(topic);
-            out.flush();
-            out.writeObject(value);
-            out.flush();
-            out.close();
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void push ()  {
+        getMyBrokerList();//get the list of brokers in order to find the responsible broker for the topic and stores to the localebrokerlist
+        for(String key:busPositionsHash.keySet()){ //for every key=busline search for the broker with same busline
+            for(int i=0;i<localBrockerList.size();i++) { //search at local broker list
+                int listSize = localBrockerList.get(i).getBrokerRangeMap().get(i).size(); //size of the busLineslist for each broker
+                for (int j = 0; j < listSize; j++) { //search to every broker's hashmap's arraylist
+                    String bus = localBrockerList.get(i).getBrokerRangeMap().get(i).get(j)[1];
+
+                    if (key.equals(bus)){
+                        String ip=localBrockerList.get(i).getIpAddress(); //responsible broker's ip
+                        int port = localBrockerList.get(i).getPort(); //responsible broker's port
+                        Socket socket=connect(ip, port);
+                        ObjectOutputStream out = null;
+                        try {
+                            out = new ObjectOutputStream(socket.getOutputStream());
+                            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+                            System.out.println(in.readUTF());
+                            out.writeUTF("Push");
+                            out.flush();
+                            out.writeObject(busPositionsHash.get(key));
+                            out.flush();
+                            out.close();
+                            in.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        finally {
+                            Disconnect(socket);
+                        }
+                    }
+                }
+            }
+
         }
-        finally {
-            Disconnect(socket);
-        }
+
+
+
     }//end push
 
     public void notitfyFailure(Brocker  broker){ }
