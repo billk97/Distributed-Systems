@@ -33,14 +33,8 @@ public class Brocker extends Node implements Runnable , Serializable {
     private ArrayList<Publisher> registerPublisher= new ArrayList<Publisher>();
     private String brokerRange =null;
     private HashMap<Brocker, ArrayList<String []>> BrokerRangeMap = new HashMap<>();
-    private ArrayList<String[]> RemoteBrokers = new ArrayList<String[]>();
     private Socket socket;
     private int brokerId;
-
-    public void add(String[] temp){
-        RemoteBrokers.add(temp);
-    }
-
     private String brokerHash;
     public String getBrokerRange(){
         return brokerRange;

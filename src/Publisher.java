@@ -14,24 +14,38 @@ public class Publisher extends Node{
     Md5 md5= new Md5();
     private String brokerIp ;
     private int brokerPort ;
-    private int PublisherRange=5;
+    private int PublisherRange;//defines the range that it will read
+    //contains for each busLine id a table with all the positions
     private HashMap<String,ArrayList<String []>> busPositionsHash = new HashMap<>();
+    //contains a local copy of the BrockerList
     private ArrayList<Brocker> localBrockerList= null;
-
+    //constructor
     public Publisher(int port, String ip){
         super(port,ip);
     }
 
+    /**this will be the first function called when the publisher is started**/
+    public void startPublisher(){
+        getBrokerList();
+    }
+
+    /**stores In busPositionHash the buslineID an a table with the position
+     * **/
     public void readBusInformation(){
         Read r = new Read();
+        /**localy stored the busLines**/
         ArrayList<String []> BusLinesArray = r.readBusLines();
+        //PublisherRange= the range of busLines responsible
         for(int i=0; i<PublisherRange;i++){
+            /**stores for the specific lineCode/LineId the positions on a ArrayList**/
             ArrayList<String []> tempArray = r.readBusPosition(BusLinesArray.get(i)[0]);
+            /**adds busLineId and a table with positions**/
             busPositionsHash.put(BusLinesArray.get(i)[1],tempArray);
         }
         //System.out.println("hashmap size ="+busPositionsHash.size());
-    }
+    }//end readBusInformation
 
+    /**prints the HashMap busPositionsHash**/
     public void printBusPostionHash(){
         for(String key: busPositionsHash.keySet()){
             System.out.println("Bus: "+key+" has linehashes: ");
@@ -40,14 +54,7 @@ public class Publisher extends Node{
             }
 
         }
-    }
-
-
-
-
-    public void startPublisher(){
-        getBrokerList();
-    }
+    }// end printBusPostionHash
 
     /**this function gets the list of all Brokers via tcp connection **/
     public void getMyBrokerList(){
@@ -100,31 +107,28 @@ public class Publisher extends Node{
         }
     }//end push
 
-    public void notitfyFailure(Brocker  broker){
-
-    }
+    public void notitfyFailure(Brocker  broker){ }
+    /**setter getter **/
     public void setMyHash(String myHash) {
         this.myHash = myHash;
     }
-
     public String getBrokerIp() {
         return brokerIp;
     }
-
     public void setBrokerIp(String brokerIp) {
         this.brokerIp = brokerIp;
     }
-
     public int getBrokerPort() {
         return brokerPort;
     }
-
     public void setBrokerPort(int brokerPort) {
         this.brokerPort = brokerPort;
     }
+    public void setPublisherRange(int publisherRange) { PublisherRange = publisherRange;}
 
     public static void main(String[] args) {
-        Publisher pub1= new Publisher(4402,"local host");
+        Publisher pub1= new Publisher(4402,"localhost");
+        pub1.setPublisherRange(5);
         pub1.readBusInformation();
         pub1.printBusPostionHash();
     }
