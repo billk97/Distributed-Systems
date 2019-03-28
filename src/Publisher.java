@@ -12,7 +12,8 @@ public class Publisher extends Node{
     Md5 md5= new Md5();
     private String brokerIp ;
     private int brokerPort ;
-    private int PublisherRange;//defines the range that it will read
+    private int PublisherRange; //defines the range that it will read
+    /**bill-> what dose that refer to ?**/
     //contains for each busLine id a table with all the positions
     private int rangeStart;
     private int rangeEnd;
@@ -22,6 +23,7 @@ public class Publisher extends Node{
     //constructor
     public Publisher(int port, String ip, int start, int end){
         super(port,ip);
+        /**bill-> (suggestion)probably not nice in constructor will be better with getter setter**/
         rangeStart=start;
         rangeEnd=end;
     }
@@ -47,7 +49,7 @@ public class Publisher extends Node{
         }
         //System.out.println("hashmap size ="+busPositionsHash.size());
     }//end readBusInformation
-
+    //todo delete this when ready
     /**prints the HashMap busPositionsHash**/
     public void printBusPositionHash(){
         for(String key: busPositionsHash.keySet()){
@@ -55,7 +57,6 @@ public class Publisher extends Node{
             for(int i=0;i<busPositionsHash.get(key).size();i++){
                 System.out.println(busPositionsHash.get(key).get(i)[0]+" "+busPositionsHash.get(key).get(i)[1]+" "+busPositionsHash.get(key).get(i)[2]+" "+busPositionsHash.get(key).get(i)[3]+" "+busPositionsHash.get(key).get(i)[4]+" "+busPositionsHash.get(key).get(i)[5]);
             }
-
         }
     }// end printBusPositionHash
 
@@ -80,7 +81,6 @@ public class Publisher extends Node{
         }
         finally {
             Disconnect(socket);
-
         }
     }//end getBrokerList
     /**takes 2 Objects as arguments
@@ -88,13 +88,16 @@ public class Publisher extends Node{
      * topic(busLine)
      * and sends them to the broker**/
     public void push ()  {
+        /**bill-> this does not belong hire put it in the Start Publisher **/
         getMyBrokerList();//get the list of brokers in order to find the responsible broker for the topic and stores to the localebrokerlist
+        /**bill->.keyset()=what?**/
         for(String key:busPositionsHash.keySet()){ //for every key=busline search for the broker with same busline
             for(int i=0;i<localBrockerList.size();i++) { //search at local broker list
+                /**bill-> listSize=the busLines each broker is responsible?**/
                 int listSize = localBrockerList.get(i).getBrokerRangeMap().get(i).size(); //size of the busLineslist for each broker
                 for (int j = 0; j < listSize; j++) { //search to every broker's hashmap's arraylist
+                    /**bill-> bus=? get(j)=?**/
                     String bus = localBrockerList.get(i).getBrokerRangeMap().get(i).get(j)[1];
-
                     if (key.equals(bus)){
                         String ip=localBrockerList.get(i).getIpAddress(); //responsible broker's ip
                         int port = localBrockerList.get(i).getPort(); //responsible broker's port
@@ -106,6 +109,7 @@ public class Publisher extends Node{
                             System.out.println(in.readUTF());
                             out.writeUTF("Push");
                             out.flush();
+                            /**bill ->key is string wandering how it works**/
                             out.writeObject(busPositionsHash.get(key));
                             out.flush();
                             out.close();
@@ -116,14 +120,10 @@ public class Publisher extends Node{
                         finally {
                             Disconnect(socket);
                         }
-                    }
-                }
-            }
-
-        }
-
-
-
+                    }//end if
+                }//end for3
+            }//end for2
+        }//end for1
     }//end push
 
     public void notitfyFailure(Brocker  broker){ }
