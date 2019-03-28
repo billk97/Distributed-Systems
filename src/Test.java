@@ -21,7 +21,7 @@ public class Test {
             String table []= new String[2];
             table[0]=remoteBrokerIp;
             table[1]=remoteBrokerPort;
-            //v1.add(table);
+            v1.add(table);
             System.out.print("Declare another remote Broker: y/n");
              option = in.nextLine();
         }
