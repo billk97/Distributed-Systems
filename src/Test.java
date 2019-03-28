@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Test {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         Scanner in = new Scanner(System.in);
-        System.out.println("Setting up broker: ");
+        System.out.println("Setting up broker! ");
         System.out.print("Set brocker Ip: ");
         String brokerIp =in.nextLine();
         System.out.print("Set Up Broker port: ");
@@ -21,7 +21,7 @@ public class Test {
             String table []= new String[2];
             table[0]=remoteBrokerIp;
             table[1]=remoteBrokerPort;
-            v1.add(table);
+            //v1.add(table);
             System.out.print("Declare another remote Broker: y/n");
              option = in.nextLine();
         }

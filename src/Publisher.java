@@ -1,10 +1,8 @@
-import DataTypes.Bus;
 import DataTypes.Topic;
 import DataTypes.Value;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.Inet4Address;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,12 +14,16 @@ public class Publisher extends Node{
     private int brokerPort ;
     private int PublisherRange;//defines the range that it will read
     //contains for each busLine id a table with all the positions
+    private int rangeStart;
+    private int rangeEnd;
     private HashMap<String,ArrayList<String []>> busPositionsHash = new HashMap<>();
     //contains a local copy of the BrockerList
     private ArrayList<Brocker> localBrockerList= null;
     //constructor
-    public Publisher(int port, String ip){
+    public Publisher(int port, String ip, int start, int end){
         super(port,ip);
+        rangeStart=start;
+        rangeEnd=end;
     }
 
     /**this will be the first function called when the publisher is started**/
@@ -36,7 +38,7 @@ public class Publisher extends Node{
         /**localy stored the busLines**/
         ArrayList<String []> BusLinesArray = r.readBusLines();
         //PublisherRange= the range of busLines responsible
-        for(int i=0; i<PublisherRange;i++){
+        for(int i=rangeStart; i<rangeEnd;i++){
             /**stores for the specific lineCode/LineId the positions on a ArrayList**/
             ArrayList<String []> tempArray = r.readBusPosition(BusLinesArray.get(i)[0]);
             /**adds busLineId and a table with positions**/
@@ -46,7 +48,7 @@ public class Publisher extends Node{
     }//end readBusInformation
 
     /**prints the HashMap busPositionsHash**/
-    public void printBusPostionHash(){
+    public void printBusPositionHash(){
         for(String key: busPositionsHash.keySet()){
             System.out.println("Bus: "+key+" has linehashes: ");
             for(int i=0;i<busPositionsHash.get(key).size();i++){
@@ -54,7 +56,7 @@ public class Publisher extends Node{
             }
 
         }
-    }// end printBusPostionHash
+    }// end printBusPositionHash
 
     /**this function gets the list of all Brokers via tcp connection **/
     public void getMyBrokerList(){
@@ -124,12 +126,10 @@ public class Publisher extends Node{
     public void setBrokerPort(int brokerPort) {
         this.brokerPort = brokerPort;
     }
-    public void setPublisherRange(int publisherRange) { PublisherRange = publisherRange;}
 
     public static void main(String[] args) {
-        Publisher pub1= new Publisher(4402,"localhost");
-        pub1.setPublisherRange(5);
+        Publisher pub1= new Publisher(4402,"localhost",0,5);
         pub1.readBusInformation();
-        pub1.printBusPostionHash();
+        pub1.printBusPositionHash();
     }
 }//end Class Publisher
