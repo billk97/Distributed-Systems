@@ -102,7 +102,7 @@ public class Brocker extends Node implements Runnable , Serializable {
                 String newBrokerIp = socket.getInetAddress().getHostName();
                 int newBrokerPort=Integer.parseInt(in.readUTF());//kati paizei edo to bgazei o
                 Brocker b1 = new Brocker(newBrokerPort,newBrokerIp);
-                BrokerList.add(b1);
+                //BrokerList.add(b1);
                 String temp = in.readUTF();
                 System.out.println("BrokerList.size: "+BrokerList.size());
                 if(temp.equals("ping")){

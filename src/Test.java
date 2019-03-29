@@ -3,28 +3,28 @@ import java.util.Scanner;
 
 public class Test {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
-        Scanner in = new Scanner(System.in);
-        System.out.println("Setting up broker! ");
-        System.out.print("Set brocker Ip: ");
-        String brokerIp =in.nextLine();
-        System.out.print("Set Up Broker port: ");
-        int brokerport = Integer.parseInt(in.nextLine());
-        Brocker v1 = new Brocker(4202, "localhost");
+//        Scanner in = new Scanner(System.in);
+//        System.out.println("Setting up broker! ");
+//        System.out.print("Set brocker Ip: ");
+//        String brokerIp =in.nextLine();
+//        System.out.print("Set Up Broker port: ");
+//        int brokerport = Integer.parseInt(in.nextLine());
+        Brocker v1 = new Brocker(4202, "172.16.2.22");
         //Brocker v1 = new Brocker(brokerport, brokerIp);
-        System.out.print("Declare remote Broker: y/n");
-        String option = in.nextLine();
-        while(!option.equals("y")||!option.equals("Y")){
-            System.out.print("Set remote Broker Ip: ");
-            String remoteBrokerIp = in.nextLine();
-            System.out.print("Set remote Broker Port: ");
-            String remoteBrokerPort = in.nextLine();
-            String table []= new String[2];
-            table[0]=remoteBrokerIp;
-            table[1]=remoteBrokerPort;
-            v1.add(table);
-            System.out.print("Declare another remote Broker: y/n");
-             option = in.nextLine();
-        }
+//        System.out.print("Declare remote Broker: y/n");
+//        String option = in.nextLine();
+//        while(!option.equals("y")||!option.equals("Y")){
+//            System.out.print("Set remote Broker Ip: ");
+//            String remoteBrokerIp = in.nextLine();
+//            System.out.print("Set remote Broker Port: ");
+//            String remoteBrokerPort = in.nextLine();
+//            String table []= new String[2];
+//            table[0]=remoteBrokerIp;
+//            table[1]=remoteBrokerPort;
+//            v1.add(table);
+//            System.out.print("Declare another remote Broker: y/n");
+//             option = in.nextLine();
+//        }
         //v1.calculateKeys();
         v1.startServer();
        // Brocker v2 = new Brocker(4203, "192.168.1.65");
