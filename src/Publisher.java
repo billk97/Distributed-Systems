@@ -1,5 +1,3 @@
-import DataTypes.Topic;
-import DataTypes.Value;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -17,7 +15,7 @@ public class Publisher extends Node{
     //contains for each busLine id a table with all the positions
     private int rangeStart;
     private int rangeEnd;
-    private HashMap<String,ArrayList<String []>> busPositionsHash = new HashMap<>(); //HashMap<busline,buspositions>
+    private HashMap<String,ArrayList<String []>> busPositionsHashMap = new HashMap<>(); //HashMap<busline,buspositions>
     //contains a local copy of the BrockerList
     private ArrayList<Brocker> localBrockerList= null;
     //constructor
@@ -45,17 +43,17 @@ public class Publisher extends Node{
             String busLineId=BusLinesArray.get(i)[0];
             ArrayList<String []> tempArray = r.readBusPosition(busLineId);
             /**adds busLineId and a table with positions**/
-            busPositionsHash.put(BusLinesArray.get(i)[1],tempArray);
+            busPositionsHashMap.put(BusLinesArray.get(i)[1],tempArray);
         }
-        //System.out.println("hashmap size ="+busPositionsHash.size());
+        //System.out.println("hashmap size ="+busPositionsHashMap.size());
     }//end readBusInformation
     //todo delete this when ready
-    /**prints the HashMap busPositionsHash**/
+    /**prints the HashMap busPositionsHashMap**/
     public void printBusPositionHash(){
-        for(String key: busPositionsHash.keySet()){
+        for(String key: busPositionsHashMap.keySet()){
             System.out.println("Bus: "+key+" has linehashes: ");
-            for(int i=0;i<busPositionsHash.get(key).size();i++){
-                System.out.println(busPositionsHash.get(key).get(i)[0]+" "+busPositionsHash.get(key).get(i)[1]+" "+busPositionsHash.get(key).get(i)[2]+" "+busPositionsHash.get(key).get(i)[3]+" "+busPositionsHash.get(key).get(i)[4]+" "+busPositionsHash.get(key).get(i)[5]);
+            for(int i = 0; i< busPositionsHashMap.get(key).size(); i++){
+                System.out.println(busPositionsHashMap.get(key).get(i)[0]+" "+ busPositionsHashMap.get(key).get(i)[1]+" "+ busPositionsHashMap.get(key).get(i)[2]+" "+ busPositionsHashMap.get(key).get(i)[3]+" "+ busPositionsHashMap.get(key).get(i)[4]+" "+ busPositionsHashMap.get(key).get(i)[5]);
             }
         }
     }// end printBusPositionHash
@@ -83,46 +81,50 @@ public class Publisher extends Node{
             Disconnect(socket);
         }
     }//end getBrokerList
+
+    /**search for the broker with who is responsible for the busline:busOfPub **/
+    public Brocker findBus(String busOfPub){
+        for(int i=0;i<localBrockerList.size();i++) { //search at local broker list
+            int BrokerRangeListSize = localBrockerList.get(i).getBrokerRangeList().size(); //size of the BrokerRangeList for each broker
+            for (int j = 0; j < BrokerRangeListSize; j++) { //search to every broker's hashmap's arraylist
+                /**bill-> bus=? get(j)=?**/
+                String busOfBroker = localBrockerList.get(i).getBrokerRangeList().get(i)[1];
+                if (busOfPub.equals(busOfBroker)) {
+                    return localBrockerList.get(i);
+                }
+            }
+        }
+        System.out.println("ERROR:The bus dont exists at the broker's list");
+        return null;
+    }
     /**takes 2 Objects as arguments
      * value(bus,latitude,lontitude)
      * topic(busLine)
      * and sends them to the broker**/
     public void push ()  {
-        /**bill-> this does not belong hire put it in the Start Publisher **/
-        getMyBrokerList();//get the list of brokers in order to find the responsible broker for the topic and stores to the localebrokerlist
-        /**bill->.keyset()=what?**/
-        for(String key:busPositionsHash.keySet()){ //for every key=busline search for the broker with same busline
-            for(int i=0;i<localBrockerList.size();i++) { //search at local broker list
-                /**bill-> listSize=the busLines each broker is responsible?**/
-                int listSize = localBrockerList.get(i).getBrokerRangeMap().get(i).size(); //size of the busLineslist for each broker
-                for (int j = 0; j < listSize; j++) { //search to every broker's hashmap's arraylist
-                    /**bill-> bus=? get(j)=?**/
-                    String bus = localBrockerList.get(i).getBrokerRangeMap().get(i).get(j)[1];
-                    if (key.equals(bus)){
-                        String ip=localBrockerList.get(i).getIpAddress(); //responsible broker's ip
-                        int port = localBrockerList.get(i).getPort(); //responsible broker's port
-                        Socket socket=connect(ip, port);
-                        ObjectOutputStream out = null;
-                        try {
-                            out = new ObjectOutputStream(socket.getOutputStream());
-                            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-                            System.out.println(in.readUTF());
-                            out.writeUTF("Push");
-                            out.flush();
-                            /**bill ->key is string wandering how it works**/
-                            out.writeObject(busPositionsHash.get(key));
-                            out.flush();
-                            out.close();
-                            in.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        finally {
-                            Disconnect(socket);
-                        }
-                    }//end if
-                }//end for3
-            }//end for2
+        for(String key: busPositionsHashMap.keySet()){ //for every key=busline search for the broker with same busline
+            String ip=findBus(key).getIpAddress(); //responsible broker's ip
+            int port = findBus(key).getPort(); //responsible broker's port
+            Socket socket=connect(ip, port);
+            ObjectOutputStream out = null;
+            try {
+                out = new ObjectOutputStream(socket.getOutputStream());
+                ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+                System.out.println(in.readUTF());
+                out.writeUTF("Push");
+                out.flush();
+                /**bill ->key is string wandering how it works**/
+                out.writeObject(busPositionsHashMap.get(key));
+                out.flush();
+                out.close();
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            finally {
+                Disconnect(socket);
+            }
+
         }//end for1
     }//end push
 

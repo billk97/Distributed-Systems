@@ -32,7 +32,7 @@ public class Brocker extends Node implements Runnable , Serializable {
     private ArrayList<Subscriber> registeredSubscribers = new ArrayList<Subscriber>();
     private ArrayList<Publisher> registerPublisher= new ArrayList<Publisher>();
     private String brokerRange =null;
-    private HashMap<Brocker, ArrayList<String []>> BrokerRangeMap = new HashMap<>();
+    private ArrayList<String []> brokerRangeList = new ArrayList<>();
     private ArrayList<String[]> RemoteBrokers = new ArrayList<String[]>();
     private Socket socket;
     private int brokerId;
@@ -175,7 +175,7 @@ public class Brocker extends Node implements Runnable , Serializable {
             hashLine = md5.HASH(busLinesList.get(i)[1]);
             busLineHashList.add(hashLine);
         }
-        //sigrinw ta brokerhashes me ta buslinehashes kai ta bazw sto hashmap
+        //sortarw tin brokerList me basi to megalitero brokerhash
         sortBrokerList();
 
         BigInteger brokHash;//temporary metablites gia tis sigriseis mes to if
@@ -185,7 +185,6 @@ public class Brocker extends Node implements Runnable , Serializable {
 
             brokHash= new BigInteger(b.calculateBrokerHash(),16);
             //System.out.println(" Broker   = "+brokHash);
-            ArrayList<String []> tempList = new ArrayList();
             //System.out.println(busLineHashList.size());
             for(int i=0;i<busLineHashList.size();i++){
                 if(busLineHashList.get(i)!="0") {
@@ -193,13 +192,11 @@ public class Brocker extends Node implements Runnable , Serializable {
                     //System.out.println(lineHash);
                     if (lineHash.mod(maxBrokHash).compareTo(brokHash) <= 0) {
                         //System.out.println("--> "+lineHash.mod(maxBrokHash));
-                        tempList.add(busLinesList.get(i));
+                        b.brokerRangeList.add(busLinesList.get(i));
                         busLineHashList.set(i, "0");
                     }
                 }
             }
-            BrokerRangeMap.put(b,tempList);
-            //System.out.println(tempList);
         }
     }//end calculateKeys
 
@@ -227,18 +224,15 @@ public class Brocker extends Node implements Runnable , Serializable {
     }
 
     public void printBrokerRangeMap(){
-        for(Brocker b: BrokerRangeMap.keySet()){
-            int key = b.brokerId;
-            System.out.println("Broker "+key+" has linehashes: ");
-            for(int i=0;i<BrokerRangeMap.get(b).size();i++){
-                System.out.println(BrokerRangeMap.get(b).get(i)[0]+" "+BrokerRangeMap.get(b).get(i)[1]+" "+BrokerRangeMap.get(b).get(i)[2]);
-            }
+        System.out.println("Broker has lines : ");
+        for(int i=0;i<brokerRangeList.size();i++){
+            System.out.println(brokerRangeList.get(i)[1]);
 
         }
     }
 
-    public HashMap<Brocker,ArrayList<String []>> getBrokerRangeMap(){
-        return BrokerRangeMap;
+    public ArrayList<String[]> getBrokerRangeList(){
+        return brokerRangeList;
     }
 
     public void printBrokerList(){
