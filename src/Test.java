@@ -13,7 +13,7 @@ public class Test {
         //Brocker v1 = new Brocker(brokerport, brokerIp);
 //        System.out.print("Declare remote Broker: y/n");
 //        String option = in.nextLine();
-//        while(!option.equals("y")||!option.equals("Y")){
+//        while(!option.equals("n")||!option.equals("N")){
 //            System.out.print("Set remote Broker Ip: ");
 //            String remoteBrokerIp = in.nextLine();
 //            System.out.print("Set remote Broker Port: ");
