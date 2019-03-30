@@ -118,6 +118,7 @@ public class Brocker extends Node implements Runnable , Serializable {
             /**receives the object of push**/
             else if(request.equals("Push")){
                 ArrayList<String []> positionList =(ArrayList<String []>) in.readObject();
+                System.out.println("pos: "+ positionList.size());
             }
             else if (request.equals("Subscribe")){
                 Topic localTopic =(Topic) in.readObject();
