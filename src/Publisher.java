@@ -28,7 +28,7 @@ public class Publisher extends Node{
 
     /**this will be the first function called when the publisher is started**/
     public void startPublisher(){
-        getBrokerList();
+        getMyBrokerList();
         readBusInformation();
         push();
     }
@@ -88,7 +88,7 @@ public class Publisher extends Node{
         for(int i=0;i<localBrockerList.size();i++) { //search at local broker list
             int BrokerRangeListSize = localBrockerList.get(i).getBrokerRangeList().size(); //size of the BrokerRangeList for each broker
             for (int j = 0; j < BrokerRangeListSize; j++) { //search to every broker's hashmap's arraylist
-                String busOfBroker = localBrockerList.get(i).getBrokerRangeList().get(i)[1];
+                String busOfBroker = localBrockerList.get(i).getBrokerRangeList().get(j)[1];
                 if (busOfPub.equals(busOfBroker)) {
                     return localBrockerList.get(i);
                 }
@@ -103,8 +103,8 @@ public class Publisher extends Node{
      * and sends them to the broker**/
     public void push ()  {
         for(String key: busPositionsHashMap.keySet()){ //for every key=busline search for the broker with same busline
-            String ip=findBus(key).getIpAddress(); //responsible broker's ip
-            int port = findBus(key).getPort(); //responsible broker's port
+            String ip=findBus(key).ipAddress; //responsible broker's ip
+            int port = findBus(key).port; //responsible broker's port
             Socket socket=connect(ip, port);
             ObjectOutputStream out = null;
             try {

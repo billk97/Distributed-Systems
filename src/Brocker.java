@@ -96,7 +96,9 @@ public class Brocker extends Node implements Runnable , Serializable {
             System.out.println("request for: "+ request);
             /**returns the List of the brokers**/
             if(request.equals("BrokerList")&& BrokerList!=null){
+                calculateKeys();//temporary
                 out.writeObject(BrokerList);
+                out.flush();
             }
             else if(request.equals("BrokerAdd")){
                 String newBrokerIp = socket.getInetAddress().getHostName();
@@ -104,7 +106,7 @@ public class Brocker extends Node implements Runnable , Serializable {
                 Brocker b1 = new Brocker(newBrokerPort,newBrokerIp);
                 BrokerList.add(b1);
                 calculateKeys();
-                printBrokerRangeMap();
+                printBrokerRangeSList();
                 String temp = in.readUTF();
                 System.out.println("BrokerList.size: "+BrokerList.size());
                 if(temp.equals("ping")){
@@ -184,10 +186,7 @@ public class Brocker extends Node implements Runnable , Serializable {
         BigInteger lineHash;//temporary metablites gia tis sigriseis mes to if
         BigInteger maxBrokHash=new BigInteger(BrokerList.get(BrokerList.size()-1).calculateBrokerHash(),16);
         for(Brocker b:BrokerList){
-
             brokHash= new BigInteger(b.calculateBrokerHash(),16);
-            //System.out.println(" Broker   = "+brokHash);
-            //System.out.println(busLineHashList.size());
             for(int i=0;i<busLineHashList.size();i++){
                 if(busLineHashList.get(i)!="0") {
                     lineHash = new BigInteger(busLineHashList.get(i), 16);
@@ -219,13 +218,9 @@ public class Brocker extends Node implements Runnable , Serializable {
                 }
             }
         }
-        //print list
-//        for(Brocker b: BrokerList){
-//            System.out.println("Brocker"+b.brokerId+" hash: "+b.calculateBrokerHash());
-//        }
     }
 
-    public void printBrokerRangeMap(){
+    public void printBrokerRangeSList(){
         System.out.println("Broker has lines : ");
         for(int i=0;i<brokerRangeList.size();i++){
             System.out.println(brokerRangeList.get(i)[1]);
@@ -247,17 +242,6 @@ public class Brocker extends Node implements Runnable , Serializable {
 
     /**will accept a connection if the Publisher's hash is with in the
      * range of the keys that he can accept**/
-//    public Publisher acceptConnection(Publisher pub){
-//        if(Integer.parseInt(pub.getMyHash() )< Integer.parseInt(brokerRange)){
-//            registerPublisher.add(pub);
-//            return pub;
-//        }
-//        else if(Integer.parseInt(pub.getMyHash())%Integer.parseInt(brokerRange)<Integer.parseInt(brokerRange)){
-//            registerPublisher.add(pub);
-//            return pub;
-//        }
-//        return null;
-//    }
 
     //todo
     /**this function will be responsible to update the other hosts
