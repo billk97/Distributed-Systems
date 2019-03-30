@@ -9,7 +9,8 @@ public class Test {
 //        String brokerIp =in.nextLine();
 //        System.out.print("Set Up Broker port: ");
 //        int brokerport = Integer.parseInt(in.nextLine());
-        Brocker v1 = new Brocker(4202, "192.168.1.65");
+        Brocker v1 = new Brocker(4202, "192.168.1.70");
+        v1.startServer();
         //Brocker v1 = new Brocker(brokerport, brokerIp);
 //        System.out.print("Declare remote Broker: y/n");
 //        String option = in.nextLine();
@@ -26,7 +27,7 @@ public class Test {
 //             option = in.nextLine();
 //        }
         //v1.calculateKeys();
-        v1.startServer();
+        //v1.startServer();
        // Brocker v2 = new Brocker(4203, "192.168.1.65");
         //Brocker v3 = new Brocker(4204,"192.168.1.55");
         //Brocker v4 = new Brocker(4205,"192.168.1.35");

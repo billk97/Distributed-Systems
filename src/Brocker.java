@@ -48,16 +48,11 @@ public class Brocker extends Node implements Runnable , Serializable {
         super(port,ip);
         //BrokerList.add(this);
     }
-    public Brocker(Socket socket,ArrayList<Brocker> BrokerList){
+    public Brocker(Socket socket,ArrayList<Brocker> BrokerList,ArrayList<String []>brokerRangeList){
         this.socket=socket;
         this.BrokerList=BrokerList;
+        this.brokerRangeList=brokerRangeList;
     }
-
-    public static void main(String[] args) {
-        Brocker v1 = new Brocker(4201, "192.168.1.65");
-        v1.startServer();
-    }
-
 
     public void run(){
         brokerListener(socket);
@@ -74,7 +69,7 @@ public class Brocker extends Node implements Runnable , Serializable {
         System.out.println("Brocker:"+ BrokerList.size());
         //todo inside a for for each element in the arraylist
         //new Thread(new BrokerConnect(RemoteBrokers.get(1)[0],Integer.parseInt(RemoteBrokers.get(1)[1])));
-        new Thread(new BrokerConnect("192.168.1.70",4202)).start();
+        new Thread(new BrokerConnect("192.168.1.87",4202)).start();
         try {
             listenerSocket= new ServerSocket(port);//a new Socket is created for the specific port
             while (true){
@@ -82,7 +77,7 @@ public class Brocker extends Node implements Runnable , Serializable {
                  * has been created for the communication **/
                 System.out.println("Server up and  waiting");
                 connection =listenerSocket.accept();
-                new Thread(new Brocker(connection,getBrokerList())).start();
+                new Thread(new Brocker(connection,getBrokerList(),brokerRangeList)).start();
             }
         } catch (IOException e) {
             e.printStackTrace();

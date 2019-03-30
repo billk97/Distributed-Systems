@@ -63,16 +63,16 @@ public class Node implements Serializable {
                 scanning=false;
                 return socket;
             } catch (UnknownHostException e) {
-
                 e.printStackTrace();
             } catch (IOException e) {
+                //System.out.println(e);
                 System.out.println("Server seems down next try in 10 seconds");
                 try {
-                    TimeUnit.SECONDS.sleep(10);
+                    TimeUnit.SECONDS.sleep(1);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
-                // e.printStackTrace();
+                 e.printStackTrace();
             }
             System.out.println("No socket could be returned");
         }
