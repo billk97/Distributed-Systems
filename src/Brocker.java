@@ -53,6 +53,11 @@ public class Brocker extends Node implements Runnable , Serializable {
         this.BrokerList=BrokerList;
     }
 
+    public static void main(String[] args) {
+        Brocker v1 = new Brocker(4201, "192.168.1.65");
+        v1.startServer();
+    }
+
 
     public void run(){
         brokerListener(socket);
@@ -69,7 +74,7 @@ public class Brocker extends Node implements Runnable , Serializable {
         System.out.println("Brocker:"+ BrokerList.size());
         //todo inside a for for each element in the arraylist
         //new Thread(new BrokerConnect(RemoteBrokers.get(1)[0],Integer.parseInt(RemoteBrokers.get(1)[1])));
-        new Thread(new BrokerConnect("172.16.10.39",4202)).start();
+        new Thread(new BrokerConnect("192.168.1.70",4202)).start();
         try {
             listenerSocket= new ServerSocket(port);//a new Socket is created for the specific port
             while (true){
@@ -102,16 +107,9 @@ public class Brocker extends Node implements Runnable , Serializable {
                 String newBrokerIp = socket.getInetAddress().getHostName();
                 int newBrokerPort=Integer.parseInt(in.readUTF());//kati paizei edo to bgazei o
                 Brocker b1 = new Brocker(newBrokerPort,newBrokerIp);
-//                for (int i=0; i<BrokerList.size(); i++){
-//                    if(!(b1.ipAddress.equals(BrokerList.get(i).ipAddress))&&(b1.port!=(BrokerList.get(i).port))){
-//                        System.out.println(b1.ipAddress);
-//                        System.out.println(BrokerList.get(i).ipAddress);
-//                        System.out.println(b1.port);
-//                        System.out.println(BrokerList.get(i).port);
-                            BrokerList.add(b1);
-//                        break;
-//                    }
-//                }
+                BrokerList.add(b1);
+                calculateKeys();
+                printBrokerRangeMap();
                 String temp = in.readUTF();
                 System.out.println("BrokerList.size: "+BrokerList.size());
                 if(temp.equals("ping")){
@@ -186,7 +184,6 @@ public class Brocker extends Node implements Runnable , Serializable {
         }
         //sortarw tin brokerList me basi to megalitero brokerhash
         sortBrokerList();
-
         BigInteger brokHash;//temporary metablites gia tis sigriseis mes to if
         BigInteger lineHash;//temporary metablites gia tis sigriseis mes to if
         BigInteger maxBrokHash=new BigInteger(BrokerList.get(BrokerList.size()-1).calculateBrokerHash(),16);

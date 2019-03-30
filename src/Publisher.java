@@ -29,6 +29,8 @@ public class Publisher extends Node{
     /**this will be the first function called when the publisher is started**/
     public void startPublisher(){
         getBrokerList();
+        readBusInformation();
+        push();
     }
 
     /**stores In busPositionHash the buslineID an a table with the position
@@ -37,7 +39,6 @@ public class Publisher extends Node{
         Read r = new Read();
         /**localy stored the busLines**/
         ArrayList<String []> BusLinesArray = r.readBusLines();
-        //PublisherRange= the range of busLines responsible
         for(int i=rangeStart; i<rangeEnd;i++){
             /**stores for the specific lineCode/LineId the positions on a ArrayList**/
             String busLineId=BusLinesArray.get(i)[0];
@@ -87,7 +88,6 @@ public class Publisher extends Node{
         for(int i=0;i<localBrockerList.size();i++) { //search at local broker list
             int BrokerRangeListSize = localBrockerList.get(i).getBrokerRangeList().size(); //size of the BrokerRangeList for each broker
             for (int j = 0; j < BrokerRangeListSize; j++) { //search to every broker's hashmap's arraylist
-                /**bill-> bus=? get(j)=?**/
                 String busOfBroker = localBrockerList.get(i).getBrokerRangeList().get(i)[1];
                 if (busOfPub.equals(busOfBroker)) {
                     return localBrockerList.get(i);
@@ -113,7 +113,6 @@ public class Publisher extends Node{
                 System.out.println(in.readUTF());
                 out.writeUTF("Push");
                 out.flush();
-                /**bill ->key is string wandering how it works**/
                 out.writeObject(busPositionsHashMap.get(key));
                 out.flush();
                 out.close();
@@ -124,7 +123,6 @@ public class Publisher extends Node{
             finally {
                 Disconnect(socket);
             }
-
         }//end for1
     }//end push
 
