@@ -66,12 +66,12 @@ public class Node implements Serializable {
                 e.printStackTrace();
             } catch (IOException e) {
                 //System.out.println(e);
-                System.out.println("Server seems down next try in 10 seconds");
-                try {
-                    TimeUnit.SECONDS.sleep(1);
-                } catch (InterruptedException e1) {
-                    e1.printStackTrace();
-                }
+                System.out.println("Server seems down next try in 1 seconds");
+//                try {
+//                    TimeUnit.SECONDS.sleep(1);
+//                } catch (InterruptedException e1) {
+//                    e1.printStackTrace();
+//                }
                  //e.printStackTrace();
             }
             System.out.println("No socket could be returned");

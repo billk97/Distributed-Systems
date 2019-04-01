@@ -69,7 +69,7 @@ public class Brocker extends Node implements Runnable , Serializable {
         System.out.println("Brocker:"+ BrokerList.size());
         //todo inside a for for each element in the arraylist
         //new Thread(new BrokerConnect(RemoteBrokers.get(1)[0],Integer.parseInt(RemoteBrokers.get(1)[1])));
-        new Thread(new BrokerConnect("172.16.2.25",4202)).start();
+        new Thread(new BrokerConnect("192.168.1.70",4202)).start();
         try {
             listenerSocket= new ServerSocket(port);//a new Socket is created for the specific port
             while (true){

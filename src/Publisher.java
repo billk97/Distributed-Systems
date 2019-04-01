@@ -4,6 +4,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 public class Publisher extends Node{
     private String myHash=null;
@@ -117,10 +118,12 @@ public class Publisher extends Node{
                 out.flush();
                 out.close();
                 in.close();
+                TimeUnit.SECONDS.sleep(1);
             } catch (IOException e) {
                 e.printStackTrace();
-            }
-            finally {
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
                 Disconnect(socket);
             }
         }//end for1
