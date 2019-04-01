@@ -72,7 +72,7 @@ public class Node implements Serializable {
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
-                 e.printStackTrace();
+                 //e.printStackTrace();
             }
             System.out.println("No socket could be returned");
         }
