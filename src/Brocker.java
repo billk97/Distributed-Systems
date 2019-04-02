@@ -127,6 +127,7 @@ public class Brocker extends Node implements Runnable , Serializable {
             System.out.println("request Successful");
             out.close();
             in.close();
+            printPositionList();
             System.out.println("connection closed");
         } catch (IOException e) {
             System.out.println("Broker failed");
@@ -144,6 +145,11 @@ public class Brocker extends Node implements Runnable , Serializable {
             e.printStackTrace();
         }
     }//end brokerListener
+    private void printPositionList(){
+        for(String[] position :positionList){
+            System.out.println("position[0]: "+ position[0]+" "+position[1]+" "+position[2]+" "+position[3]+" "+position[4]);
+        }
+    }
 
     public String calculateBrokerHash(){
         Md5 md5 = new Md5();
