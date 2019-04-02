@@ -8,9 +8,10 @@ import java.util.concurrent.TimeUnit;
 public class BrokerConnect extends Node implements Runnable {
     private String RemoteBrokerIp;
     private int RemoteBrokerPort;
-    public BrokerConnect(String RemoteBrokerIp, int RemoteBrokerPort){
+    public BrokerConnect(String RemoteBrokerIp, int RemoteBrokerPort,int port){
         this.RemoteBrokerIp=RemoteBrokerIp;
         this.RemoteBrokerPort=RemoteBrokerPort;
+        this.port=port;
     }
     public void run(){
         Myconnection();
@@ -24,7 +25,7 @@ public class BrokerConnect extends Node implements Runnable {
             System.out.println(in.readUTF());
             out.writeUTF("BrokerAdd");
             out.flush();
-            out.writeUTF(Integer.toString(port));//einai 0 prepei na perastei alios
+            out.writeUTF(Integer.toString(port));//einai 0 prepei na perastei alio
             out.flush();
             // m BrokerList.add(new Brocker(RemoteBrokerPort,RemoteBrokerIp));
             while (true){
@@ -42,11 +43,6 @@ public class BrokerConnect extends Node implements Runnable {
         }
     }
 
-    public static void main(String[] args) {
-        BrokerConnect b1 = new BrokerConnect("192.168.1.65",4202);
-        b1.Myconnection();
-    }
-
     /**geter seter **/
     public String getRemoteBrokerIp() {
         return RemoteBrokerIp;
@@ -62,6 +58,10 @@ public class BrokerConnect extends Node implements Runnable {
 
     public void setRemoteBrokerPort(int remoteBrokerPort) {
         RemoteBrokerPort = remoteBrokerPort;
+    }
+
+    public void setPort(int port){
+        this.port=port;
     }
 
 }

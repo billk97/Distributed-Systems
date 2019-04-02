@@ -13,20 +13,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-/**A broker will:
- * --- Initialization/System Image ---
- * 1) receive an Object Type MyNode for initialization
- * 2) Hash the required values
- * 3) save it in an ArrayList
- * 4) send to all other Nodes (the one in the HashTable)
- * --- Traffic Manipulation ---
- *
- * --- Work/responsibility ---
- * 1) receive an Object Type DataTypes.Bus
- * 2) lock up where to send it
- * 3) send it to al consumers in the same time
- *
- * **/
 public class Brocker extends Node implements Runnable , Serializable {
     private static final long serialVersionUID = -1799537022412025503L;
     private ArrayList<Subscriber> registeredSubscribers = new ArrayList<Subscriber>();
@@ -34,20 +20,20 @@ public class Brocker extends Node implements Runnable , Serializable {
     private String brokerRange =null;
     private ArrayList<String []> brokerRangeList = new ArrayList<>();
     private ArrayList<String[]> RemoteBrokers = new ArrayList<String[]>();
+    /**contains the position recieved from publisher**/
+    private ArrayList<String []> positionList = new ArrayList<String[]>();
     private Socket socket;
     private int brokerId;
+    private String brokerHash;
     public void add(String[] temp){
         RemoteBrokers.add(temp);
     }
-    private String brokerHash;
-    public String getBrokerRange(){
-        return brokerRange;
-    }
-
+    //constructor
     public Brocker(int port,String ip){
         super(port,ip);
         //BrokerList.add(this);
     }
+    //constructor
     public Brocker(Socket socket,ArrayList<Brocker> BrokerList,ArrayList<String []>brokerRangeList){
         this.socket=socket;
         this.BrokerList=BrokerList;
@@ -58,23 +44,23 @@ public class Brocker extends Node implements Runnable , Serializable {
         brokerListener(socket);
         System.out.println(socket.getInetAddress());
     }
+    public void acceptPublisher(){ }
     /**A socket is not a port!!!!  you open a socket to listen and when a connection request
      * is send then a new Socket each time gets created and listen in the same port!!!!**/
     //todo find out why the BrokerList has more objects than it should
-
     public void startServer(){
         ServerSocket listenerSocket =null;
         Socket connection=null;
         BrokerList.add(this);
         System.out.println("Brocker:"+ BrokerList.size());
         //todo inside a for for each element in the arraylist
-        //new Thread(new BrokerConnect(RemoteBrokers.get(1)[0],Integer.parseInt(RemoteBrokers.get(1)[1])));
-        new Thread(new BrokerConnect("192.168.1.70",4202)).start();
+        for(String [] b1 :RemoteBrokers){
+            new Thread(new BrokerConnect(b1[0],Integer.parseInt(b1[1]),Integer.parseInt(b1[2]))).start();
+        }
         try {
             listenerSocket= new ServerSocket(port);//a new Socket is created for the specific port
             while (true){
-                /**the connection is accepted that means a new socket and now a new port
-                 * has been created for the communication **/
+                /**connection is accepted that means a new socket and now a new port has been created for the communication **/
                 System.out.println("Server up and  waiting");
                 connection =listenerSocket.accept();
                 new Thread(new Brocker(connection,getBrokerList(),brokerRangeList)).start();
@@ -119,7 +105,7 @@ public class Brocker extends Node implements Runnable , Serializable {
             }
             /**receives the object of push**/
             else if(request.equals("Push")){
-                ArrayList<String []> positionList =(ArrayList<String []>) in.readObject();
+                positionList=(ArrayList<String []>) in.readObject();
                 System.out.println("pos: "+ positionList.size());
             }
             else if (request.equals("Subscribe")){
@@ -190,9 +176,7 @@ public class Brocker extends Node implements Runnable , Serializable {
             for(int i=0;i<busLineHashList.size();i++){
                 if(busLineHashList.get(i)!="0") {
                     lineHash = new BigInteger(busLineHashList.get(i), 16);
-                    //System.out.println(lineHash);
                     if (lineHash.mod(maxBrokHash).compareTo(brokHash) <= 0) {
-                        //System.out.println("--> "+lineHash.mod(maxBrokHash));
                         b.brokerRangeList.add(busLinesList.get(i));
                         busLineHashList.set(i, "0");
                     }
@@ -237,6 +221,9 @@ public class Brocker extends Node implements Runnable , Serializable {
         for(Brocker b: BrokerList){
             System.out.println("Brocker"+b.brokerId+" hash: "+b.calculateBrokerHash());
         }
+    }
+    public String getBrokerRange(){
+        return brokerRange;
     }
 
 

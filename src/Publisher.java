@@ -34,8 +34,7 @@ public class Publisher extends Node{
         push();
     }
 
-    /**stores In busPositionHash the buslineID an a table with the position
-     * **/
+    /**stores In busPositionHash the buslineID an a table with the position**/
     public void readBusInformation(){
         Read r = new Read();
         /**localy stored the busLines**/
@@ -98,6 +97,20 @@ public class Publisher extends Node{
         System.out.println("ERROR:The bus dont exists at the broker's list");
         return null;
     }
+    /**notiffys the main broker for a faillure**/
+    public void notifyFailure(){
+        Socket socket = connect(brokerIp,brokerPort);
+        try {
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+            System.out.println(in.readUTF());
+            out.writeUTF("Broker Failed");
+            out.flush();
+            getMyBrokerList();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }//end notifyFailure
     /**takes 2 Objects as arguments
      * value(bus,latitude,lontitude)
      * topic(busLine)
@@ -145,11 +158,5 @@ public class Publisher extends Node{
     }
     public void setBrokerPort(int brokerPort) {
         this.brokerPort = brokerPort;
-    }
-
-    public static void main(String[] args) {
-        Publisher pub1= new Publisher(4402,"localhost",0,5);
-        pub1.readBusInformation();
-        pub1.printBusPositionHash();
     }
 }//end Class Publisher
