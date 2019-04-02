@@ -20,8 +20,8 @@ public class Brocker extends Node implements Runnable , Serializable {
     private String brokerRange =null;
     private ArrayList<String []> brokerRangeList = new ArrayList<>();
     private ArrayList<String[]> RemoteBrokers = new ArrayList<String[]>();
+    private HashMap<String,ArrayList<String []>> localBusPositionsHashMap = new HashMap<>();
     /**contains the position recieved from publisher**/
-    private ArrayList<String []> positionList = new ArrayList<String[]>();
     private Socket socket;
     private int brokerId;
     private String brokerHash;
@@ -63,9 +63,13 @@ public class Brocker extends Node implements Runnable , Serializable {
                 /**connection is accepted that means a new socket and now a new port has been created for the communication **/
                 System.out.println("Server up and  waiting");
                 connection =listenerSocket.accept();
-                new Thread(new Brocker(connection,getBrokerList(),brokerRangeList)).start();
+                Thread t = new Thread(new Brocker(connection,getBrokerList(),brokerRangeList));
+                t.start();
+                t.join();
             }
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }//end startServer
@@ -105,9 +109,17 @@ public class Brocker extends Node implements Runnable , Serializable {
             }
             /**receives the object of push**/
             else if(request.equals("Push")){
-                System.out.println("buslineId: "+in.readUTF());
-                positionList=(ArrayList<String []>) in.readObject();
-                System.out.println("pos: "+ positionList.size());
+                String temp = in.readUTF();
+                System.err.println("buslineId: "+temp);
+                if(acceptPublisher(temp)==true){
+                     ArrayList<String []> positionList = positionList=(ArrayList<String []>) in.readObject();
+                     localBusPositionsHashMap.put(temp,positionList);
+                     System.out.println("positionList.size: "+ positionList.size());
+                }
+                else {
+                    in.readObject();
+                    System.err.println("does not belong hire");
+                }
             }
             else if (request.equals("Subscribe")){
                 Topic localTopic =(Topic) in.readObject();
@@ -128,7 +140,6 @@ public class Brocker extends Node implements Runnable , Serializable {
             System.out.println("request Successful");
             out.close();
             in.close();
-            printPositionList();
             System.out.println("connection closed");
         } catch (IOException e) {
             System.out.println("Broker failed");
@@ -146,11 +157,7 @@ public class Brocker extends Node implements Runnable , Serializable {
             e.printStackTrace();
         }
     }//end brokerListener
-    private void printPositionList(){
-        for(String[] position :positionList){
-            System.out.println("position[0]: "+ position[0]+" "+position[1]+" "+position[2]+" "+position[3]+" "+position[4]);
-        }
-    }
+
 
     public String calculateBrokerHash(){
         Md5 md5 = new Md5();

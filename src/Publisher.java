@@ -117,6 +117,10 @@ public class Publisher extends Node{
      * and sends them to the broker**/
     public void push ()  {
         for(String key: busPositionsHashMap.keySet()){ //for every key=busline search for the broker with same busline
+            //todo na to kanoyme etsi
+//            Thread t = new Thread(() -> {
+//                // your code here ...
+//            });
             String ip=findBus(key).ipAddress; //responsible broker's ip
             int port = findBus(key).port; //responsible broker's port
             Socket socket=connect(ip, port);
@@ -127,7 +131,7 @@ public class Publisher extends Node{
                 System.out.println(in.readUTF());
                 out.writeUTF("Push");
                 out.flush();
-                out.writeUTF(busPositionsHashMap.get(key).get(0)[1]);
+                out.writeUTF(key);
                 out.flush();
                 out.writeObject(busPositionsHashMap.get(key));
                 out.flush();

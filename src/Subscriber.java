@@ -11,9 +11,6 @@ public class Subscriber extends Node implements Serializable {
     private static final long serialVersionUID = -2122691439868668146L;
     private String brokerIp = "192.168.1.65";
     private int brokerport= 4202;
-
-
-
     public Subscriber(){}
     public Subscriber(String ip, int port){
         super(port,ip);
