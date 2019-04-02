@@ -127,6 +127,8 @@ public class Publisher extends Node{
                 System.out.println(in.readUTF());
                 out.writeUTF("Push");
                 out.flush();
+                out.writeUTF(busPositionsHashMap.get(key).get(0)[1]);
+                out.flush();
                 out.writeObject(busPositionsHashMap.get(key));
                 out.flush();
                 out.close();

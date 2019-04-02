@@ -10,10 +10,12 @@ public class Test {
 //        System.out.print("Set Up Broker port: ");
 //        int brokerport = Integer.parseInt(in.nextLine());
         /**defines the broker port and ip for this mashine **/
-        Brocker v1 = new Brocker(4202, "172.16.10.39");
+        //Brocker v1 = new Brocker(4202, "172.16.10.39");
+        Brocker v1 = new Brocker(4202, "192.168.1.65");
         String table [] = new String[3];
         /**defines the remote broker**/
-        table[0]="172.16.1.72";
+        //table[0]="172.16.1.72";
+        table[0]="192.168.1.70";
         table[1]="4202";
         table[2]="4202";
         v1.add(table);

@@ -40,10 +40,6 @@ public class Node implements Serializable {
         System.out.println("size of the list is = "+read.readBusPosition("817").size());
     }
 
-    public static void main(String[] args) {
-        Node node= new Node();
-        node.initialize();
-    }
 
     public ArrayList<Brocker> getBrokerList() {
         return BrokerList;
@@ -72,7 +68,6 @@ public class Node implements Serializable {
 //                } catch (InterruptedException e1) {
 //                    e1.printStackTrace();
 //                }
-                 //e.printStackTrace();
             }
             System.out.println("No socket could be returned");
         }

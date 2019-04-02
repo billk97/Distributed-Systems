@@ -44,7 +44,7 @@ public class Brocker extends Node implements Runnable , Serializable {
         brokerListener(socket);
         System.out.println(socket.getInetAddress());
     }
-    public void acceptPublisher(){ }
+
     /**A socket is not a port!!!!  you open a socket to listen and when a connection request
      * is send then a new Socket each time gets created and listen in the same port!!!!**/
     //todo find out why the BrokerList has more objects than it should
@@ -105,6 +105,7 @@ public class Brocker extends Node implements Runnable , Serializable {
             }
             /**receives the object of push**/
             else if(request.equals("Push")){
+                System.out.println("buslineId: "+in.readUTF());
                 positionList=(ArrayList<String []>) in.readObject();
                 System.out.println("pos: "+ positionList.size());
             }
@@ -210,6 +211,7 @@ public class Brocker extends Node implements Runnable , Serializable {
         }
     }
 
+
     public void printBrokerRangeSList(){
         System.out.println("Broker has lines : ");
         for(int i=0;i<brokerRangeList.size();i++){
@@ -217,6 +219,14 @@ public class Brocker extends Node implements Runnable , Serializable {
 
         }
     }
+    public boolean acceptPublisher(String lineId){
+        for (int i=0; i<brokerRangeList.size();i++){
+            if(brokerRangeList.get(i)[1].equals(lineId)){
+                return true;
+            }
+        }
+        return false;
+    }//end acceptPublisher
 
     public ArrayList<String[]> getBrokerRangeList(){
         return brokerRangeList;
