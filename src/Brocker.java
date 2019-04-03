@@ -33,10 +33,11 @@ public class Brocker extends Node implements Runnable , Serializable {
         //BrokerList.add(this);
     }
     //constructor
-    public Brocker(Socket socket,ArrayList<Brocker> BrokerList,ArrayList<String []>brokerRangeList){
+    public Brocker(Socket socket,ArrayList<Brocker> BrokerList,ArrayList<String []>brokerRangeList,ArrayList<String []> BusLinesArray){
         this.socket=socket;
         this.BrokerList=BrokerList;
         this.brokerRangeList=brokerRangeList;
+        this.BusLinesArray=BusLinesArray;
     }
 
     public void run(){
@@ -51,6 +52,7 @@ public class Brocker extends Node implements Runnable , Serializable {
         ServerSocket listenerSocket =null;
         Socket connection=null;
         BrokerList.add(this);
+        initialize();
         System.out.println("Brocker:"+ BrokerList.size());
         //todo inside a for for each element in the arraylist
         for(String [] b1 :RemoteBrokers){
@@ -62,7 +64,7 @@ public class Brocker extends Node implements Runnable , Serializable {
                 /**connection is accepted that means a new socket and now a new port has been created for the communication **/
                 System.out.println("Server up and  waiting");
                 connection =listenerSocket.accept();
-                Thread t = new Thread(new Brocker(connection,getBrokerList(),brokerRangeList));
+                Thread t = new Thread(new Brocker(connection,getBrokerList(),brokerRangeList,BusLinesArray));
                 t.start();
                 //t.join();
             }
@@ -112,10 +114,13 @@ public class Brocker extends Node implements Runnable , Serializable {
             else if(request.equals("Push")){
                 String temp = in.readUTF();
                 System.err.println("buslineId: "+temp);
+                temp =convertBusLineIdToBus(temp);
+                System.err.println("NewbuslineId: "+temp);
                 if(acceptPublisher(temp)==true){
                      ArrayList<String []> positionList =(ArrayList<String []>) in.readObject();
                      localBusPositionsHashMap.put(temp,positionList);
                      System.out.println("positionList.size: "+ positionList.size());
+                    System.err.println("hire");
                 }
                 else {
                     in.readObject();
@@ -124,6 +129,7 @@ public class Brocker extends Node implements Runnable , Serializable {
             }
             else if (request.equals("Subscribe")){
                 Topic localTopic =(Topic) in.readObject();
+                System.err.println("localtopic: "+localTopic.getBusLine());
                 ArrayList<String[]> local= findValue(localTopic);
                 Bus b1 = new Bus();
                 b1.setBusLineId(local.get(0)[0]);
@@ -162,11 +168,22 @@ public class Brocker extends Node implements Runnable , Serializable {
             e.printStackTrace();
         }
     }//end brokerListener
+    private String convertBusLineIdToBus(String busLineId){
+        String bus=null;
+        System.out.println(BusLinesArray.size());
+        for(String [] local :BusLinesArray){
+            if(busLineId.equals(local[0])){
+                bus=local[1];
+            }
+        }
+        return  bus;
+    }
     /**this function is responcible for finding the busLineId from the hasmap
      * and returns the list of all the bus positoons for the specific bus**/
     private ArrayList<String []> findValue(Topic localTopic){
+        String bus=convertBusLineIdToBus(localTopic.getBusLine());
         for(String key : localBusPositionsHashMap.keySet()){
-            if(key.equals(localTopic.getBusLine())){
+            if(key.equals(bus)){
                 return localBusPositionsHashMap.get(key);
             }
         }

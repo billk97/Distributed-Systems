@@ -15,6 +15,7 @@ public class Node implements Serializable {
     private static final long serialVersionUID = -304193945227516524L;
     public  static ArrayList<Brocker> BrokerList= new ArrayList<Brocker>();
     public ArrayList<String []> localeRouteCodesList;
+    public ArrayList<String []> BusLinesArray = new ArrayList<>();
     protected String ipAddress ;
     protected int port;
     public Node(){
@@ -30,6 +31,7 @@ public class Node implements Serializable {
     public void initialize(){
         Read read = new Read();
         localeRouteCodesList=read.readRouteCodes();
+        BusLinesArray = read.readBusLines();
         //read.readBusPosition();
         //todo how to select a specific route example 816
         //ose other type of list
@@ -63,11 +65,11 @@ public class Node implements Serializable {
             } catch (IOException e) {
                 //System.out.println(e);
                 System.out.println("Server seems down next try in 1 seconds");
-//                try {
-//                    TimeUnit.SECONDS.sleep(1);
-//                } catch (InterruptedException e1) {
-//                    e1.printStackTrace();
-//                }
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
             }
             System.out.println("No socket could be returned");
         }
