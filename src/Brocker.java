@@ -64,13 +64,14 @@ public class Brocker extends Node implements Runnable , Serializable {
                 connection =listenerSocket.accept();
                 Thread t = new Thread(new Brocker(connection,getBrokerList(),brokerRangeList));
                 t.start();
-                t.join();
+                //t.join();
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
+//        catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }//end startServer
 
     public void brokerListener(Socket socket1){

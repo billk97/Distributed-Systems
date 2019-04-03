@@ -12,36 +12,30 @@ public class Subscriber extends Node implements Serializable {
     private String brokerIp = "192.168.1.65";
     private int brokerport= 4202;
     Socket socket =new Socket();
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
     public Subscriber(){
-         socket = connect(brokerIp,brokerport);
+
     }
     public Subscriber(String ip, int port){
         super(port,ip);
     }
-    private ObjectInputStream in;
 
-    {
+    public void init(){
         try {
+            socket = connect(brokerIp,brokerport);
             in = new ObjectInputStream(socket.getInputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private ObjectOutputStream out;
-
-    {
-        try {
             out = new ObjectOutputStream(socket.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }//end void
+
 
     /**register for the first time for a topic**/
     public void register(Topic topic){
         try {
-
+            init();
             System.out.println(in.readUTF());
             out.writeUTF("Subscribe");
             out.flush();
