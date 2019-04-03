@@ -11,24 +11,44 @@ public class Subscriber extends Node implements Serializable {
     private static final long serialVersionUID = -2122691439868668146L;
     private String brokerIp = "192.168.1.65";
     private int brokerport= 4202;
-    public Subscriber(){}
+    Socket socket =new Socket();
+    public Subscriber(){
+         socket = connect(brokerIp,brokerport);
+    }
     public Subscriber(String ip, int port){
         super(port,ip);
     }
+    private ObjectInputStream in;
+
+    {
+        try {
+            in = new ObjectInputStream(socket.getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private ObjectOutputStream out;
+
+    {
+        try {
+            out = new ObjectOutputStream(socket.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**register for the first time for a topic**/
     public void register(Topic topic){
-        Socket socket = connect(brokerIp,brokerport);
         try {
-            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+
             System.out.println(in.readUTF());
             out.writeUTF("Subscribe");
             out.flush();
             out.writeObject(topic);
             out.flush();
             Value localValue = (Value) in.readObject();
-            in.close();
-            out.close();
+            System.out.println("sub: "+ localValue.getBus().getBusLineId());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -39,10 +59,7 @@ public class Subscriber extends Node implements Serializable {
     }//end register
     /**disconnect from the topic does not receive any more data **/
     private void disconnect(Topic topic){
-        Socket socket = connect(brokerIp,brokerport);
         try {
-            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             System.out.println(in.readUTF());
             out.writeUTF("Unsubscribe");
             out.flush();

@@ -86,6 +86,7 @@ public class Brocker extends Node implements Runnable , Serializable {
             /**returns the List of the brokers**/
             if(request.equals("BrokerList")&& BrokerList!=null){
                 calculateKeys();//temporary
+                printBrokerRangeSList();
                 out.writeObject(BrokerList);
                 out.flush();
             }
@@ -111,22 +112,22 @@ public class Brocker extends Node implements Runnable , Serializable {
                 String temp = in.readUTF();
                 System.err.println("buslineId: "+temp);
                 if(acceptPublisher(temp)==true){
-                     ArrayList<String []> positionList = positionList=(ArrayList<String []>) in.readObject();
+                     ArrayList<String []> positionList =(ArrayList<String []>) in.readObject();
                      localBusPositionsHashMap.put(temp,positionList);
                      System.out.println("positionList.size: "+ positionList.size());
                 }
                 else {
                     in.readObject();
-                    System.err.println("does not belong hire");
+                    System.err.println("does not belong here");
                 }
             }
             else if (request.equals("Subscribe")){
                 Topic localTopic =(Topic) in.readObject();
                 ArrayList<String[]> local= findValue(localTopic);
                 Bus b1 = new Bus();
-                b1.setBusLineId(local.get(1)[0]);
-                b1.setRouteCode(local.get(1)[1]);
-                b1.setVehicleId(local.get(1)[2]);
+                b1.setBusLineId(local.get(0)[0]);
+                b1.setRouteCode(local.get(0)[1]);
+                b1.setVehicleId(local.get(0)[2]);
                 Topic topic1 = new Topic("bill");
                 Value value1 = new Value(b1,Double.parseDouble(local.get(1)[3]),Double.parseDouble(local.get(1)[4]));
                 out.writeObject(value1);
@@ -178,7 +179,6 @@ public class Brocker extends Node implements Runnable , Serializable {
         return brokerHash;
     }
     /**calculates the ip + port + BUS ID  --> md5 hash**/
-    //todo calculate for which key the broker is responsible
     //BUS ID
     public void calculateKeys() throws IOException {
         Md5 md5 = new Md5();

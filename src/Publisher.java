@@ -39,12 +39,13 @@ public class Publisher extends Node{
         Read r = new Read();
         /**localy stored the busLines**/
         ArrayList<String []> BusLinesArray = r.readBusLines();
+        System.out.println("BusLIneArray: "+ BusLinesArray.size());
         for(int i=rangeStart; i<rangeEnd;i++){
             /**stores for the specific lineCode/LineId the positions on a ArrayList**/
             String busLineId=BusLinesArray.get(i)[0];
             ArrayList<String []> tempArray = r.readBusPosition(busLineId);
             /**adds busLineId and a table with positions**/
-            busPositionsHashMap.put(BusLinesArray.get(i)[1],tempArray);
+            busPositionsHashMap.put(BusLinesArray.get(i)[0],tempArray);
         }
         //System.out.println("hashmap size ="+busPositionsHashMap.size());
     }//end readBusInformation
@@ -88,7 +89,7 @@ public class Publisher extends Node{
         for(int i=0;i<localBrockerList.size();i++) { //search at local broker list
             int BrokerRangeListSize = localBrockerList.get(i).getBrokerRangeList().size(); //size of the BrokerRangeList for each broker
             for (int j = 0; j < BrokerRangeListSize; j++) { //search to every broker's hashmap's arraylist
-                String busOfBroker = localBrockerList.get(i).getBrokerRangeList().get(j)[1];
+                String busOfBroker = localBrockerList.get(i).getBrokerRangeList().get(j)[0];
                 if (busOfPub.equals(busOfBroker)) {
                     return localBrockerList.get(i);
                 }
