@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
+
 public class Brocker extends Node implements Runnable , Serializable {
     private static final long serialVersionUID = -1799537022412025503L;
     private ArrayList<Subscriber> registeredSubscribers = new ArrayList<Subscriber>();
@@ -123,7 +124,11 @@ public class Brocker extends Node implements Runnable , Serializable {
             }
             else if (request.equals("Subscribe")){
                 Topic localTopic =(Topic) in.readObject();
+                ArrayList<String[]> local=fingValue(localTopic);
                 Bus b1 = new Bus();
+                b1.setBusLineId(local.get(1)[0]);
+                b1.setRouteCode(local.get(1)[1]);
+                b1.setVehicleId(local.get(1)[2]);
                 Topic topic1 = new Topic("bill");
                 Value value1 = new Value(b1,0.0,10.0);
                 out.writeObject(value1);
@@ -157,7 +162,16 @@ public class Brocker extends Node implements Runnable , Serializable {
             e.printStackTrace();
         }
     }//end brokerListener
-
+    /**this function is responcible for finding the busLineId from the hasmap
+     * and returns the list of all the bus positoons for the specific bus**/
+    private ArrayList<String []> fingValue(Topic localTopic){
+        for(String key : localBusPositionsHashMap.keySet()){
+            if(key.equals(localTopic.getBusLine())){
+                return localBusPositionsHashMap.get(key);
+            }
+        }
+        return null;
+    }
 
     public String calculateBrokerHash(){
         Md5 md5 = new Md5();
