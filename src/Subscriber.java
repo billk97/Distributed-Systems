@@ -47,6 +47,7 @@ public class Subscriber extends Node implements Serializable {
         try {
             System.out.println(in.readUTF());
             out.writeUTF("BrokerList");
+            out.flush();
             BrokerList=(ArrayList<Brocker>) in.readObject();
         } catch (IOException e) {
             e.printStackTrace();

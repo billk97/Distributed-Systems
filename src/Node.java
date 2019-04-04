@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class Node implements Serializable {
     private static final long serialVersionUID = -304193945227516524L;
     public  static ArrayList<Brocker> BrokerList= new ArrayList<Brocker>();
-    protected ArrayList<String []> brokerRangeList = new ArrayList<>();
+
     public ArrayList<String []> localeRouteCodesList;
     public ArrayList<String []> BusLinesArray = new ArrayList<>();
     protected String ipAddress ;
