@@ -17,7 +17,7 @@ public class Brocker extends Node implements Runnable , Serializable {
     private ArrayList<Subscriber> registeredSubscribers = new ArrayList<Subscriber>();
     private ArrayList<Publisher> registerPublisher= new ArrayList<Publisher>();
     private String brokerRange =null;
-    private ArrayList<String []> brokerRangeList = new ArrayList<>();
+
     private ArrayList<String[]> RemoteBrokers = new ArrayList<String[]>();
     private HashMap<String,ArrayList<String []>> localBusPositionsHashMap = new HashMap<>();
     /**contains the position recieved from publisher**/

@@ -1,3 +1,4 @@
+import DataTypes.Bus;
 import com.sun.corba.se.pept.broker.Broker;
 import sun.swing.BakedArrayList;
 
@@ -14,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class Node implements Serializable {
     private static final long serialVersionUID = -304193945227516524L;
     public  static ArrayList<Brocker> BrokerList= new ArrayList<Brocker>();
+    protected ArrayList<String []> brokerRangeList = new ArrayList<>();
     public ArrayList<String []> localeRouteCodesList;
     public ArrayList<String []> BusLinesArray = new ArrayList<>();
     protected String ipAddress ;
@@ -40,6 +42,12 @@ public class Node implements Serializable {
             System.out.println(localeRouteCodesList.get(i)[0]);
         }
         System.out.println("size of the list is = "+read.readBusPosition("817").size());
+    }
+
+    public void printBusLinesArray(){
+        for(String [] tempTable : BusLinesArray){
+            System.out.println(tempTable[0]+" "+tempTable[1]+" "+tempTable[2]);
+        }
     }
 
 

@@ -6,6 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Subscriber extends Node implements Serializable {
     private static final long serialVersionUID = -2122691439868668146L;
@@ -21,6 +22,17 @@ public class Subscriber extends Node implements Serializable {
         super(port,ip);
     }
 
+    public void findBroker(Topic topic){
+        for(Brocker b:BrokerList ){
+            for(int i=0;i<b.brokerRangeList.size();i++) {
+                if (topic.getBusLine().equals(b.brokerRangeList.get(i)[1])) {
+                    brokerIp=b.getIpAddress();
+                    brokerport=b.getPort();
+                }
+            }
+        }
+    }
+
     public void init(){
         try {
             socket = connect(brokerIp,brokerport);
@@ -31,6 +43,17 @@ public class Subscriber extends Node implements Serializable {
         }
     }//end void
 
+    public void EstablishConnection() {
+        try {
+            System.out.println(in.readUTF());
+            out.writeUTF("BrokerList");
+            BrokerList=(ArrayList<Brocker>) in.readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**register for the first time for a topic**/
     public void register(Topic topic){
