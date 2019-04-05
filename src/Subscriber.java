@@ -7,6 +7,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Subscriber extends Node implements Serializable {
     private static final long serialVersionUID = -2122691439868668146L;
@@ -56,6 +57,15 @@ public class Subscriber extends Node implements Serializable {
         }
     }
 
+    public void printAvailableBusLines(){
+        System.out.println("Available buslines are: ");
+        for(Brocker b:BrokerList){
+            for(int i=0;i<b.brokerRangeList.size();i++){
+                System.out.println(b.brokerRangeList.get(i)[1]);
+            }
+        }
+    }
+
     /**register for the first time for a topic**/
     public void register(Topic topic){
         try {
@@ -92,6 +102,16 @@ public class Subscriber extends Node implements Serializable {
             Disconnect(socket);
         }
     }//end disconnect
+
+    /**read the topic(bus) from console**/
+    public Topic readTopicFromConsole(){
+        Scanner in = new Scanner(System.in);
+        System.out.println("Give the busline that you prefer: ");
+        String busline = in.nextLine();
+        Topic topic = new Topic(busline);
+        return topic;
+    }
+
     /**print the data in a readable format**/
     private void VisualiseData(){}
     public String getBrokerIp() {
