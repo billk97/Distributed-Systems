@@ -106,9 +106,7 @@ public class Brocker extends Node implements Runnable , Serializable {
                 System.out.println("BrokerList.size: "+BrokerList.size());
                 if(temp.equals("ping")){
                     while(true) {
-                        out.writeUTF("ping");
-                        out.flush();
-                        System.out.println(in.readUTF());
+
                     }
                 }
             }

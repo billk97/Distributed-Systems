@@ -31,8 +31,6 @@ public class BrokerConnect extends Node implements Runnable {
             while (true){
                 TimeUnit.SECONDS.sleep(10);
                 out.writeUTF("ping");
-                out.flush();
-                System.out.println(in.readUTF());
             }
         } catch (IOException e) {
             System.out.println("No connection could be established");
