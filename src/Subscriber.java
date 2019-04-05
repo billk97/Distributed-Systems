@@ -58,11 +58,12 @@ public class Subscriber extends Node implements Serializable {
     }
 
     public void printAvailableBusLines(){
-        System.out.println("Available buslines are: ");
+        System.out.println("Available bus lines are: ");
         for(Brocker b:BrokerList){
             for(int i=0;i<b.brokerRangeList.size();i++){
-                System.out.println(b.brokerRangeList.get(i)[1]);
+                System.out.print(b.brokerRangeList.get(i)[1]+" ");
             }
+            System.out.println("");
         }
     }
 

@@ -54,13 +54,15 @@ public class Brocker extends Node implements Runnable , Serializable {
         Socket connection=null;
         BrokerList.add(this);
         initialize();
-        System.out.println(BusLinesArray.size());
+        System.out.println("BuslinesArray.size: "+BusLinesArray.size());
         System.out.println("Brocker:"+ BrokerList.size());
-        //todo inside a for for each element in the arraylist
-        for(String [] b1 :RemoteBrokers){
-            new Thread(new BrokerConnect(b1[0],Integer.parseInt(b1[1]),Integer.parseInt(b1[2]))).start();
-        }
+        calculateKeys();
         try {
+        for(String [] b1 :RemoteBrokers){
+            Thread connectionThread =new Thread(new BrokerConnect(b1[0],Integer.parseInt(b1[1]),Integer.parseInt(b1[2])));
+            connectionThread.start();
+            //connectionThread.join();
+        }
             listenerSocket= new ServerSocket(port);//a new Socket is created for the specific port
             while (true){
                 /**connection is accepted that means a new socket and now a new port has been created for the communication **/
@@ -88,7 +90,8 @@ public class Brocker extends Node implements Runnable , Serializable {
             String client=socket1.getInetAddress().getHostName();
             System.out.println("connected client: " +client);
             String request =in.readUTF();
-            System.out.println("request for: "+ request);
+            String remoteNodeIp = socket.getInetAddress().getHostName();
+            System.out.println("request for: "+ request +" form --> "+remoteNodeIp);
             /**returns the List of the brokers**/
             if(request.equals("BrokerList")&& BrokerList!=null){
                 calculateKeys();//temporary
@@ -126,17 +129,16 @@ public class Brocker extends Node implements Runnable , Serializable {
                 Topic localTopic =(Topic) in.readObject();
                 System.err.println("localtopic: "+localTopic.getBusLine());
                 ArrayList<String[]> local= findValue(localTopic);
-                Bus b1 = new Bus();
-                b1.setBusLineId(local.get(0)[0]);
-                b1.setRouteCode(local.get(0)[1]);
-                b1.setVehicleId(local.get(0)[2]);
-                Topic topic1 = new Topic("bill");
-                Value value1 = new Value(b1,Double.parseDouble(local.get(1)[3]),Double.parseDouble(local.get(1)[4]));
-                out.writeObject(value1);
-                out.flush();
-                //todo search for the bus line
-                //todo send the Values back
-                //out.writeObject(value);
+                if(local!=null){
+                    Bus b1 = new Bus();
+                    b1.setBusLineId(local.get(0)[0]);
+                    b1.setRouteCode(local.get(0)[1]);
+                    b1.setVehicleId(local.get(0)[2]);
+                    Topic topic1 = new Topic("bill");
+                    Value value1 = new Value(b1,Double.parseDouble(local.get(1)[3]),Double.parseDouble(local.get(1)[4]));
+                    out.writeObject(value1);
+                    out.flush();
+                }
             }
             else if(request.equals("Unsubscribe")){
                 Topic localTopic = (Topic) in.readObject();
@@ -206,7 +208,7 @@ public class Brocker extends Node implements Runnable , Serializable {
     }
     /**calculates the ip + port + BUS ID  --> md5 hash**/
     //BUS ID
-    public void calculateKeys() throws IOException {
+    public void calculateKeys()  {
         Md5 md5 = new Md5();
         String hashLine;
         Read r = new Read();
@@ -235,6 +237,7 @@ public class Brocker extends Node implements Runnable , Serializable {
                 }
             }
         }
+
     }//end calculateKeys
 
     //taksinomei ta brokerHashes apo to mikrotero sto megalitero
