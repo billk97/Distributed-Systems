@@ -110,10 +110,13 @@ public class Brocker extends Node implements Runnable , Serializable {
                 Thread t = new Thread(()->{
                     while (true){
                         try {
-                            System.out.println("recived: "+ in.readUTF());
                             out.writeUTF("ping");
                             out.flush();
+                            System.out.println("recived: "+ in.readUTF());
+                            Thread.sleep(10000);
                         } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
