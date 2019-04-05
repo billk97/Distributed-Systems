@@ -107,6 +107,7 @@ public class Brocker extends Node implements Runnable , Serializable {
                 calculateKeys();
                 printBrokerRangeSList();
                 System.err.println("BrokerList.size: "+BrokerList.size());
+                //dennn trexeiiii gaommmmoooo
                 Thread t = new Thread(()->{
                     while (true){
                         try {
@@ -115,7 +116,7 @@ public class Brocker extends Node implements Runnable , Serializable {
                             System.out.println("recived: "+ in.readUTF());
                             Thread.sleep(10000);
                         } catch (IOException e) {
-                            System.out.println("Broker Unreachable no Connection Culled be established ");
+                            System.err.println("Broker Unreachable no Connection Coulled be established ");
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
