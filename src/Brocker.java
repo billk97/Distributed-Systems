@@ -98,7 +98,7 @@ public class Brocker extends Node implements Runnable , Serializable {
             }
             else if(request.equals("BrokerAdd")){
                 String newBrokerIp = socket.getInetAddress().getHostName();
-                int newBrokerPort=Integer.parseInt(in.readUTF());
+                int newBrokerPort=Integer.parseInt(in.readUTF());//kati paizei edo to bgazei o
                 Brocker b1 = new Brocker(newBrokerPort,newBrokerIp);
                 BrokerList.add(b1);
                 calculateKeys();
@@ -123,7 +123,15 @@ public class Brocker extends Node implements Runnable , Serializable {
                 }
             }
             else if (request.equals("Subscribe")){
-                Value value1=subscribeRequest((Topic) in.readObject());
+                Topic localTopic =(Topic) in.readObject();
+                System.err.println("localtopic: "+localTopic.getBusLine());
+                ArrayList<String[]> local= findValue(localTopic);
+                Bus b1 = new Bus();
+                b1.setBusLineId(local.get(0)[0]);
+                b1.setRouteCode(local.get(0)[1]);
+                b1.setVehicleId(local.get(0)[2]);
+                Topic topic1 = new Topic("bill");
+                Value value1 = new Value(b1,Double.parseDouble(local.get(1)[3]),Double.parseDouble(local.get(1)[4]));
                 out.writeObject(value1);
                 out.flush();
                 //todo search for the bus line
@@ -135,48 +143,26 @@ public class Brocker extends Node implements Runnable , Serializable {
                 String subscriberIp = socket.getInetAddress().getHostName();
                 //Todo delete consumer for registeredSubscribers
             }
-            System.out.println("Request Successful");
+            System.out.println("request Successful");
             out.close();
             in.close();
-            System.out.println("connection: Closed");
+            System.out.println("connection closed");
         } catch (IOException e) {
-            brokerExceptionHandler(socket1);
+            System.out.println("Broker failed");
+            System.out.println("BrokerListSize: "+ BrokerList.size());
+            /**if a broker disconects for eny reason the other broker deletes th broker from the arraylist**/
+            for(int i=0; i<BrokerList.size(); i++){
+                if(BrokerList.get(i).getIpAddress().equals(socket1.getInetAddress().getHostName())){
+                    System.out.println(BrokerList.get(i).ipAddress);
+                    BrokerList.remove(i);
+                    System.out.println("BrokerListSize: "+ BrokerList.size());
+                }
+            }
+            //e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }//end brokerListener
-
-    /**this function is responsible for handling the BrokerAdd Request  **/
-    private void BrokerAddRequest(String newBrokerIp, int newBrokerPort){
-
-    }
-    /**this function is responsible for handling the Subscribe Request  **/
-    private Value subscribeRequest(Topic localTopic){
-        System.err.println("localtopic: "+localTopic.getBusLine());
-        ArrayList<String[]> local= findValue(localTopic);
-        Bus b1 = new Bus();
-        b1.setBusLineId(local.get(0)[0]);
-        b1.setRouteCode(local.get(0)[1]);
-        b1.setVehicleId(local.get(0)[2]);
-        Topic topic1 = new Topic("bill");
-        Value value1 = new Value(b1,Double.parseDouble(local.get(1)[3]),Double.parseDouble(local.get(1)[4]));
-        return value1;
-    }
-
-
-    /**this function Notiffies if a host is down and removes a Broker from the list**/
-    private void brokerExceptionHandler(Socket socket1){
-        System.out.println("Broker failed");
-        System.out.println("BrokerListSize: "+ BrokerList.size());
-        /**if a broker disconects for eny reason the other broker deletes th broker from the arraylist**/
-        for(int i=0; i<BrokerList.size(); i++){
-            if(BrokerList.get(i).getIpAddress().equals(socket1.getInetAddress().getHostName())){
-                System.out.println(BrokerList.get(i).ipAddress);
-                BrokerList.remove(i);
-                System.out.println("BrokerListSize: "+ BrokerList.size());
-            }
-        }
-    }//end brokerExceptionHandler
     private String convertBusLineIdToBus(String busLineId){
         String bus=null;
         System.out.println(BusLinesArray.size());
