@@ -16,10 +16,10 @@ public class Subscriber extends Node implements Serializable {
     private ObjectInputStream in;
     private ObjectOutputStream out;
     public Subscriber(){
-
+        super();
     }
     public Subscriber(String ip, int port){
-        super(port,ip);
+        super();
     }
 
     public void findBroker(Topic topic){
