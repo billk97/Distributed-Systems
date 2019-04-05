@@ -31,6 +31,7 @@ public class BrokerConnect extends Node implements Runnable {
             while (true){
                 out.writeUTF("ping");
                 out.flush();
+                System.out.println(in.readUTF());
                 TimeUnit.SECONDS.sleep(10);
             }
         } catch (IOException e) {

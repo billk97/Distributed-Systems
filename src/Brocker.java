@@ -56,7 +56,7 @@ public class Brocker extends Node implements Runnable , Serializable {
         initialize();
         System.out.println("BuslinesArray.size: "+BusLinesArray.size());
         System.out.println("Brocker:"+ BrokerList.size());
-        calculateKeys();
+        //calculateKeys();
         try {
         for(String [] b1 :RemoteBrokers){
             Thread connectionThread =new Thread(new BrokerConnect(b1[0],Integer.parseInt(b1[1]),Integer.parseInt(b1[2])));
@@ -111,6 +111,8 @@ public class Brocker extends Node implements Runnable , Serializable {
                     while (true){
                         try {
                             System.out.println("recived: "+ in.readUTF());
+                            out.writeUTF("ping");
+                            out.flush();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
