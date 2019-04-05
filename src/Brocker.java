@@ -118,6 +118,7 @@ public class Brocker extends Node implements Runnable , Serializable {
                         }
                     }
                 });
+                t.start();
             }
             /**receives the object of push**/
             else if(request.equals("Push")){
@@ -218,7 +219,7 @@ public class Brocker extends Node implements Runnable , Serializable {
     /**calculates the ip + port + BUS ID  --> md5 hash**/
     //todo what happens if you want to re calculate the keys
     //todo the table needs to be cleared?
-    public void calculateKeys()  {
+    public void calculateKeys() throws IOException  {
         Md5 md5 = new Md5();
         String hashLine;
         Read r = new Read();
