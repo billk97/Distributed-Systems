@@ -118,16 +118,16 @@ public class Brocker extends Node implements Runnable , Serializable {
                 System.err.println("buslineId: "+temp);
                 String newtemp =convertBusLineIdToBus(temp);
                 System.err.println("NewbuslineId: "+newtemp);
-                //if(acceptPublisher(temp)==true){
+                if(acceptPublisher(newtemp)==true){
                      ArrayList<String[]> positionList =(ArrayList<String []>) in.readObject();
                      localBusPositionsHashMap.put(temp,positionList);
                      System.out.println("positionList.size: "+ positionList.size());
                     System.err.println("here");
-                //}
-                //else {
-                    //in.readObject();
-                    //System.err.println("does not belong here");
-                //}
+                }
+                else {
+                    in.readObject();
+                    System.err.println("does not belong here");
+                }
             }
             else if (request.equals("Subscribe")){
                 Topic localTopic =(Topic) in.readObject();
