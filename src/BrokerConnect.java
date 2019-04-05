@@ -30,7 +30,6 @@ public class BrokerConnect extends Node implements Runnable {
             // m BrokerList.add(new Brocker(RemoteBrokerPort,RemoteBrokerIp));
             while (true){
                 TimeUnit.SECONDS.sleep(10);
-                out.writeUTF("ping");
             }
         } catch (IOException e) {
             System.out.println("No connection could be established");

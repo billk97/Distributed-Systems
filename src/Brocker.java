@@ -102,13 +102,7 @@ public class Brocker extends Node implements Runnable , Serializable {
                 BrokerList.add(b1);
                 calculateKeys();
                 printBrokerRangeSList();
-                String temp = in.readUTF();
                 System.out.println("BrokerList.size: "+BrokerList.size());
-                if(temp.equals("ping")){
-                    while(true) {
-
-                    }
-                }
             }
             /**receives the object of push**/
             else if(request.equals("Push")){

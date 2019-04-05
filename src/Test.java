@@ -15,10 +15,14 @@ public class Test {
         String table [] = new String[3];
         /**defines the remote broker**/
         //table[0]="172.16.1.72";
-        table[0]="172.16.2.11";
+        table[0]="172.16.2.12";
         table[1]="4202";
         table[2]="4202";
-        //v1.add(table);
+        v1.add(table);
+        table[0]="172.16.2.13";
+        table[1]="4202";
+        table[2]="4202";
+        v1.add(table);
         v1.startServer();
         //Brocker v1 = new Brocker(brokerport, brokerIp);
 //        System.out.print("Declare remote Broker: y/n");
