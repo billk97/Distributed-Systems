@@ -11,7 +11,6 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
 public class Brocker extends Node implements Runnable , Serializable {
     private static final long serialVersionUID = -1799537022412025503L;
     private ArrayList<Subscriber> registeredSubscribers = new ArrayList<Subscriber>();
@@ -33,7 +32,8 @@ public class Brocker extends Node implements Runnable , Serializable {
         //BrokerList.add(this);
     }
     //constructor
-    public Brocker(Socket socket,ArrayList<Brocker> BrokerList,ArrayList<String []>brokerRangeList,ArrayList<String []> BusLinesArray,HashMap<String,ArrayList<String []>> localBusPositionsHashMap){
+    public Brocker(Socket socket,ArrayList<Brocker> BrokerList,ArrayList<String []>brokerRangeList
+            ,ArrayList<String []> BusLinesArray,HashMap<String,ArrayList<String []>> localBusPositionsHashMap){
         this.socket=socket;
         this.BrokerList=BrokerList;
         this.brokerRangeList=brokerRangeList;
@@ -107,6 +107,15 @@ public class Brocker extends Node implements Runnable , Serializable {
                 calculateKeys();
                 printBrokerRangeSList();
                 System.err.println("BrokerList.size: "+BrokerList.size());
+                Thread t = new Thread(()->{
+                    while (true){
+                        try {
+                            System.out.println("recived: "+ in.readUTF());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
             }
             /**receives the object of push**/
             else if(request.equals("Push")){
@@ -160,7 +169,6 @@ public class Brocker extends Node implements Runnable , Serializable {
                     System.out.println("BrokerListSize: "+ BrokerList.size());
                 }
             }
-            //e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -203,11 +211,11 @@ public class Brocker extends Node implements Runnable , Serializable {
     public String calculateBrokerHash(){
         Md5 md5 = new Md5();
         brokerHash = md5.HASH(ipAddress +Integer.toString(port));
-        //System.out.println("brokerRange: "+ brokerHash);
         return brokerHash;
     }
     /**calculates the ip + port + BUS ID  --> md5 hash**/
-    //BUS ID
+    //todo what happens if you want to re calculate the keys
+    //todo the table needs to be cleared?
     public void calculateKeys()  {
         Md5 md5 = new Md5();
         String hashLine;
@@ -215,7 +223,6 @@ public class Brocker extends Node implements Runnable , Serializable {
         r.readBusLines();
         ArrayList<String []> busLinesList = r.readBusLines();
         ArrayList<String> busLineHashList = new ArrayList<>(); //na to svisw
-        brokerRangeList.clear();
         //pernaw ta lineid apo to source,ta hasharw kai bazw ta hash sto busLineHashTable
         for(int i=0;i<busLinesList.size();i++){
             hashLine = md5.HASH(busLinesList.get(i)[1]);
