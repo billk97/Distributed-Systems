@@ -215,6 +215,7 @@ public class Brocker extends Node implements Runnable , Serializable {
         r.readBusLines();
         ArrayList<String []> busLinesList = r.readBusLines();
         ArrayList<String> busLineHashList = new ArrayList<>(); //na to svisw
+        brokerRangeList.clear();
         //pernaw ta lineid apo to source,ta hasharw kai bazw ta hash sto busLineHashTable
         for(int i=0;i<busLinesList.size();i++){
             hashLine = md5.HASH(busLinesList.get(i)[1]);
@@ -261,6 +262,7 @@ public class Brocker extends Node implements Runnable , Serializable {
 
 
     public void printBrokerRangeSList(){
+
         System.out.println("Broker has lines : ");
         for(int i=0;i<brokerRangeList.size();i++){
             System.out.println(brokerRangeList.get(i)[1]);
