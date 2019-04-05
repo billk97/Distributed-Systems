@@ -99,7 +99,11 @@ public class Brocker extends Node implements Runnable , Serializable {
             else if(request.equals("BrokerAdd")){
                 String newBrokerIp = socket.getInetAddress().getHostName();
                 int newBrokerPort=Integer.parseInt(in.readUTF());
-                BrokerAddRequest(newBrokerIp,newBrokerPort);
+                Brocker b1 = new Brocker(newBrokerPort,newBrokerIp);
+                BrokerList.add(b1);
+                calculateKeys();
+                printBrokerRangeSList();
+                System.err.println("BrokerList.size: "+BrokerList.size());
             }
             /**receives the object of push**/
             else if(request.equals("Push")){
@@ -144,11 +148,7 @@ public class Brocker extends Node implements Runnable , Serializable {
 
     /**this function is responsible for handling the BrokerAdd Request  **/
     private void BrokerAddRequest(String newBrokerIp, int newBrokerPort){
-        Brocker b1 = new Brocker(newBrokerPort,newBrokerIp);
-        BrokerList.add(b1);
-        calculateKeys();
-        printBrokerRangeSList();
-        System.err.println("BrokerList.size: "+BrokerList.size());
+
     }
     /**this function is responsible for handling the Subscribe Request  **/
     private Value subscribeRequest(Topic localTopic){
@@ -220,7 +220,7 @@ public class Brocker extends Node implements Runnable , Serializable {
     }
     /**calculates the ip + port + BUS ID  --> md5 hash**/
     //BUS ID
-    public void calculateKeys() {
+    public void calculateKeys() throws IOException {
         Md5 md5 = new Md5();
         String hashLine;
         Read r = new Read();
