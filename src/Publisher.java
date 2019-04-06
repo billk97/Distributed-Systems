@@ -1,12 +1,13 @@
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-public class Publisher extends Node{
+public class Publisher extends Node {
     private String myHash=null;
     Md5 md5= new Md5();
     private String brokerIp ;

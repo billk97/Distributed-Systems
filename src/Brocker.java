@@ -1,5 +1,3 @@
-import com.sun.corba.se.pept.broker.Broker;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -7,92 +5,156 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class Brocker extends Node implements Runnable , Serializable {
+public class Brocker extends Node implements Runnable, Serializable {
     private static final long serialVersionUID = -6643274596837043061L;
-    /**brokerBusList = the bus list for which a broker is responsible **/
-    protected ArrayList<String []> brokerBusList = new ArrayList<>();
-    private ServerSocket listenerSocket = null;
-    private Socket connection= null;
-    private ObjectOutputStream out = null;
-    private ObjectInputStream in = null;
+    /**
+     * brokerBusList = the bus list for which a broker is responsible
+     **/
+    protected ArrayList<String[]> brokerBusList = new ArrayList<>();
+    private HashMap<String, ArrayList<String[]>> BusInformationHashMap = new HashMap<>();
+    public ArrayList<Brocker> BrokerList = new ArrayList<Brocker>();
+    private Socket socket;
 
-    public  Brocker(){
-        super();
-    }
-    public Brocker(int port, String ip){
-        ipAddress=ip;
-        this.port=port;
-    }
-    public void run (){
-        brokerListener();
+
+    public Brocker() {
     }
 
-    public void startServer(){
+    public Brocker(int port, String ip) {
+        ipAddress = ip;
+        this.port = port;
+    }
+
+    public Brocker(Socket socket, ArrayList<Brocker> BrokerList, ArrayList<String[]> brokerBusList,
+                   ArrayList<String[]> BusLinesArrays, HashMap<String, ArrayList<String[]>> BusInformationHashMap) {
+        this.BrokerList = BrokerList;
+        this.socket = socket;
+        this.BusLinesArray = BusLinesArrays;
+        this.BusInformationHashMap = BusInformationHashMap;
+        this.brokerBusList = brokerBusList;
+    }
+
+    public void run() {
+        brokerListener(socket);
+    }
+
+    public void startServer() {
+        ServerSocket listenerSocket = null;
+        Socket connection=null;
         BrokerList.add(this);
         initialize();
         try {
-            listenerSocket= new ServerSocket(port);
-            Thread BrokerAddThread1 = new Thread(new BrokerConnect("192.168.1.87",4202,4202));
-            Thread BrokerAddThread2 = new Thread(new BrokerConnect("192.168.1.74",4202,4202));
+            listenerSocket = new ServerSocket(port);
+            Thread BrokerAddThread1 = new Thread(new BrokerConnect("192.168.1.87", 4202, 4202));
+            Thread BrokerAddThread2 = new Thread(new BrokerConnect("192.168.1.74", 4202, 4202));
             BrokerAddThread1.start();
             BrokerAddThread2.start();
-            while (true){
+            while (true) {
                 /**connection accepted means a new socket and a new port have been created for the communication **/
                 System.out.println("Server is up and waiting ");
-                connection=listenerSocket.accept();
-                Thread t = new Thread(this);//check if thread has access to memory
+                connection = listenerSocket.accept();
+                Thread t = new Thread(new Brocker(connection, BrokerList, brokerBusList, BusLinesArray, BusInformationHashMap));//check if thread has access to memory
                 t.start();
+                t.join();
             }
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }//startServer
 
-    public void brokerListener(){
+    public void brokerListener(Socket socket) {
+
         try {
-            out = new ObjectOutputStream(connection.getOutputStream());
-            in = new ObjectInputStream(connection.getInputStream());
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             out.writeUTF("Server: Connection Successful ");
             out.flush();
-            String client = connection.getInetAddress().getHostAddress();
-            System.out.println("Connected client : "+ client);
+            String client = socket.getInetAddress().getHostAddress();
+            System.out.println("Connected client : " + client);
             String request = in.readUTF();
-            System.out.println("Request for: "+ request + "from -->" + client);
-            if(request.equals("BrokerList")){
+            System.out.println("Request for: " + request + "from -->" + client);
+            if (request.equals("BrokerList")) {
                 calculateKeys();
                 printBusLinesArray();
                 out.writeObject(BrokerList);
                 out.flush();
-            }
-            else if(request.equals("BrokerAdd")){
+            } else if (request.equals("BrokerAdd")) {
                 int newBrokerPort = Integer.parseInt(in.readUTF());
-                Brocker b1 = new Brocker(newBrokerPort,client);
-                System.out.println("b1 port: "+ b1.port);
-                System.out.println("b1 ip: "+b1.ipAddress);
+                Brocker b1 = new Brocker(newBrokerPort, client);
+                System.out.println("b1 port: " + b1.port);
+                System.out.println("b1 ip: " + b1.ipAddress);
                 BrokerList.add(b1);
                 calculateKeys();
                 printBrokerBusList();
-                System.err.println("BrokeList.size: "+ BrokerList.size());
+                System.err.println("BrokeList.size: " + BrokerList.size());
+            } else if (request.equals("Push")) {
+                String LineCode = in.readUTF();
+                System.err.println("LineCode: "+ LineCode);
+                String Bus = convertLineCodeToBus(LineCode);
+                System.err.println("Bus: "+ Bus);
+                if(acceptPublisher(Bus)==true){
+                    ArrayList<String[]> positionList =(ArrayList<String[]>)in.readObject();
+                    BusInformationHashMap.put(LineCode,positionList);
+                    System.out.println("positionList.size: "+ positionList.size());
+                }
+                else {
+                    in.readObject();
+                    System.err.println("This broker is not responsible for this bus");
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
+    public boolean acceptPublisher(String lineId){
+        for (int i=0; i<brokerBusList.size();i++){
+            if(brokerBusList.get(i)[1].equals(lineId)){
+                return true;
+            }
+        }
+        return false;
+    }//end acceptPublisher
+    private String convertLineCodeToBus(String LineCode){
+        String bus=null;
+        for(String [] local :BusLinesArray){
+            if(LineCode.equals(local[0])){
+                bus=local[1];
+                return bus;
+            }
+        }
+        return null;
+    }//convertLineCodeToBus
 
-    /**calculates the ip + port + BUS ID  --> md5 hash**/
+    private String convertBusToLineCode(String bus){
+        String LineCode=null;
+        for(String [] local : BusLinesArray){
+            if(bus.equals(local[1])){
+                LineCode=local[0];
+                return LineCode;
+            }
+        }
+        return LineCode;
+    }
+    /**
+     * calculates the ip + port + BUS ID  --> md5 hash
+     **/
     //todo what happens if you want to re calculate the keys
     //todo the table needs to be cleared?
-    public void calculateKeys() throws IOException  {
+    public void calculateKeys() throws IOException {
         Md5 md5 = new Md5();
         String hashLine;
         Read r = new Read();
         r.readBusLines();
-        brokerBusList=new ArrayList<String []>();
-        ArrayList<String []> busLinesList = r.readBusLines();
+        brokerBusList = new ArrayList<String[]>();
+        ArrayList<String[]> busLinesList = r.readBusLines();
         ArrayList<String> busLineHashList = new ArrayList<>(); //na to svisw
         //pernaw ta lineid apo to source,ta hasharw kai bazw ta hash sto busLineHashTable
-        for(int i=0;i<busLinesList.size();i++){
+        for (int i = 0; i < busLinesList.size(); i++) {
             hashLine = md5.HASH(busLinesList.get(i)[1]);
             busLineHashList.add(hashLine);
         }
@@ -100,11 +162,11 @@ public class Brocker extends Node implements Runnable , Serializable {
         sortBrokerList();
         BigInteger brokHash;//temporary metablites gia tis sigriseis mes to if
         BigInteger lineHash;//temporary metablites gia tis sigriseis mes to if
-        BigInteger maxBrokHash=new BigInteger(BrokerList.get(BrokerList.size()-1).calculateIpPortHash(),16);
-        for(Brocker b:BrokerList){
-            brokHash= new BigInteger(b.calculateIpPortHash(),16);
-            for(int i=0;i<busLineHashList.size();i++){
-                if(busLineHashList.get(i)!="0") {
+        BigInteger maxBrokHash = new BigInteger(BrokerList.get(BrokerList.size() - 1).calculateIpPortHash(), 16);
+        for (Brocker b : BrokerList) {
+            brokHash = new BigInteger(b.calculateIpPortHash(), 16);
+            for (int i = 0; i < busLineHashList.size(); i++) {
+                if (busLineHashList.get(i) != "0") {
                     lineHash = new BigInteger(busLineHashList.get(i), 16);
                     if (lineHash.mod(maxBrokHash).compareTo(brokHash) <= 0) {
                         b.brokerBusList.add(busLinesList.get(i));
@@ -115,15 +177,17 @@ public class Brocker extends Node implements Runnable , Serializable {
         }
     }//end calculateKeys
 
-    /**sorts the BrokerList based on the Hashes(Ip+port) the contain. smaller to bigger**/
-    public void sortBrokerList(){
+    /**
+     * sorts the BrokerList based on the Hashes(Ip+port) the contain. smaller to bigger
+     **/
+    public void sortBrokerList() {
         int n = BrokerList.size();
         BigInteger temp1;
         BigInteger temp2;
-        for (int i = 0; i < n-1; i++) {
-            for (int j = 0; j < n - i - 1; j++){
-                temp1= new BigInteger(BrokerList.get(j).calculateIpPortHash(),16);
-                temp2= new BigInteger(BrokerList.get(j + 1).calculateIpPortHash(),16);
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                temp1 = new BigInteger(BrokerList.get(j).calculateIpPortHash(), 16);
+                temp2 = new BigInteger(BrokerList.get(j + 1).calculateIpPortHash(), 16);
                 if (temp1.compareTo(temp2) > 0) {
                     // swap brocker elements in the arraylist
                     Brocker temp = BrokerList.get(j);
@@ -133,24 +197,24 @@ public class Brocker extends Node implements Runnable , Serializable {
             }
         }
     }
-    public String calculateIpPortHash(){
+
+    public String calculateIpPortHash() {
         Md5 md5 = new Md5();
         String brokerHash;
-        brokerHash = md5.HASH(ipAddress +Integer.toString(port));
+        brokerHash = md5.HASH(ipAddress + Integer.toString(port));
         return brokerHash;
     }
-    public void printBrokerBusList(){
+
+    public void printBrokerBusList() {
         System.out.println("Broker has lines : ");
-        for(int i=0;i<brokerBusList.size();i++){
+        for (int i = 0; i < brokerBusList.size(); i++) {
             System.out.println(brokerBusList.get(i)[1]);
         }
     }
 
-    public ArrayList<String[]> getBrokerBusList(){
+    public ArrayList<String[]> getBrokerBusList() {
         return brokerBusList;
     }
-
-
 
 
 }//end class Broker
