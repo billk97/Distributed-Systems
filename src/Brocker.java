@@ -34,7 +34,9 @@ public class Brocker extends Node implements Runnable , Serializable {
         initialize();
         try {
             Thread BrokerAddThread1 = new Thread(new BrokerConnect("192.168.1.70",4202,4202));
-            Thread BrokerAddThread2 = new Thread(new BrokerConnect("192.168.1.74",4202,4202));
+            //Thread BrokerAddThread2 = new Thread(new BrokerConnect("192.168.1.74",4202,4202));
+            BrokerAddThread1.start();
+            //BrokerAddThread2.start();
             listenerSocket= new ServerSocket(port);
             while (true){
                 /**connection accepted means a new socket and a new port have been created for the communication **/
