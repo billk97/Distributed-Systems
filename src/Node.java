@@ -52,6 +52,7 @@ public class Node implements Serializable {
         boolean scanning=true;
         while (scanning){
             try {
+
                 InetAddress host = Inet4Address.getByName(ip);
                 Socket socket = new Socket(host,port);
                 scanning=false;

@@ -10,7 +10,7 @@ public class Test {
 //        System.out.print("Set Up Broker port: ");
 //        int brokerport = Integer.parseInt(in.nextLine());
         /**defines the broker port and ip for this machine **/
-        Brocker v1 = new Brocker(4202, "localhost");
+        Brocker v1 = new Brocker(4202, "192.168.1.65");
         v1.startServer();
 //        //Brocker v1 = new Brocker(4202, "172.16.2.11");
 //        String table [] = new String[3];

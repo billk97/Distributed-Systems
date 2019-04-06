@@ -22,10 +22,8 @@ public class Brocker extends Node implements Runnable , Serializable {
     }
     public Brocker(int port, String ip){
         ipAddress=ip;
-        port=this.port;
+        this.port=port;
     }
-    public Brocker(Socket connection){}
-
     public void run (){
         brokerListener();
     }
@@ -35,15 +33,15 @@ public class Brocker extends Node implements Runnable , Serializable {
         initialize();
         try {
             listenerSocket= new ServerSocket(port);
-            //Thread BrokerAddThread1 = new Thread(new BrokerConnect("localhost",4202,4202));
-            //Thread BrokerAddThread2 = new Thread(new BrokerConnect("192.168.1.74",4202,4202));
-            //BrokerAddThread1.start();
-            //BrokerAddThread2.start();
+            Thread BrokerAddThread1 = new Thread(new BrokerConnect("192.168.1.87",4202,4202));
+            Thread BrokerAddThread2 = new Thread(new BrokerConnect("192.168.1.74",4202,4202));
+            BrokerAddThread1.start();
+            BrokerAddThread2.start();
             while (true){
                 /**connection accepted means a new socket and a new port have been created for the communication **/
                 System.out.println("Server is up and waiting ");
                 connection=listenerSocket.accept();
-                Thread t = new Thread(new Brocker(connection));//check if thread has access to memory
+                Thread t = new Thread(this);//check if thread has access to memory
                 t.start();
             }
         } catch (IOException e) {
