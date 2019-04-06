@@ -65,7 +65,7 @@ public class Brocker extends Node implements Runnable , Serializable {
                 out.writeObject(BrokerList);
                 out.flush();
             }
-            else if(request.equals("BrockerAdd")){
+            else if(request.equals("BrokerAdd")){
                 int newBrokerPort = Integer.parseInt(in.readUTF());
                 Brocker b1 = new Brocker(newBrokerPort,client);
                 System.out.println("b1 port: "+ b1.port);
