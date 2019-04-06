@@ -26,21 +26,10 @@ public class Node implements Serializable {
         this.port=port;
         this.ipAddress=ipAddress;
     }
-    public void printNodeInfo(){
-        System.out.println("nodeip "+ ipAddress);
-        System.out.println("nodeport "+ port);
-    }
     public void initialize(){
         Read read = new Read();
         localeRouteCodesList=read.readRouteCodes();
         BusLinesArray = read.readBusLines();
-        //read.readBusPosition();
-        //todo how to select a specific route example 816
-        //ose other type of list
-//        for(int i=0;i<20;i++) {
-//            System.out.println(localeRouteCodesList.get(i)[0]);
-//        }
-//        System.out.println("size of the list is = "+read.readBusPosition("817").size());
     }
 
     public void printBusLinesArray(){
@@ -77,8 +66,8 @@ public class Node implements Serializable {
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
+                System.out.println("No socket could be returned");
             }
-            System.out.println("No socket could be returned");
         }
         return null;
     }

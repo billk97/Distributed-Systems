@@ -25,8 +25,8 @@ public class Subscriber extends Node implements Serializable {
 
     public void findBroker(Topic topic){
         for(Brocker b:BrokerList ){
-            for(int i=0;i<b.brokerRangeList.size();i++) {
-                if (topic.getBusLine().equals(b.brokerRangeList.get(i)[1])) {
+            for(int i=0;i<b.brokerBusList.size();i++) {
+                if (topic.getBusLine().equals(b.brokerBusList.get(i)[1])) {
                     brokerIp=b.getIpAddress();
                     brokerport=b.getPort();
                 }
@@ -60,8 +60,8 @@ public class Subscriber extends Node implements Serializable {
     public void printAvailableBusLines(){
         System.out.println("Available bus lines are: ");
         for(Brocker b:BrokerList){
-            for(int i=0;i<b.brokerRangeList.size();i++){
-                System.out.print(b.brokerRangeList.get(i)[1]+" ");
+            for(int i=0;i<b.brokerBusList.size();i++){
+                System.out.print(b.brokerBusList.get(i)[1]+" ");
             }
             System.out.println("");
         }

@@ -1,6 +1,4 @@
-import DataTypes.Bus;
-import DataTypes.Topic;
-import DataTypes.Value;
+import com.sun.corba.se.pept.broker.Broker;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -9,218 +7,76 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.net.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Brocker extends Node implements Runnable , Serializable {
-    private static final long serialVersionUID = -1799537022412025503L;
-    private ArrayList<Subscriber> registeredSubscribers = new ArrayList<Subscriber>();
-    private ArrayList<Publisher> registerPublisher= new ArrayList<Publisher>();
-    private String brokerRange =null;
-    protected ArrayList<String []> brokerRangeList = new ArrayList<>();
-    private ArrayList<String[]> RemoteBrokers = new ArrayList<String[]>();
-    private HashMap<String,ArrayList<String []>> localBusPositionsHashMap = new HashMap<>();
-    /**contains the position recieved from publisher**/
-    private Socket socket;
-    private int brokerId;
-    private String brokerHash;
-    public void add(String[] temp){
-        RemoteBrokers.add(temp);
+    private static final long serialVersionUID = -6643274596837043061L;
+    /**brokerBusList = the bus list for which a broker is responsible **/
+    protected ArrayList<String []> brokerBusList = new ArrayList<>();
+    private ServerSocket listenerSocket = null;
+    private Socket connection= null;
+    private ObjectOutputStream out = null;
+    private ObjectInputStream in = null;
+
+    public  Brocker(){
+        super();
     }
-    //constructor
-    public Brocker(int port,String ip){
-        super(port,ip);
-        //BrokerList.add(this);
-    }
-    //constructor
-    public Brocker(Socket socket,ArrayList<Brocker> BrokerList,ArrayList<String []>brokerRangeList
-            ,ArrayList<String []> BusLinesArray,HashMap<String,ArrayList<String []>> localBusPositionsHashMap){
-        this.socket=socket;
-        this.BrokerList=BrokerList;
-        this.brokerRangeList=brokerRangeList;
-        this.BusLinesArray=BusLinesArray;
-        this.localBusPositionsHashMap=localBusPositionsHashMap;
+    public Brocker(int port, String ip){
+        ipAddress=ip;
+        port=this.port;
     }
 
-    public void run(){
-        brokerListener(socket);
-        System.out.println(socket.getInetAddress());
+    public void run (){
+        brokerListener();
     }
 
-    /**A socket is not a port!!!!  you open a socket to listen and when a connection request
-     * is send then a new Socket each time gets created and listen in the same port!!!!**/
-    //todo find out why the BrokerList has more objects than it should
-    public void startServer(){
-        ServerSocket listenerSocket =null;
-        Socket connection=null;
+    private void startServer(){
         BrokerList.add(this);
         initialize();
-        System.out.println("BuslinesArray.size: "+BusLinesArray.size());
-        System.out.println("Brocker:"+ BrokerList.size());
-        //calculateKeys();
         try {
-        for(String [] b1 :RemoteBrokers){
-            Thread connectionThread =new Thread(new BrokerConnect(b1[0],Integer.parseInt(b1[1]),Integer.parseInt(b1[2])));
-            connectionThread.start();
-            //connectionThread.join();
-        }
-            listenerSocket= new ServerSocket(port);//a new Socket is created for the specific port
+            listenerSocket= new ServerSocket(port);
             while (true){
-                /**connection is accepted that means a new socket and now a new port has been created for the communication **/
-                System.out.println("Server up and  waiting");
-                connection =listenerSocket.accept();
-                Thread t = new Thread(new Brocker(connection,getBrokerList(),brokerRangeList,BusLinesArray,localBusPositionsHashMap));
+                /**connection accepted means a new socket and a new port have been created for the communication **/
+                System.out.println("Server is up and waiting ");
+                connection=listenerSocket.accept();
+                Thread t = new Thread(this);//check if thread has access to memory
                 t.start();
-                t.join();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }//end startServer
+    }//startServer
 
-    /**this is the mane function responcible for handling the requests**/
-    public void brokerListener(Socket socket1){
+    public void brokerListener(){
         try {
-            ObjectOutputStream out = new ObjectOutputStream(socket1.getOutputStream());
-            ObjectInputStream in = new ObjectInputStream(socket1.getInputStream());
+            out = new ObjectOutputStream(connection.getOutputStream());
+            in = new ObjectInputStream(connection.getInputStream());
             out.writeUTF("Server: Connection Successful ");
             out.flush();
-            String client=socket1.getInetAddress().getHostName();
-            System.out.println("connected client: " +client);
-            String request =in.readUTF();
-            String remoteNodeIp = socket.getInetAddress().getHostName();
-            System.out.println("request for: "+ request +" form --> "+remoteNodeIp);
-            /**returns the List of the brokers**/
-            if(request.equals("BrokerList")&& BrokerList!=null){
-                calculateKeys();//temporary
-                printBrokerRangeSList();
+            String client = connection.getInetAddress().getHostAddress();
+            System.out.println("Connected client : "+ client);
+            String request = in.readUTF();
+            System.out.println("Request for: "+ request + "from -->" + client);
+            if(request.equals("BrokerList")){
+                calculateKeys();
+                printBusLinesArray();
                 out.writeObject(BrokerList);
                 out.flush();
             }
-            else if(request.equals("BrokerAdd")){
-                String newBrokerIp = socket.getInetAddress().getHostName();
-                int newBrokerPort=Integer.parseInt(in.readUTF());//kati paizei edo to bgazei o
-                Brocker b1 = new Brocker(newBrokerPort,newBrokerIp);
+            else if(request.equals("BrockerAdd")){
+                int newBrokerPort = Integer.parseInt(in.readUTF());
+                Brocker b1 = new Brocker(newBrokerPort,client);
+                System.out.println("b1 port: "+ b1.port);
+                System.out.println("b1 ip: "+b1.ipAddress);
                 BrokerList.add(b1);
                 calculateKeys();
-                printBrokerRangeSList();
-                System.err.println("BrokerList.size: "+BrokerList.size());
-                //dennn trexeiiii gaommmmoooo
-//                Thread t = new Thread(()->{
-//                    while (true){
-//                        try {
-//                            out.writeUTF("ping");
-//                            out.flush();
-//                            System.out.println("recived: "+ in.readUTF());
-//                            Thread.sleep(1000);
-//                        } catch (IOException e) {
-//                            System.err.println("Broker Unreachable no Connection Could be established ");
-//
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                });
-//                t.start();
+                printBrokerBusList();
+                System.err.println("BrokeList.size: "+ BrokerList.size());
             }
-            /**receives the object of push**/
-            else if(request.equals("Push")){
-                String temp = in.readUTF();
-                System.err.println("buslineId: "+temp);
-                String newtemp =convertBusLineIdToBus(temp);
-                System.err.println("NewbuslineId: "+newtemp);
-                if(acceptPublisher(newtemp)==true){
-                     ArrayList<String[]> positionList =(ArrayList<String []>) in.readObject();
-                     localBusPositionsHashMap.put(temp,positionList);
-                     System.out.println("positionList.size: "+ positionList.size());
-                    System.err.println("here");
-                }
-                else {
-                    in.readObject();
-                    System.err.println("does not belong here");
-                }
-            }
-            else if (request.equals("Subscribe")){
-                Topic localTopic =(Topic) in.readObject();
-                System.err.println("localtopic: "+localTopic.getBusLine());
-                ArrayList<String[]> local= findValue(localTopic);
-                if(local!=null){
-                    Bus b1 = new Bus();
-                    b1.setBusLineId(local.get(0)[0]);
-                    b1.setRouteCode(local.get(0)[1]);
-                    b1.setVehicleId(local.get(0)[2]);
-                    Topic topic1 = new Topic("bill");
-                    Value value1 = new Value(b1,Double.parseDouble(local.get(1)[3]),Double.parseDouble(local.get(1)[4]));
-                    out.writeObject(value1);
-                    out.flush();
-                }
-            }
-            else if(request.equals("Unsubscribe")){
-                Topic localTopic = (Topic) in.readObject();
-                String subscriberIp = socket.getInetAddress().getHostName();
-                //Todo delete consumer for registeredSubscribers
-            }
-            System.out.println("request Successful");
-            out.close();
-            in.close();
-            System.out.println("connection closed");
         } catch (IOException e) {
-            System.out.println("Broker failed");
-            System.out.println("BrokerListSize: "+ BrokerList.size());
-            /**if a broker disconects for eny reason the other broker deletes th broker from the arraylist**/
-            for(int i=0; i<BrokerList.size(); i++){
-                if(BrokerList.get(i).getIpAddress().equals(socket1.getInetAddress().getHostName())){
-                    System.out.println(BrokerList.get(i).ipAddress);
-                    BrokerList.remove(i);
-                    System.out.println("BrokerListSize: "+ BrokerList.size());
-                }
-            }
-        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-    }//end brokerListener
-    private String convertBusLineIdToBus(String busLineId){
-        String bus=null;
-        System.out.println(BusLinesArray.size());
-        for(String [] local :BusLinesArray){
-            if(busLineId.equals(local[0])){
-                bus=local[1];
-                return  bus;
-            }
-        }
-        return null;
-    }
-    private String convertBusToBusLineId(String bus){
-        String busLineId=null;
-        System.out.println(BusLinesArray.size());
-        for(String [] local :BusLinesArray){
-            if(bus.equals(local[1])){
-                busLineId=local[0];
-                return  busLineId;
-            }
-        }
-        return busLineId;
-    }
-    /**this function is responcible for finding the busLineId from the hasmap
-     * and returns the list of all the bus positoons for the specific bus**/
-    private ArrayList<String []> findValue(Topic localTopic){
-        String temp =localTopic.getBusLine();
-        String bus=convertBusToBusLineId(temp);
-        for(String key : localBusPositionsHashMap.keySet()){
-            if(key.equals(bus)){
-                return localBusPositionsHashMap.get(key);
-            }
-        }
-        return null;
     }
 
-    public String calculateBrokerHash(){
-        Md5 md5 = new Md5();
-        brokerHash = md5.HASH(ipAddress +Integer.toString(port));
-        return brokerHash;
-    }
     /**calculates the ip + port + BUS ID  --> md5 hash**/
     //todo what happens if you want to re calculate the keys
     //todo the table needs to be cleared?
@@ -229,6 +85,7 @@ public class Brocker extends Node implements Runnable , Serializable {
         String hashLine;
         Read r = new Read();
         r.readBusLines();
+        brokerBusList=new ArrayList<String []>();
         ArrayList<String []> busLinesList = r.readBusLines();
         ArrayList<String> busLineHashList = new ArrayList<>(); //na to svisw
         //pernaw ta lineid apo to source,ta hasharw kai bazw ta hash sto busLineHashTable
@@ -240,31 +97,30 @@ public class Brocker extends Node implements Runnable , Serializable {
         sortBrokerList();
         BigInteger brokHash;//temporary metablites gia tis sigriseis mes to if
         BigInteger lineHash;//temporary metablites gia tis sigriseis mes to if
-        BigInteger maxBrokHash=new BigInteger(BrokerList.get(BrokerList.size()-1).calculateBrokerHash(),16);
+        BigInteger maxBrokHash=new BigInteger(BrokerList.get(BrokerList.size()-1).calculateIpPortHash(),16);
         for(Brocker b:BrokerList){
-            brokHash= new BigInteger(b.calculateBrokerHash(),16);
+            brokHash= new BigInteger(b.calculateIpPortHash(),16);
             for(int i=0;i<busLineHashList.size();i++){
                 if(busLineHashList.get(i)!="0") {
                     lineHash = new BigInteger(busLineHashList.get(i), 16);
                     if (lineHash.mod(maxBrokHash).compareTo(brokHash) <= 0) {
-                        b.brokerRangeList.add(busLinesList.get(i));
+                        b.brokerBusList.add(busLinesList.get(i));
                         busLineHashList.set(i, "0");
                     }
                 }
             }
         }
-
     }//end calculateKeys
 
-    //taksinomei ta brokerHashes apo to mikrotero sto megalitero
+    /**sorts the BrokerList based on the Hashes(Ip+port) the contain. smaller to bigger**/
     public void sortBrokerList(){
         int n = BrokerList.size();
         BigInteger temp1;
         BigInteger temp2;
         for (int i = 0; i < n-1; i++) {
             for (int j = 0; j < n - i - 1; j++){
-                 temp1= new BigInteger(BrokerList.get(j).calculateBrokerHash(),16);
-                 temp2= new BigInteger(BrokerList.get(j + 1).calculateBrokerHash(),16);
+                temp1= new BigInteger(BrokerList.get(j).calculateIpPortHash(),16);
+                temp2= new BigInteger(BrokerList.get(j + 1).calculateIpPortHash(),16);
                 if (temp1.compareTo(temp2) > 0) {
                     // swap brocker elements in the arraylist
                     Brocker temp = BrokerList.get(j);
@@ -274,49 +130,19 @@ public class Brocker extends Node implements Runnable , Serializable {
             }
         }
     }
-
-
-    public void printBrokerRangeSList(){
-
+    public String calculateIpPortHash(){
+        Md5 md5 = new Md5();
+        String brokerHash;
+        brokerHash = md5.HASH(ipAddress +Integer.toString(port));
+        return brokerHash;
+    }
+    public void printBrokerBusList(){
         System.out.println("Broker has lines : ");
-        for(int i=0;i<brokerRangeList.size();i++){
-            System.out.println(brokerRangeList.get(i)[1]);
-
+        for(int i=0;i<brokerBusList.size();i++){
+            System.out.println(brokerBusList.get(i)[1]);
         }
     }
-    public boolean acceptPublisher(String lineId){
-        for (int i=0; i<brokerRangeList.size();i++){
-            if(brokerRangeList.get(i)[1].equals(lineId)){
-                return true;
-            }
-        }
-        return false;
-    }//end acceptPublisher
-
-    public ArrayList<String[]> getBrokerRangeList(){
-        return brokerRangeList;
-    }
-
-    public void printBrokerList(){
-        System.out.println("size :"+BrokerList.size());
-        for(Brocker b: BrokerList){
-            System.out.println("Brocker"+b.brokerId+" hash: "+b.calculateBrokerHash());
-        }
-    }
-    public String getBrokerRange(){
-        return brokerRange;
-    }
 
 
-    /**will accept a connection if the Publisher's hash is with in the
-     * range of the keys that he can accept**/
 
-    //todo
-    /**this function will be responsible to update the other hosts
-     * 1) every time it has new data example (publisher sends new Value)
-     * 2) broker every time it receives new data**/
-    @Override
-    public void UpdateNodes() {
-
-    }
 }//end class Broker
