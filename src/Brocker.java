@@ -29,7 +29,7 @@ public class Brocker extends Node implements Runnable , Serializable {
         brokerListener();
     }
 
-    private void startServer(){
+    public void startServer(){
         BrokerList.add(this);
         initialize();
         try {
@@ -144,6 +144,11 @@ public class Brocker extends Node implements Runnable , Serializable {
             System.out.println(brokerBusList.get(i)[1]);
         }
     }
+
+    public ArrayList<String[]> getBrokerBusList(){
+        return brokerBusList;
+    }
+
 
 
 

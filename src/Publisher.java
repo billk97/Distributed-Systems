@@ -87,9 +87,9 @@ public class Publisher extends Node{
     /**search for the broker with who is responsible for the busline:busOfPub **/
     public Brocker findBus(String busOfPub){
         for(int i=0;i<localBrockerList.size();i++) { //search at local broker list
-            int BrokerRangeListSize = localBrockerList.get(i).getBrokerRangeList().size(); //size of the BrokerRangeList for each broker
+            int BrokerRangeListSize = localBrockerList.get(i).getBrokerBusList().size(); //size of the BrokerRangeList for each broker
             for (int j = 0; j < BrokerRangeListSize; j++) { //search to every broker's hashmap's arraylist
-                String busOfBroker = localBrockerList.get(i).getBrokerRangeList().get(j)[0];
+                String busOfBroker = localBrockerList.get(i).getBrokerBusList().get(j)[0];
                 if (busOfPub.equals(busOfBroker)) {
                     return localBrockerList.get(i);
                 }
