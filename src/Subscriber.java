@@ -76,8 +76,14 @@ public class Subscriber extends Node implements Serializable {
             out.flush();
             out.writeObject(topic);
             out.flush();
-            Value localValue = (Value) in.readObject();
-            System.out.println("sub: "+ localValue.getBus().getBusLineId());
+            if(in.readUTF().equals("true")){
+                Value localValue = (Value) in.readObject();
+                System.out.println("sub: "+ localValue.getBus().getBusLineId());
+            }else {
+                String [] table1 =(String[]) in.readObject();
+
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
