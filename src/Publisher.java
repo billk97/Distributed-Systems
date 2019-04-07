@@ -50,16 +50,6 @@ public class Publisher extends Node {
         }
         //System.out.println("hashmap size ="+busPositionsHashMap.size());
     }//end readBusInformation
-    //todo delete this when ready
-    /**prints the HashMap busPositionsHashMap**/
-    public void printBusPositionHash(){
-        for(String key: busPositionsHashMap.keySet()){
-            System.out.println("Bus: "+key+" has linehashes: ");
-            for(int i = 0; i< busPositionsHashMap.get(key).size(); i++){
-                System.out.println(busPositionsHashMap.get(key).get(i)[0]+" "+ busPositionsHashMap.get(key).get(i)[1]+" "+ busPositionsHashMap.get(key).get(i)[2]+" "+ busPositionsHashMap.get(key).get(i)[3]+" "+ busPositionsHashMap.get(key).get(i)[4]+" "+ busPositionsHashMap.get(key).get(i)[5]);
-            }
-        }
-    }// end printBusPositionHash
 
     /**this function gets the list of all Brokers via tcp connection **/
     public void getMyBrokerList(){
@@ -99,7 +89,7 @@ public class Publisher extends Node {
         System.out.println("ERROR:The bus dont exists at the broker's list");
         return null;
     }
-    /**notiffys the main broker for a faillure**/
+    /**notify the main broker for a failure**/
     public void notifyFailure(){
         Socket socket = connect(brokerIp,brokerPort);
         try {
@@ -109,6 +99,8 @@ public class Publisher extends Node {
             out.writeUTF("Broker Failed");
             out.flush();
             getMyBrokerList();
+            in.close();
+            out.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -149,8 +141,6 @@ public class Publisher extends Node {
             }
         }//end for1
     }//end push
-
-    public void notitfyFailure(Brocker  broker){ }
     /**setter getter **/
     public void setMyHash(String myHash) {
         this.myHash = myHash;

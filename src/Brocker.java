@@ -109,9 +109,9 @@ public class Brocker extends Node implements Runnable, Serializable {
                     System.err.println("This broker is not responsible for this bus");
                 }
             }else if(request.equals("Subscribe")){
-                Topic Bus =(Topic) in.readObject();
-                System.err.println("LocalTopic: "+ Bus.getBusLine());
-                ArrayList<String[]> local= findValue(Bus);
+                Topic topic =(Topic) in.readObject();
+                System.err.println("LocalTopic: "+ topic.getBusLine());
+                ArrayList<String[]> local= findValue(topic);
                 if(local!=null){
                     out.writeUTF("true");
                     out.flush();
@@ -126,7 +126,7 @@ public class Brocker extends Node implements Runnable, Serializable {
                 else {
                     out.writeUTF("false");
                     out.flush();
-                    out.writeObject(findValueRemmoteBroker(Bus));
+                    out.writeObject(findValueRemmoteBroker(topic));
                     out.flush();
                 }
             }
