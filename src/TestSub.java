@@ -9,8 +9,11 @@ public class TestSub {
         su.setBrokerport(4202);
         su.init();
         su.EstablishConnection();
-        su.printAvailableBusLines();
+        su.disconnect();
         Topic topic = su.readTopicFromConsole();
+        su.findBroker(topic);
+        su.register(topic);
+        su.printAvailableBusLines();
         //su.printBusLinesArray();
         System.out.println("searching for 024");
         su.findBroker(topic);

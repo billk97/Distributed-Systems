@@ -79,7 +79,7 @@ public class Brocker extends Node implements Runnable, Serializable {
             String client = socket.getInetAddress().getHostAddress();
             System.out.println("Connected client : " + client);
             String request = in.readUTF();
-            System.out.println("Request for: " + request + "from -->" + client);
+            System.out.println("Request for: " + request + " from --> " + client);
             if (request.equals("BrokerList")) {
                 calculateKeys();
                 printBusLinesArray();
@@ -124,6 +124,7 @@ public class Brocker extends Node implements Runnable, Serializable {
                     out.flush();
                 }
                 else {
+                    System.out.println("here");
                     out.writeUTF("false");
                     out.flush();
                     out.writeObject(findValueRemmoteBroker(topic));

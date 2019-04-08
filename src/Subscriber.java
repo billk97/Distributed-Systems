@@ -32,7 +32,7 @@ public class Subscriber extends Node implements Serializable {
                 }
             }
         }
-    }
+    }//end findBroker
 
     public void init(){
         try {
@@ -77,10 +77,10 @@ public class Subscriber extends Node implements Serializable {
             out.writeObject(topic);
             out.flush();
             if(in.readUTF().equals("true")){
+                System.out.println("found broker");
                 Value localValue = (Value) in.readObject();
                 System.out.println("sub: "+ localValue.getBus().getBusLineId());
             }else {
-                String [] table1 =(String[]) in.readObject();
 
             }
 
@@ -92,8 +92,21 @@ public class Subscriber extends Node implements Serializable {
             Disconnect(socket);
         }
     }//end register
-    /**disconnect from the topic does not receive any more data **/
-    private void disconnect(Topic topic){
+
+    public void disconnect(){
+        try {
+            out.close();
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+        Disconnect(socket);
+    }
+
+
+    }
+    /**unsubscribe from the topic does not receive any more data **/
+    public void unsubscribe(Topic topic){
         try {
             System.out.println(in.readUTF());
             out.writeUTF("Unsubscribe");
@@ -108,7 +121,7 @@ public class Subscriber extends Node implements Serializable {
         }finally {
             Disconnect(socket);
         }
-    }//end disconnect
+    }//end unsubscribe
 
     /**read the topic(bus) from console**/
     public Topic readTopicFromConsole(){

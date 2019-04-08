@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Test {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         /**defines the broker port and ip for this machine **/
-        Brocker v1 = new Brocker(4202, "192.168.1.65");
+        Brocker v1 = new Brocker(4202, "localhost");
         v1.startServer();
 //        Scanner in = new Scanner(System.in);
 //        System.out.println("Setting up broker! ");
