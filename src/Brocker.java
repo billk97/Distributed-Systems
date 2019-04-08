@@ -113,8 +113,6 @@ public class Brocker extends Node implements Runnable, Serializable {
                 System.err.println("LocalTopic: "+ topic.getBusLine());
                 ArrayList<String[]> local= findValue(topic);
                 if(local!=null){
-                    out.writeUTF("true");
-                    out.flush();
                     Bus b1 = new Bus();
                     b1.setBusLineId(local.get(0)[0]);
                     b1.setRouteCode(local.get(0)[1]);
@@ -123,13 +121,9 @@ public class Brocker extends Node implements Runnable, Serializable {
                     out.writeObject(value1);
                     out.flush();
                 }
-                else {
-                    System.out.println("here");
-                    out.writeUTF("false");
-                    out.flush();
-                    out.writeObject(findValueRemmoteBroker(topic));
-                    out.flush();
-                }
+            }
+            else if(request.equals("Unsubscribe")){
+
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -200,10 +194,10 @@ public class Brocker extends Node implements Runnable, Serializable {
     public void calculateKeys() throws IOException {
         Md5 md5 = new Md5();
         String hashLine;
-        Read r = new Read();
-        r.readBusLines();
         brokerBusList = new ArrayList<String[]>();
-        ArrayList<String[]> busLinesList = r.readBusLines();
+        brokerBusList.clear();
+        ArrayList<String[]> busLinesList =new ArrayList<String[]>();
+         busLinesList = BusLinesArray;
         ArrayList<String> busLineHashList = new ArrayList<>(); //na to svisw
         //pernaw ta lineid apo to source,ta hasharw kai bazw ta hash sto busLineHashTable
         for (int i = 0; i < busLinesList.size(); i++) {
@@ -227,6 +221,7 @@ public class Brocker extends Node implements Runnable, Serializable {
                 }
             }
         }
+        busLinesList.clear();
     }//end calculateKeys
 
     /**

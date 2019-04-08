@@ -1,5 +1,6 @@
 import DataTypes.Topic;
 import DataTypes.Value;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -16,13 +17,14 @@ public class Subscriber extends Node implements Serializable {
     Socket socket =new Socket();
     private ObjectInputStream in;
     private ObjectOutputStream out;
+    ArrayList <Value> valueArrayList = new ArrayList<Value>();
     public Subscriber(){
         super();
     }
     public Subscriber(String ip, int port){
         super();
     }
-
+    /**find the broker responsible **/
     public void findBroker(Topic topic){
         for(Brocker b:BrokerList ){
             for(int i=0;i<b.brokerBusList.size();i++) {
@@ -34,26 +36,24 @@ public class Subscriber extends Node implements Serializable {
         }
     }//end findBroker
 
-    public void init(){
+
+    public void EstablishConnection() {
         try {
             socket = connect(brokerIp,brokerport);
             in = new ObjectInputStream(socket.getInputStream());
             out = new ObjectOutputStream(socket.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }//end void
-
-    public void EstablishConnection() {
-        try {
             System.out.println(in.readUTF());
             out.writeUTF("BrokerList");
             out.flush();
             BrokerList=(ArrayList<Brocker>) in.readObject();
+            in.close();
+            out.close();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        }finally {
+            Disconnect(socket);
         }
     }
 
@@ -70,20 +70,25 @@ public class Subscriber extends Node implements Serializable {
     /**register for the first time for a topic**/
     public void register(Topic topic){
         try {
-            init();
+            findBroker(topic);
+            socket = connect(brokerIp,brokerport);
+            in = new ObjectInputStream(socket.getInputStream());
+            out = new ObjectOutputStream(socket.getOutputStream());
+            System.out.println("Connected");
             System.out.println(in.readUTF());
             out.writeUTF("Subscribe");
             out.flush();
             out.writeObject(topic);
             out.flush();
-            if(in.readUTF().equals("true")){
-                System.out.println("found broker");
-                Value localValue = (Value) in.readObject();
-                System.out.println("sub: "+ localValue.getBus().getBusLineId());
-            }else {
-
+            String close="true";
+            while (close.equals("true")){
+                Value value = (Value) in.readObject();
+                System.out.println("Bus: "+ value.getBus()+" Lon: "+value.getLongtitude()+ " lan: "+value.getLatidude());
+                valueArrayList.add(value);
+                close=in.readUTF();
             }
-
+            out.close();
+            in.close();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -92,6 +97,23 @@ public class Subscriber extends Node implements Serializable {
             Disconnect(socket);
         }
     }//end register
+
+    /**unsubscribe from the topic does not receive any more data **/
+    public void unsubscribe(Topic topic){
+        try {
+            System.out.println(in.readUTF());
+            out.writeUTF("Unsubscribe");
+            out.flush();
+            out.writeObject(topic);
+            out.flush();
+            out.close();
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            Disconnect(socket);
+        }
+    }//end unsubscribe
 
     public void disconnect(){
         try {
@@ -105,23 +127,7 @@ public class Subscriber extends Node implements Serializable {
 
 
     }
-    /**unsubscribe from the topic does not receive any more data **/
-    public void unsubscribe(Topic topic){
-        try {
-            System.out.println(in.readUTF());
-            out.writeUTF("Unsubscribe");
-            out.flush();
-            out.writeObject(topic);
-            out.flush();
-            out.close();
-            in.close();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            Disconnect(socket);
-        }
-    }//end unsubscribe
 
     /**read the topic(bus) from console**/
     public Topic readTopicFromConsole(){
