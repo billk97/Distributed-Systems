@@ -92,7 +92,7 @@ public class Brocker extends Node implements Runnable, Serializable {
                 System.out.println("b1 ip: " + b1.ipAddress);
                 BrokerList.add(b1);
                 calculateKeys();
-                printBrokerBusList();
+                this.printBrokerBusList();
                 System.err.println("BrokeList.size: " + BrokerList.size());
             } else if (request.equals("Push")) {
                 String LineCode = in.readUTF();
@@ -193,11 +193,12 @@ public class Brocker extends Node implements Runnable, Serializable {
     //todo the table needs to be cleared?
     public void calculateKeys() throws IOException {
         Md5 md5 = new Md5();
+        Read r = new Read();
         String hashLine;
         brokerBusList = new ArrayList<String[]>();
         brokerBusList.clear();
         ArrayList<String[]> busLinesList =new ArrayList<String[]>();
-        busLinesList = BusLinesArray;
+        busLinesList = r.readBusLines();
         ArrayList<String> busLineHashList = new ArrayList<>(); //na to svisw
         //pernaw ta lineid apo to source,ta hasharw kai bazw ta hash sto busLineHashTable
         for (int i = 0; i < busLinesList.size(); i++) {
@@ -222,7 +223,7 @@ public class Brocker extends Node implements Runnable, Serializable {
             }
         }
         printBrokerBusList();
-        busLinesList.clear();
+        //busLinesList.clear();
     }//end calculateKeys
 
     /**
