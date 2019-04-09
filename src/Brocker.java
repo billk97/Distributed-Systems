@@ -1,6 +1,7 @@
 import DataTypes.Bus;
 import DataTypes.Topic;
 import DataTypes.Value;
+import com.sun.corba.se.pept.broker.Broker;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -16,7 +17,7 @@ public class Brocker extends Node implements Runnable, Serializable {
     /**
      * brokerBusList = the bus list for which a broker is responsible
      **/
-    protected ArrayList<String[]> brokerBusList = new ArrayList<>();
+    public ArrayList<String[]> brokerBusList = new ArrayList<>();
     private HashMap<String, ArrayList<String[]>> BusInformationHashMap = new HashMap<>();
     public ArrayList<Brocker> BrokerList = new ArrayList<Brocker>();
     private Socket socket;
@@ -93,7 +94,12 @@ public class Brocker extends Node implements Runnable, Serializable {
                 System.out.println("b1 ip: " + b1.ipAddress);
                 BrokerList.add(b1);
                 calculateKeys();
-                printBrokerBusList();
+                for(Brocker b2 : BrokerList){
+                    System.out.println("BrockersIp: "+b2.getIpAddress());
+                    for (String [] temp :b2.brokerBusList){
+                        System.out.println("has bussed: "+ temp[1]);
+                    }
+                }
                 System.err.println("BrokeList.size: " + BrokerList.size());
             } else if (request.equals("Push")) {
                 String LineCode = in.readUTF();
@@ -196,8 +202,6 @@ public class Brocker extends Node implements Runnable, Serializable {
         Md5 md5 = new Md5();
         Read r = new Read();
         String hashLine;
-        brokerBusList = new ArrayList<String[]>();
-        brokerBusList.clear();
         ArrayList<String[]> busLinesList =new ArrayList<String[]>();
         busLinesList = r.readBusLines();
         ArrayList<String> busLineHashList = new ArrayList<>(); //na to svisw
@@ -212,6 +216,7 @@ public class Brocker extends Node implements Runnable, Serializable {
         BigInteger lineHash;//temporary metablites gia tis sigriseis mes to if
         BigInteger maxBrokHash = new BigInteger(BrokerList.get(BrokerList.size() - 1).calculateIpPortHash(), 16);
         for (Brocker b : BrokerList) {
+            b.brokerBusList = new ArrayList<String[]>();
             brokHash = new BigInteger(b.calculateIpPortHash(), 16);
             for (int i = 0; i < busLineHashList.size(); i++) {
                 if (busLineHashList.get(i) != "0") {
@@ -257,9 +262,8 @@ public class Brocker extends Node implements Runnable, Serializable {
 
     public void printBrokerBusList() {
         System.out.println("Broker has lines : ");
-            System.err.println("Broker has lines j : ");
-            for (int i = 0; i < brokerBusList.size(); i++) {
-                System.out.println(brokerBusList.get(i)[1]);
+            for (int i = 0; i < this.brokerBusList.size(); i++) {
+                System.out.println(this.brokerBusList.get(i)[1]);
             }
     }
 
