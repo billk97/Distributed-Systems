@@ -51,8 +51,8 @@ public class Brocker extends Node implements Runnable, Serializable {
         initialize();
         try {
             listenerSocket = new ServerSocket(port);
-            Thread BrokerAddThread1 = new Thread(new BrokerConnect("172.16.2.45", 4202, 4202));
-            Thread BrokerAddThread2 = new Thread(new BrokerConnect("172.16.2.46", 4202, 4202));
+            Thread BrokerAddThread1 = new Thread(new BrokerConnect("172.16.2.44", 4202, 4202));
+            Thread BrokerAddThread2 = new Thread(new BrokerConnect("172.16.2.45", 4202, 4202));
             BrokerAddThread1.start();
             BrokerAddThread2.start();
             while (true) {
@@ -114,15 +114,18 @@ public class Brocker extends Node implements Runnable, Serializable {
                 Topic topic =(Topic) in.readObject();
                 System.err.println("LocalTopic: "+ topic.getBusLine());
                 ArrayList<String[]> local= findValue(topic);
-                if(local!=null){
-                    Bus b1 = new Bus();
-                    b1.setBusLineId(local.get(0)[0]);
-                    b1.setRouteCode(local.get(0)[1]);
-                    b1.setVehicleId(local.get(0)[2]);
-                    Value value1 = new Value(b1,Double.parseDouble(local.get(1)[3]),Double.parseDouble(local.get(1)[4]));
-                    out.writeObject(value1);
-                    out.flush();
+                for(int i=0; i<10; i++){
+                    if(local!=null){
+                        Bus b1 = new Bus();
+                        b1.setBusLineId(local.get(i)[0]);
+                        b1.setRouteCode(local.get(i)[1]);
+                        b1.setVehicleId(local.get(i)[2]);
+                        Value value1 = new Value(b1,Double.parseDouble(local.get(i)[3]),Double.parseDouble(local.get(i)[4]));
+                        out.writeObject(value1);
+                        out.flush();
+                    }
                 }
+
             }
             else if(request.equals("Unsubscribe")){
 
