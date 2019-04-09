@@ -50,7 +50,7 @@ public class Brocker extends Node implements Runnable, Serializable {
         initialize();
         try {
             listenerSocket = new ServerSocket(port);
-            Thread BrokerAddThread1 = new Thread(new BrokerConnect("172.16.2.44", 4202, 4202));
+            Thread BrokerAddThread1 = new Thread(new BrokerConnect("172.16.2.45", 4202, 4202));
             Thread BrokerAddThread2 = new Thread(new BrokerConnect("172.16.2.46", 4202, 4202));
             BrokerAddThread1.start();
             BrokerAddThread2.start();
@@ -82,7 +82,7 @@ public class Brocker extends Node implements Runnable, Serializable {
             System.out.println("Request for: " + request + " from --> " + client);
             if (request.equals("BrokerList")) {
                 calculateKeys();
-                printBusLinesArray();
+                //printBusLinesArray();
                 out.writeObject(BrokerList);
                 out.flush();
             } else if (request.equals("BrokerAdd")) {
@@ -92,7 +92,7 @@ public class Brocker extends Node implements Runnable, Serializable {
                 System.out.println("b1 ip: " + b1.ipAddress);
                 BrokerList.add(b1);
                 calculateKeys();
-                this.printBrokerBusList();
+                printBrokerBusList();
                 System.err.println("BrokeList.size: " + BrokerList.size());
             } else if (request.equals("Push")) {
                 String LineCode = in.readUTF();
@@ -256,8 +256,13 @@ public class Brocker extends Node implements Runnable, Serializable {
 
     public void printBrokerBusList() {
         System.out.println("Broker has lines : ");
-        for (int i = 0; i < brokerBusList.size(); i++) {
-            System.out.println(brokerBusList.get(i)[1]);
+        int j=0;
+        for(Brocker b: BrokerList) {
+            System.err.println("Broker has lines j : "+ j);
+            for (int i = 0; i < b.brokerBusList.size(); i++) {
+                System.out.println(b.brokerBusList.get(i)[1]);
+            }
+            j++;
         }
     }
 
