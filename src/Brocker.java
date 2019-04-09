@@ -52,7 +52,7 @@ public class Brocker extends Node implements Runnable, Serializable {
         try {
             listenerSocket = new ServerSocket(port);
             Thread BrokerAddThread1 = new Thread(new BrokerConnect("172.16.2.44", 4202, 4202));
-            Thread BrokerAddThread2 = new Thread(new BrokerConnect("172.16.2.45", 4202, 4202));
+            Thread BrokerAddThread2 = new Thread(new BrokerConnect("172.16.2.46", 4202, 4202));
             BrokerAddThread1.start();
             BrokerAddThread2.start();
             while (true) {
@@ -123,6 +123,7 @@ public class Brocker extends Node implements Runnable, Serializable {
                         Value value1 = new Value(b1,Double.parseDouble(local.get(i)[3]),Double.parseDouble(local.get(i)[4]));
                         out.writeObject(value1);
                         out.flush();
+                        Thread.sleep(1000);
                     }
                 }
 
@@ -133,6 +134,8 @@ public class Brocker extends Node implements Runnable, Serializable {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

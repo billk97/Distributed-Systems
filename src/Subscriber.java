@@ -85,7 +85,6 @@ public class Subscriber extends Node implements Serializable {
                 Value value = (Value) in.readObject();
                 System.out.println("Bus: "+ value.getBus()+" Lon: "+value.getLongtitude()+ " lan: "+value.getLatidude());
                 valueArrayList.add(value);
-                close=in.readUTF();
             }
             out.close();
             in.close();
