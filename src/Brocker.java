@@ -50,8 +50,8 @@ public class Brocker extends Node implements Runnable, Serializable {
         initialize();
         try {
             listenerSocket = new ServerSocket(port);
-            Thread BrokerAddThread1 = new Thread(new BrokerConnect("192.168.1.87", 4202, 4202));
-            Thread BrokerAddThread2 = new Thread(new BrokerConnect("192.168.1.74", 4202, 4202));
+            Thread BrokerAddThread1 = new Thread(new BrokerConnect("172.16.2.44", 4202, 4202));
+            Thread BrokerAddThread2 = new Thread(new BrokerConnect("172.16.2.46", 4202, 4202));
             BrokerAddThread1.start();
             BrokerAddThread2.start();
             while (true) {
@@ -154,7 +154,7 @@ public class Brocker extends Node implements Runnable, Serializable {
     }//end acceptPublisher
     private String convertLineCodeToBus(String LineCode){
         String bus=null;
-        for(String [] local :BusLinesArray){
+        for(String [] local :brokerBusList){
             if(LineCode.equals(local[0])){
                 bus=local[1];
                 return bus;
@@ -178,7 +178,7 @@ public class Brocker extends Node implements Runnable, Serializable {
 
     private String convertBusToLineCode(String bus){
         String LineCode=null;
-        for(String [] local : BusLinesArray){
+        for(String [] local : brokerBusList){
             if(bus.equals(local[1])){
                 LineCode=local[0];
                 return LineCode;
@@ -197,7 +197,7 @@ public class Brocker extends Node implements Runnable, Serializable {
         brokerBusList = new ArrayList<String[]>();
         brokerBusList.clear();
         ArrayList<String[]> busLinesList =new ArrayList<String[]>();
-         busLinesList = BusLinesArray;
+        busLinesList = BusLinesArray;
         ArrayList<String> busLineHashList = new ArrayList<>(); //na to svisw
         //pernaw ta lineid apo to source,ta hasharw kai bazw ta hash sto busLineHashTable
         for (int i = 0; i < busLinesList.size(); i++) {
@@ -221,6 +221,7 @@ public class Brocker extends Node implements Runnable, Serializable {
                 }
             }
         }
+        printBrokerBusList();
         busLinesList.clear();
     }//end calculateKeys
 
