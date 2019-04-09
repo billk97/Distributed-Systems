@@ -51,7 +51,7 @@ public class Brocker extends Node implements Runnable, Serializable {
         initialize();
         try {
             listenerSocket = new ServerSocket(port);
-            Thread BrokerAddThread1 = new Thread(new BrokerConnect("172.16.2.44", 4202, 4202));
+            Thread BrokerAddThread1 = new Thread(new BrokerConnect("172.16.2.45", 4202, 4202));
             Thread BrokerAddThread2 = new Thread(new BrokerConnect("172.16.2.46", 4202, 4202));
             BrokerAddThread1.start();
             BrokerAddThread2.start();
@@ -94,12 +94,7 @@ public class Brocker extends Node implements Runnable, Serializable {
                 System.out.println("b1 ip: " + b1.ipAddress);
                 BrokerList.add(b1);
                 calculateKeys();
-                for(Brocker b2 : BrokerList){
-                    System.out.println("BrockersIp: "+b2.getIpAddress());
-                    for (String [] temp :b2.brokerBusList){
-                        System.out.println("has bussed: "+ temp[1]);
-                    }
-                }
+                printBrokerBusList();
                 System.err.println("BrokeList.size: " + BrokerList.size());
             } else if (request.equals("Push")) {
                 String LineCode = in.readUTF();
@@ -261,10 +256,12 @@ public class Brocker extends Node implements Runnable, Serializable {
     }
 
     public void printBrokerBusList() {
-        System.out.println("Broker has lines : ");
-            for (int i = 0; i < this.brokerBusList.size(); i++) {
-                System.out.println(this.brokerBusList.get(i)[1]);
+        for(Brocker b2 : BrokerList){
+            System.out.println("Brockers with ip: "+b2.getIpAddress()+" has busses:");
+            for (String [] temp :b2.brokerBusList){
+                System.out.println(temp[1]);
             }
+        }
     }
 
     public ArrayList<String[]> getBrokerBusList() {
