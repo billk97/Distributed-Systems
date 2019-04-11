@@ -51,10 +51,10 @@ public class Brocker extends Node implements Runnable, Serializable {
         initialize();
         try {
             listenerSocket = new ServerSocket(port);
-            Thread BrokerAddThread1 = new Thread(new BrokerConnect("172.16.2.44", 4202, 4202));
-            Thread BrokerAddThread2 = new Thread(new BrokerConnect("172.16.2.46", 4202, 4202));
-            BrokerAddThread1.start();
-            BrokerAddThread2.start();
+            //Thread BrokerAddThread1 = new Thread(new BrokerConnect("172.16.2.44", 4202, 4202));
+            //Thread BrokerAddThread2 = new Thread(new BrokerConnect("172.16.2.46", 4202, 4202));
+            //BrokerAddThread1.start();
+            //BrokerAddThread2.start();
             while (true) {
                 /**connection accepted means a new socket and a new port have been created for the communication **/
                 System.out.println("Server is up and waiting ");
@@ -114,19 +114,28 @@ public class Brocker extends Node implements Runnable, Serializable {
                 Topic topic =(Topic) in.readObject();
                 System.err.println("LocalTopic: "+ topic.getBusLine());
                 ArrayList<String[]> local= findValue(topic);
-                for(int i=0; i<10; i++){
-                    if(local!=null){
-                        Bus b1 = new Bus();
-                        b1.setBusLineId(local.get(i)[0]);
-                        b1.setRouteCode(local.get(i)[1]);
-                        b1.setVehicleId(local.get(i)[2]);
-                        Value value1 = new Value(b1,Double.parseDouble(local.get(i)[3]),Double.parseDouble(local.get(i)[4]));
-                        out.writeObject(value1);
-                        out.flush();
-                        Thread.sleep(1000);
-                    }
-                }
+                Thread t = new Thread(()->{
+                    for(int i=0; i<local.size(); i++){
+                        if(local!=null){
+                            Bus b1 = new Bus();
+                            b1.setBusLineId(local.get(i)[0]);
+                            b1.setRouteCode(local.get(i)[1]);
+                            b1.setVehicleId(local.get(i)[2]);
+                            Value value1 = new Value(b1,Double.parseDouble(local.get(i)[3]),Double.parseDouble(local.get(i)[4]));
+                            try {
+                                out.writeObject(value1);
+                                out.flush();
+                                Thread.sleep(1000);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
 
+                        }
+                    }
+                });
+                t.start();
             }
             else if(request.equals("Unsubscribe")){
 
@@ -134,8 +143,6 @@ public class Brocker extends Node implements Runnable, Serializable {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
