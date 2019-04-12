@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class Node implements Serializable {
     private static final long serialVersionUID = -304193945227516524L;
     public  static ArrayList<Brocker> BrokerList= new ArrayList<Brocker>();
-    public ArrayList<String []> localeRouteCodesList;
+    public ArrayList<String []> localeRouteCodesList=new ArrayList<>();
     public ArrayList<String []> BusLinesArray = new ArrayList<>();
     protected String ipAddress ;
     protected int port;
@@ -31,29 +31,14 @@ public class Node implements Serializable {
         BusLinesArray = read.readBusLines();
     }
 
+
     public void printBusLinesArray(){
         for(String [] tempTable : BusLinesArray){
             System.out.println(tempTable[0]+" "+tempTable[1]+" "+tempTable[2]);
         }
     }
 
-    public String getBusLineName(String routeCode){
-        for (String[] line : localeRouteCodesList){
-            if(line[1].equals(routeCode)){
-                return line[3];
-            }
-        }
-        return null;
-    }
 
-    public String getBusLineInfo(String routeCode){
-        for (String[] line : localeRouteCodesList){
-            if(line[1].equals(routeCode)){
-                return line[4];
-            }
-        }
-        return null;
-    }
     public ArrayList<Brocker> getBrokerList() {
         return BrokerList;
     }

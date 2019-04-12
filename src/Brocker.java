@@ -32,12 +32,13 @@ public class Brocker extends Node implements Runnable, Serializable {
     }
 
     public Brocker(Socket socket, ArrayList<Brocker> BrokerList, ArrayList<String[]> brokerBusList,
-                   ArrayList<String[]> BusLinesArrays, HashMap<String, ArrayList<String[]>> BusInformationHashMap) {
+                   ArrayList<String[]> BusLinesArrays, HashMap<String, ArrayList<String[]>> BusInformationHashMap, ArrayList<String []> localeRouteCodesList) {
         this.BrokerList = BrokerList;
         this.socket = socket;
         this.BusLinesArray = BusLinesArrays;
         this.BusInformationHashMap = BusInformationHashMap;
         this.brokerBusList = brokerBusList;
+        this.localeRouteCodesList=localeRouteCodesList;
     }
 
     public void run() {
@@ -59,7 +60,7 @@ public class Brocker extends Node implements Runnable, Serializable {
                 /**connection accepted means a new socket and a new port have been created for the communication **/
                 System.out.println("Server is up and waiting ");
                 connection = listenerSocket.accept();
-                Thread t = new Thread(new Brocker(connection, BrokerList, brokerBusList, BusLinesArray, BusInformationHashMap));//check if thread has access to memory
+                Thread t = new Thread(new Brocker(connection, BrokerList, brokerBusList, BusLinesArray, BusInformationHashMap,localeRouteCodesList));//check if thread has access to memory
                 t.start();
                 t.join();
             }
@@ -121,13 +122,13 @@ public class Brocker extends Node implements Runnable, Serializable {
                             b1.setBusLineId(local.get(i)[0]);
                             b1.setRouteCode(local.get(i)[1]);
                             b1.setVehicleId(local.get(i)[2]);
-//                          b1.setLineName(getBusLineName(local.get(i)[1]));
-//                          b1.setInfo(getBusLineInfo(local.get(i)[1]));
+                            b1.setLineName(getBusLineName(local.get(i)[1]));
+                            b1.setInfo(getBusLineInfo(local.get(i)[1]));
                             Value value1 = new Value(b1,Double.parseDouble(local.get(i)[3]),Double.parseDouble(local.get(i)[4]));
                             try {
                                 out.writeObject(value1);
                                 out.flush();
-                                Thread.sleep(1000);
+                                Thread.sleep(3000);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             } catch (InterruptedException e) {
@@ -147,6 +148,24 @@ public class Brocker extends Node implements Runnable, Serializable {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getBusLineName(String routeCode){
+        for (String[] line : localeRouteCodesList){
+            if(line[0].equals(routeCode)){
+                return line[3];
+            }
+        }
+        return "Name not found";
+    }
+
+    public String getBusLineInfo(String routeCode){
+        for (String[] line : localeRouteCodesList){
+            if(line[0].equals(routeCode)){
+                return line[4];
+            }
+        }
+        return "Info not found";
     }
     private String[] findValueRemmoteBroker(Topic bus){
         String localTable [] =new String[2];

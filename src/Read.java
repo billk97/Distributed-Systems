@@ -71,7 +71,6 @@ public class Read {
                     word= "";
 
                     if(lineCode.equals(busPositionTable[0])) {
-                        //System.out.println(busPositionTable[0]+" "+busPositionTable[1]+" "+busPositionTable[2]+" "+busPositionTable[3]+" "+busPositionTable[4]+" "+busPositionTable[5]);
                         busPositionList.add(busPositionTable);
                     }
                     busPositionTable= new String[6];
@@ -93,12 +92,12 @@ public class Read {
         FileReader fileReader= null;
         String word="";
         ArrayList<String []> routeCodesList= new ArrayList<String[]>();
-        String routeCodesTable[]= new String[5];
         File file = new File(routeCodesPath);
         Scanner scanner = null;
         try {
             scanner = new Scanner(file);
             while (scanner.hasNextLine()){
+                String routeCodesTable[]= new String[5];
                 String line = scanner.nextLine();
                 String [] temp =line.split("\\[");
                 String[] temp2=temp[0].split(",");
@@ -112,12 +111,7 @@ public class Read {
                 else {
                     routeCodesTable[4]="empty";
                 }
-//                System.out.println(routeCodesTable[0]+
-//                        routeCodesTable[1]+
-//                        routeCodesTable[2]+
-//                        routeCodesTable[3]+
-//                        routeCodesTable[4]);
-//                routeCodesList.add(routeCodesTable);
+                routeCodesList.add(routeCodesTable);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -126,10 +120,6 @@ public class Read {
         return routeCodesList;
     }//end readRouteCodes
 
-    public static void main(String[] args) {
-        Read r = new Read();
-        r.readRouteCodes();
-    }
 
 
     public void printBusLineList() {
@@ -138,12 +128,7 @@ public class Read {
         }
     }
 
-//    public void printRouteCodeList(){
-//        for(int i=0;i<=20;i++){
-//            System.out.println(readRouteCodes().get(i)[0]+" "+readRouteCodes().get(i)[1]+" "+readRouteCodes().get(i)[2]+" "+readRouteCodes().get(i)[3]);
-//        }
-//        //System.out.println("line leoforiou= "+busLineTable[2][0]+"perioxi leof= "+busLineTable[2][3]);
-//    }
+
 
     public void printBusPosition(){
         ArrayList<String []> array = readBusPosition("817");
@@ -152,13 +137,4 @@ public class Read {
         }
     }
 
-//    public static void main(String[] args) throws IOException {
-//        Read r = new Read();
-//        //r.readBusLines();
-//        //r.printBusLineList();
-//        r.readBusPosition("817");
-//        //r.printBusPosition();
-//        r.readRouteCodes();
-//        r.printRouteCodeList();
-//    }
 }
