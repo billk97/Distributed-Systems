@@ -20,11 +20,11 @@ public class Brocker extends Node implements Runnable, Serializable {
     public ArrayList<String[]> brokerBusList = new ArrayList<>();
     private HashMap<String, ArrayList<String[]>> BusInformationHashMap = new HashMap<>();
     public ArrayList<Brocker> BrokerList = new ArrayList<Brocker>();
+    public ArrayList<String []> remoteBrokerList=new ArrayList<>();
     private Socket socket;
 
 
-    public Brocker() {
-    }
+    public Brocker() {}
 
     public Brocker(int port, String ip) {
         ipAddress = ip;
@@ -44,6 +44,16 @@ public class Brocker extends Node implements Runnable, Serializable {
     public void run() {
         brokerListener(socket);
     }
+    public void ConnectServers(String [] remoteBrokersIp){
+        int RemotePort =4202;
+        for(int i=0; i<remoteBrokersIp.length; i++){
+            new Thread(new BrokerConnect(remoteBrokersIp[i], RemotePort, RemotePort)).start();
+        }
+        /**for emergency**/
+//        new Thread(new BrokerConnect("172.16.2.46", RemotePort, RemotePort)).start();
+//        new Thread(new BrokerConnect("172.16.2.44", RemotePort, RemotePort)).start();
+//        new Thread(new BrokerConnect("172.16.2.46", RemotePort, RemotePort)).start();
+    }
 
     public void startServer() {
         ServerSocket listenerSocket = null;
@@ -52,10 +62,8 @@ public class Brocker extends Node implements Runnable, Serializable {
         initialize();
         try {
             listenerSocket = new ServerSocket(port);
-            //Thread BrokerAddThread1 = new Thread(new BrokerConnect("172.16.2.44", 4202, 4202));
-            //Thread BrokerAddThread2 = new Thread(new BrokerConnect("172.16.2.46", 4202, 4202));
-            //BrokerAddThread1.start();
-            //BrokerAddThread2.start();
+            /**for emergency use**/
+//
             while (true) {
                 /**connection accepted means a new socket and a new port have been created for the communication **/
                 System.out.println("Server is up and waiting ");
