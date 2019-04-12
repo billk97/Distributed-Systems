@@ -37,7 +37,23 @@ public class Node implements Serializable {
         }
     }
 
+    public String getBusLineName(String routeCode){
+        for (String[] line : localeRouteCodesList){
+            if(line[1].equals(routeCode)){
+                return line[3];
+            }
+        }
+        return null;
+    }
 
+    public String getBusLineInfo(String routeCode){
+        for (String[] line : localeRouteCodesList){
+            if(line[1].equals(routeCode)){
+                return line[4];
+            }
+        }
+        return null;
+    }
     public ArrayList<Brocker> getBrokerList() {
         return BrokerList;
     }

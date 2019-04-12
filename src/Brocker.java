@@ -121,6 +121,8 @@ public class Brocker extends Node implements Runnable, Serializable {
                             b1.setBusLineId(local.get(i)[0]);
                             b1.setRouteCode(local.get(i)[1]);
                             b1.setVehicleId(local.get(i)[2]);
+//                          b1.setLineName(getBusLineName(local.get(i)[1]));
+//                          b1.setInfo(getBusLineInfo(local.get(i)[1]));
                             Value value1 = new Value(b1,Double.parseDouble(local.get(i)[3]),Double.parseDouble(local.get(i)[4]));
                             try {
                                 out.writeObject(value1);
