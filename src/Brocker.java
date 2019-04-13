@@ -23,14 +23,14 @@ public class Brocker extends Node implements Runnable, Serializable {
     public ArrayList<String []> remoteBrokerList=new ArrayList<>();
     private Socket socket;
 
-
+    /**default constructor**/
     public Brocker() {}
-
+    /**copy constructor**/
     public Brocker(int port, String ip) {
         ipAddress = ip;
         this.port = port;
     }
-
+    /**copy constructor**/
     public Brocker(Socket socket, ArrayList<Brocker> BrokerList, ArrayList<String[]> brokerBusList,
                    ArrayList<String[]> BusLinesArrays, HashMap<String, ArrayList<String[]>> BusInformationHashMap, ArrayList<String []> localeRouteCodesList) {
         this.BrokerList = BrokerList;
@@ -44,6 +44,7 @@ public class Brocker extends Node implements Runnable, Serializable {
     public void run() {
         brokerListener(socket);
     }
+    /**Connects with the remote servers**/
     public void ConnectServers(String [] remoteBrokersIp){
         int RemotePort =4202;
         for(int i=0; i<remoteBrokersIp.length; i++){
@@ -54,7 +55,7 @@ public class Brocker extends Node implements Runnable, Serializable {
 //        new Thread(new BrokerConnect("172.16.2.44", RemotePort, RemotePort)).start();
 //        new Thread(new BrokerConnect("172.16.2.46", RemotePort, RemotePort)).start();
     }
-
+    /**Is called on the beginning of the server **/
     public void startServer() {
         ServerSocket listenerSocket = null;
         Socket connection=null;
@@ -80,6 +81,7 @@ public class Brocker extends Node implements Runnable, Serializable {
     }//startServer
 
 
+    /**main Broker function listens for all the requests**/
     public void brokerListener(Socket socket) {
 
         try {
@@ -158,7 +160,7 @@ public class Brocker extends Node implements Runnable, Serializable {
             e.printStackTrace();
         }
     }
-
+    /**finds the Bus Line Name from the localeRouteCodesList**/
     public String getBusLineName(String routeCode){
         for (String[] line : localeRouteCodesList){
             if(line[0].equals(routeCode)){
@@ -167,7 +169,7 @@ public class Brocker extends Node implements Runnable, Serializable {
         }
         return "Name not found";
     }
-
+    /**finds the Bus Lineinfo from the localeRouteCodesList**/
     public String getBusLineInfo(String routeCode){
         for (String[] line : localeRouteCodesList){
             if(line[0].equals(routeCode)){
@@ -189,6 +191,7 @@ public class Brocker extends Node implements Runnable, Serializable {
         }
         return null;
     }
+    /**checks if the broker is responsible for the bus**/
     public boolean acceptPublisher(String lineId){
         for (int i=0; i<brokerBusList.size();i++){
             if(brokerBusList.get(i)[1].equals(lineId)){
@@ -197,6 +200,7 @@ public class Brocker extends Node implements Runnable, Serializable {
         }
         return false;
     }//end acceptPublisher
+    /**converts Line Code To bus**/
     private String convertLineCodeToBus(String LineCode){
         String bus=null;
         for(String [] local :brokerBusList){
@@ -220,7 +224,7 @@ public class Brocker extends Node implements Runnable, Serializable {
         }
         return null;
     }
-
+    /**converts Bus to Line Code**/
     private String convertBusToLineCode(String bus){
         String LineCode=null;
         for(String [] local : brokerBusList){
@@ -290,7 +294,6 @@ public class Brocker extends Node implements Runnable, Serializable {
             }
         }
     }
-
     public String calculateIpPortHash() {
         Md5 md5 = new Md5();
         String brokerHash;

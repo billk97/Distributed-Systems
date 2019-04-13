@@ -38,7 +38,7 @@ public class Subscriber extends Node implements Serializable {
         }
     }//end findBroker
 
-
+    /**first connection gets the broker list to know who is responsible**/
     public void EstablishConnection() {
         try {
             socket = connect(brokerIp,brokerport);

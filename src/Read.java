@@ -25,7 +25,6 @@ public class Read {
             int k = 0;
             int j = 0;
             while ((i = fr.read()) != -1) {
-                //System.out.print(i+" ");
                 if (i == 44) {
                     busLineTable[k] = word;
                     word = "";
@@ -60,7 +59,6 @@ public class Read {
             int k=0;
             int stop=0;
             while ((i = fileReader.read()) != -1) {
-                //System.out.print(i+" ");
                 if (i == 44) {
                     busPositionTable[k]=word;
                     word = "";
@@ -69,7 +67,6 @@ public class Read {
                     busPositionTable[k]=word;
                     k=0;
                     word= "";
-
                     if(lineCode.equals(busPositionTable[0])) {
                         busPositionList.add(busPositionTable);
                     }
@@ -116,7 +113,6 @@ public class Read {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
         return routeCodesList;
     }//end readRouteCodes
 

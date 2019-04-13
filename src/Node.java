@@ -25,6 +25,7 @@ public class Node implements Serializable {
         this.port=port;
         this.ipAddress=ipAddress;
     }
+    /**first thing running**/
     public void initialize(){
         Read read = new Read();
         localeRouteCodesList=read.readRouteCodes();

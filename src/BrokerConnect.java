@@ -6,6 +6,7 @@ import java.net.Socket;
 public class BrokerConnect extends Node implements Runnable {
     private String RemoteBrokerIp;
     private int RemoteBrokerPort;
+    /**RemoteBrokerIp= my Ip , RemoteBrokerPort = the remote broker port , port= this brokers port**/
     public BrokerConnect(String RemoteBrokerIp, int RemoteBrokerPort,int port){
         this.RemoteBrokerIp=RemoteBrokerIp;
         this.RemoteBrokerPort=RemoteBrokerPort;
@@ -14,6 +15,7 @@ public class BrokerConnect extends Node implements Runnable {
     public void run(){
         MyConnection();
     }
+    /**Sends request for connection between two brokers **/
     public void MyConnection(){
         Socket socket = connect(RemoteBrokerIp,RemoteBrokerPort);
         try {
@@ -23,16 +25,11 @@ public class BrokerConnect extends Node implements Runnable {
             System.out.println(in.readUTF());
             out.writeUTF("BrokerAdd");
             out.flush();
-            out.writeUTF(Integer.toString(port));//einai 0 prepei na perastei alio
+            out.writeUTF(Integer.toString(port));
             out.flush();
         } catch (IOException e) {
             System.out.println("No connection could be established");
-
-            //e.printStackTrace();
             }
-//            catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
     }
 
     /**geter seter **/
