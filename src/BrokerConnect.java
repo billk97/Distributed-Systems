@@ -1,9 +1,7 @@
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.concurrent.TimeUnit;
 
 public class BrokerConnect extends Node implements Runnable {
     private String RemoteBrokerIp;
@@ -14,9 +12,9 @@ public class BrokerConnect extends Node implements Runnable {
         this.port=port;
     }
     public void run(){
-        Myconnection();
+        MyConnection();
     }
-    public void Myconnection(){
+    public void MyConnection(){
         Socket socket = connect(RemoteBrokerIp,RemoteBrokerPort);
         try {
             System.out.println("Connected");
