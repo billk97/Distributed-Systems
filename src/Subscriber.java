@@ -2,10 +2,12 @@ import DataTypes.Topic;
 import DataTypes.Value;
 import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.lang.invoke.LambdaConversionException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -80,11 +82,12 @@ public class Subscriber extends Node implements Serializable {
             out.flush();
             out.writeObject(topic);
             out.flush();
-            String close="true";
-            while (close.equals("true")){
-                Value value = (Value) in.readObject();
-                System.out.println("Bus: "+ value.getBus()+" Lon: "+value.getLongtitude()+ " lan: "+value.getLatidude());
-                valueArrayList.add(value);
+            Boolean close=false;
+            while (!close){
+                    Value value = (Value) in.readObject();
+                    System.out.println("Bus: "+ value.getBus()+" Lon: "+value.getLongtitude()+ " lan: "+value.getLatidude());
+                    valueArrayList.add(value);
+                    close=true;
             }
             out.close();
             in.close();

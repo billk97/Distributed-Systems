@@ -36,9 +36,4 @@ public class Md5 {
         }//when Hash1=Hash2
         else return Hash1;
     }//end compare
-    /**a small implementation/example/test**/
-    public static void main(String[] args) {
-        Md5 m5 =new Md5();
-        m5.HASH("172"+Integer.toString(420));
-    }
 }//end classMd5Implement

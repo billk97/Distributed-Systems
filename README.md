@@ -3,14 +3,18 @@ A Java/android based project focused on distributed Systems implementing the pub
 This is a university project developed for the course distributed systems. With the idea of creating an android client application that will be able to suggest the appropriate route for the given location the current time.
 As far as the backend system is concerned, it will be implemented / created using the publish/subscribe model, in which the broker nodes and publisher nodes will be created.
 # How to use
-* First the server/brocker needs to  wake up by
-* To start the **Brocker** run **Test.java** file
-* After the server is up eather the publisher or the pubsciber will eventuali connect
-* to start the **Publisher** run **TestPub.java** file 
-* to start the **Subscriber** run file
+* First the server/broker needs to  wake up
+* To start the **Broker** run **Test.java** file
+* Enter in the Program the Number Of Brokers you want to have by setting the table size
+* For each cell enter the remote host Ip address port is default 4202
+* After the server is up ether the publisher or the subscriber will eventually connect
+* To start the **Publisher** run **TestPub.java** file 
+* Before starting please set the Publishers Ip and the Default broker that it contact the first time
+* To start the **Subscriber** run file
+* Before starting please set the Subscriber Ip and the Default broker that it contact the first time
 # How its build 
-* please fill me
-# Actuall project (greek)
+* The hole systems communicates via sockets, the role of the server has the Broker and the Publishers And Subscribers are clients .
+# Actual project decryption (greek)
 ## ΟΙΚΟΝΟΜΙΚΟ ΠΑΝΕΠΙΣΤΗΜΙΟ ΑΘΗΝΩΝ
 
 ## ΤΜΗΜΑ ΠΛΗΡΟΦΟΡΙΚΗΣ
