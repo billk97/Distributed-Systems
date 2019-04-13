@@ -82,12 +82,11 @@ public class Subscriber extends Node implements Serializable {
             out.flush();
             out.writeObject(topic);
             out.flush();
-            Boolean close=false;
-            while (!close){
+            Boolean close=true;
+            while (close){
                     Value value = (Value) in.readObject();
                     System.out.println("Bus: "+ value.getBus()+" Lon: "+value.getLongtitude()+ " lan: "+value.getLatidude());
                     valueArrayList.add(value);
-                    close=true;
             }
             out.close();
             in.close();
