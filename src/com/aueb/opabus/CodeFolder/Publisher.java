@@ -1,7 +1,8 @@
+package com.aueb.opabus.CodeFolder;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -157,4 +158,4 @@ public class Publisher extends Node {
     public void setBrokerPort(int brokerPort) {
         this.brokerPort = brokerPort;
     }
-}//end Class Publisher
+}//end Class com.aueb.opabus.CodeFolder.Publisher

@@ -1,16 +1,9 @@
-import DataTypes.Bus;
-import com.sun.corba.se.pept.broker.Broker;
-import sun.swing.BakedArrayList;
+package com.aueb.opabus.CodeFolder;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.*;
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.concurrent.TimeUnit;
 
 public class Node implements Serializable {
     private static final long serialVersionUID = -304193945227516524L;
@@ -44,7 +37,7 @@ public class Node implements Serializable {
         return BrokerList;
     }
     //todo for the thread put inside hire the functions
-    /**allows each subclass Broker,Publisher,Subscriber to call this method
+    /**allows each subclass Broker,com.aueb.opabus.CodeFolder.Publisher,com.aueb.opabus.CodeFolder.Subscriber to call this method
      * broker.setBrokerList
      * broker --> object type broker
      * connection --> a socket in order to send the object via tcp**/

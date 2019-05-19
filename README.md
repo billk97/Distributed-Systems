@@ -4,14 +4,14 @@ This is a university project developed for the course distributed systems. With 
 As far as the backend system is concerned, it will be implemented / created using the publish/subscribe model, in which the broker nodes and publisher nodes will be created.
 # How to use
 * First the server/broker needs to  wake up
-* To start the **Broker** run **Test.java** file
+* To start the **Broker** run **com.aueb.opabus.CodeFolder.Test.java** file
 * Enter in the Program the Number Of Brokers you want to have by setting the table size
 * For each cell enter the remote host Ip address port is default 4202
 * After the server is up ether the publisher or the subscriber will eventually connect
-* To start the **Publisher** run **TestPub.java** file 
+* To start the **com.aueb.opabus.CodeFolder.Publisher** run **com.aueb.opabus.CodeFolder.TestPub.java** file
 * Before starting please set the Publishers Ip and the Default broker that it contact the first time
-* To start the **Subscriber** run file
-* Before starting please set the Subscriber Ip and the Default broker that it contact the first time
+* To start the **com.aueb.opabus.CodeFolder.Subscriber** run file
+* Before starting please set the com.aueb.opabus.CodeFolder.Subscriber Ip and the Default broker that it contact the first time
 # How its build 
 * The hole systems communicates via sockets, the role of the server has the Broker and the Publishers And Subscribers are clients .
 # Actual project decryption (greek)
@@ -71,7 +71,7 @@ push συνάρτηση μπορεί να εκτελείται παράλληλ�
 
 Για τις ανάγκες του publish / subscribe μοντέλου χρειάζεται να κατασκευάσουμε τρία components, _τον publisher nodeImpl, τους broker nodes_ και _τον consumer node_.
 
-1. **Publisher nodeImpl:** Eίναι υπεύθυνος να παίρνει τα δεδομένα από το κατάλληλο source. Ο κόμβος αυτός με κατάλληλο τρόπο και σε κατάλληλο χρονικό
+1. **com.aueb.opabus.CodeFolder.Publisher nodeImpl:** Eίναι υπεύθυνος να παίρνει τα δεδομένα από το κατάλληλο source. Ο κόμβος αυτός με κατάλληλο τρόπο και σε κατάλληλο χρονικό
     διάστημα στέλνει τα δεδομένα του στους brokers. Ουσιαστικά αυτό που κάνει  είναι να κάνει push τα δεδομένα για τα κλειδιά για τα οποία είναι υπεύθυνος,
     κατάλληλα στους brokers που είναι υπεύθυνοι για τα συγκεκριμένα κλειδιά. O publisher nodeImpl κατά την έναρξη της λειτουργίας του θα πρέπει να γνωρίζει για ποια κλειδιά είναι υπεύθυνος καθώς επίσης και όλη την απαραίτητη
 πληροφορία για τους brokers. Θα πρέπει να γνωρίζει για κάθε διαθέσιμο broker για ποια κλειδιά είναι υπεύθυνος. Αυτό θα επιτευχθεί κατά τη στιγμή
@@ -92,7 +92,7 @@ push συνάρτηση μπορεί να εκτελείται παράλληλ�
     για το ίδιο topic (την ίδια λεωφορειακή γραμμή) τότε θα πρέπει η αποστολή των δεδομένων να γίνει ταυτόχρονα και στους δύο κάνοντας χρήση των
     αρχών πολυνηματικού προγραμματισμού.
 3. **Consumer MyNode:** Ο Consumer MyNode είναι ουσιαστικά το κινητό το οποίο δέχεται την πληροφορία σχετικά με την γραμμή του λεωφορείου και την
-    αντίστοιχη θέση του. Δέχεται από τους broker nodes tuples της μορφής: <busLine, (DataTypes.Bus LatLng)>. Ο consumer nodeImpl βρίσκεται μόνιμα συνδεδεμένος
+    αντίστοιχη θέση του. Δέχεται από τους broker nodes tuples της μορφής: <busLine, (com.aueb.opabus.CodeFolder.DataTypes.Bus LatLng)>. Ο consumer nodeImpl βρίσκεται μόνιμα συνδεδεμένος
     με τον broker που είναι υπεύθυνος για την εκάστοτε γραμμή λεωφορείου. Επειδή, αυτό όμως δεν είναι πάντα γνωστό, ο consumer ρωτάει κατάλληλα
     όλους τους διαθέσιμους brokers για το ποιος είναι υπεύθυνος και για ποια κλειδιά. Συνεπώς, κατά την πρώτη επικοινωνία ενός consumer nodeImpl μ’έναν
     από τους broker, λαμβάνει από αυτόν την πληροφορία για το ποιοι είναι οι υπόλοιποι brokers και για ποια κλειδιά. Ουσιαστικά επιστρέφεται ένα

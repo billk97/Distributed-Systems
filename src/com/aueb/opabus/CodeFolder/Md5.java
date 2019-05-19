@@ -1,8 +1,10 @@
+package com.aueb.opabus.CodeFolder;
+
 import javax.xml.bind.DatatypeConverter;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-/**this is a small implementation for the Md5 algorithm used to hash the ip&port
+/**this is a small implementation for the com.aueb.opabus.CodeFolder.Md5 algorithm used to hash the ip&port
  * and the buslines **/
 public class Md5 {
     private MessageDigest md;

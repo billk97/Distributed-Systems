@@ -1,10 +1,10 @@
-package DataTypes;
+package com.aueb.opabus.CodeFolder.DataTypes;
 
 import java.io.Serializable;
 
-/**The DataTypes.Bus class represents a DataTypes.Bus that a publisher will pulling from the data
+/**The com.aueb.opabus.CodeFolder.DataTypes.Bus class represents a com.aueb.opabus.CodeFolder.DataTypes.Bus that a publisher will pulling from the data
  * lineNumber: the name of the bus example: B12
- * routeCode : the current/nearest DataTypes.Bus Stop (Suggestion)
+ * routeCode : the current/nearest com.aueb.opabus.CodeFolder.DataTypes.Bus Stop (Suggestion)
  * vehicleId: of the bus for a given time
  * lineName : of the bus for a given time **/
 public class Bus implements Serializable {
@@ -87,5 +87,5 @@ public class Bus implements Serializable {
                 '}';
     }
 
-}//end class DataTypes.Bus
+}//end class com.aueb.opabus.CodeFolder.DataTypes.Bus
 

@@ -1,3 +1,5 @@
+package com.aueb.opabus.CodeFolder;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -9,9 +11,9 @@ import java.util.Scanner;
 
 public class Read {
     /**careful the the linux and windows don't share the same path system **/
-    private String busLinesPath= "src\\DS_project_dataset\\busLinesNew.txt";
-    private String busPositionsPath = "src/DS_project_dataset\\busPositionsNew.txt";
-    private String routeCodesPath = "src\\DS_project_dataset\\RouteCodesNew.txt";
+    private String busLinesPath= "src\\com\\aueb\\opabus\\CodeFolder\\DS_project_dataset\\busLinesNew.txt";
+    private String busPositionsPath = "src/com\\aueb\\opabus\\CodeFolder\\DS_project_dataset\\busPositionsNew.txt";
+    private String routeCodesPath = "src\\com\\aueb\\opabus\\CodeFolder\\DS_project_dataset\\RouteCodesNew.txt";
     private String busLineTable[] = new String[3];
 
     public ArrayList<String []> readBusLines(){

@@ -1,13 +1,12 @@
-import DataTypes.Topic;
-import DataTypes.Value;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+package com.aueb.opabus.CodeFolder;
 
-import javax.swing.*;
+import com.aueb.opabus.CodeFolder.DataTypes.Topic;
+import com.aueb.opabus.CodeFolder.DataTypes.Value;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.lang.invoke.LambdaConversionException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -156,4 +155,4 @@ public class Subscriber extends Node implements Serializable {
     public void setBrokerport(int brokerport) {
         this.brokerport = brokerport;
     }
-}//end class Subscriber
+}//end class com.aueb.opabus.CodeFolder.Subscriber

@@ -1,4 +1,4 @@
-package DataTypes;
+package com.aueb.opabus.CodeFolder.DataTypes;
 
 import java.io.Serializable;
 

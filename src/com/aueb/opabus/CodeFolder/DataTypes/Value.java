@@ -1,6 +1,4 @@
-package DataTypes;
-
-import DataTypes.Bus;
+package com.aueb.opabus.CodeFolder.DataTypes;
 
 import java.io.Serializable;
 

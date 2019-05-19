@@ -1,7 +1,9 @@
-import DataTypes.Bus;
-import DataTypes.Topic;
-import DataTypes.Value;
-import com.sun.corba.se.pept.broker.Broker;
+package com.aueb.opabus.CodeFolder;
+
+import com.aueb.opabus.CodeFolder.DataTypes.Bus;
+import com.aueb.opabus.CodeFolder.DataTypes.Topic;
+import com.aueb.opabus.CodeFolder.DataTypes.Value;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -22,7 +24,6 @@ public class Brocker extends Node implements Runnable, Serializable {
     public ArrayList<Brocker> BrokerList = new ArrayList<Brocker>();
     public ArrayList<String []> remoteBrokerList=new ArrayList<>();
     private Socket socket;
-
     /**default constructor**/
     public Brocker() {}
     /**copy constructor**/
@@ -51,9 +52,9 @@ public class Brocker extends Node implements Runnable, Serializable {
             new Thread(new BrokerConnect(remoteBrokersIp[i], RemotePort, RemotePort)).start();
         }
         /**for emergency**/
-//        new Thread(new BrokerConnect("172.16.2.46", RemotePort, RemotePort)).start();
-//        new Thread(new BrokerConnect("172.16.2.44", RemotePort, RemotePort)).start();
-//        new Thread(new BrokerConnect("172.16.2.46", RemotePort, RemotePort)).start();
+//        new Thread(new com.aueb.opabus.CodeFolder.BrokerConnect("172.16.2.46", RemotePort, RemotePort)).start();
+//        new Thread(new com.aueb.opabus.CodeFolder.BrokerConnect("172.16.2.44", RemotePort, RemotePort)).start();
+//        new Thread(new com.aueb.opabus.CodeFolder.BrokerConnect("172.16.2.46", RemotePort, RemotePort)).start();
     }
     /**Is called on the beginning of the server **/
     public void startServer() {
@@ -80,7 +81,6 @@ public class Brocker extends Node implements Runnable, Serializable {
         }
     }//startServer
 
-
     /**main Broker function listens for all the requests**/
     public void brokerListener(Socket socket) {
 
@@ -96,7 +96,10 @@ public class Brocker extends Node implements Runnable, Serializable {
             if (request.equals("BrokerList")) {
                 calculateKeys();
                 //printBusLinesArray();
+                out.writeUTF("ok");
+                out.flush();
                 out.writeObject(BrokerList);
+
                 out.flush();
             } else if (request.equals("BrokerAdd")) {
                 int newBrokerPort = Integer.parseInt(in.readUTF());
