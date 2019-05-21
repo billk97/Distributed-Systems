@@ -3,7 +3,6 @@ package com.aueb.opabus.CodeFolder;
 import com.aueb.opabus.CodeFolder.DataTypes.Bus;
 import com.aueb.opabus.CodeFolder.DataTypes.Topic;
 import com.aueb.opabus.CodeFolder.DataTypes.Value;
-import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -96,7 +95,7 @@ public class Brocker extends Node implements Runnable, Serializable {
             if (request.equals("BrokerList")) {
                 calculateKeys();
                 //printBusLinesArray();
-                out.writeUTF("ok");
+               // out.writeUTF("ok");
                 out.flush();
                 out.writeObject(BrokerList);
 
