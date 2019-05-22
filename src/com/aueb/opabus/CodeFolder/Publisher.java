@@ -162,7 +162,7 @@ public class Publisher extends Node {
                 }
             }//end for2
             try {
-                TimeUnit.SECONDS.sleep(2);
+                TimeUnit.SECONDS.sleep(3);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

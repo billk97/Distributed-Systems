@@ -31,7 +31,7 @@ public class Bus implements Serializable {
         return busLineId;
     }
 
-    public void setBusLineId(String busLineId) {
+    public void setBusLineCode(String busLineId) {
         this.busLineId = busLineId;
     }
 

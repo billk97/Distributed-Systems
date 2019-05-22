@@ -84,9 +84,9 @@ public class Subscriber extends Node implements Serializable {
             Boolean close=true;
             while (close){
                     Value value = (Value) in.readObject();
-                    System.out.println("Value = "+value.getBus());
+                    //System.out.println("Value = "+value.getBus());
                     if(value == null){
-                        System.out.println("Waiting for response...");
+//                        System.out.println("Waiting for response...");
                     }else{
                         System.out.println("Bus: "+ value.getBus()+" Lon: "+value.getLongtitude()+ " lan: "+value.getLatidude());
                         valueArrayList.add(value);
