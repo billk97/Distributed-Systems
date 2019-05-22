@@ -154,15 +154,18 @@ public class Publisher extends Node {
 //                out.flush();
                     out.close();
                     in.close();
-                    TimeUnit.SECONDS.sleep(2);
+
                 } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
                     e.printStackTrace();
                 } finally {
                     Disconnect(socket);
                 }
             }//end for2
+            try {
+                TimeUnit.SECONDS.sleep(2);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }//end for1
     }//end push
     /**setter getter **/
@@ -182,10 +185,4 @@ public class Publisher extends Node {
         this.brokerPort = brokerPort;
     }
 
-    public static void main(String[] args) {
-        Publisher pub = new Publisher(4202,"192.168.1.65",0,20);
-        pub.readBusInformation();
-        pub.findArrayMaxLength();
-
-    }
 }//end Class com.aueb.opabus.CodeFolder.Publisher

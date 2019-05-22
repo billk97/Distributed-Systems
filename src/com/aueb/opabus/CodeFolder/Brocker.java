@@ -20,10 +20,10 @@ public class Brocker extends Node implements Runnable, Serializable {
      * brokerBusList = the bus list for which a broker is responsible
      **/
     public ArrayList<String[]> brokerBusList = new ArrayList<>();
-    private HashMap<String, ArrayList<String[]>> BusInformationHashMap = new HashMap<>();
+    private HashMap<String,String[]> BusInformationHashMap = new HashMap<>();
     public ArrayList<Brocker> BrokerList = new ArrayList<Brocker>();
     public ArrayList<String []> remoteBrokerList=new ArrayList<>();
-    public static String[] positionTable = new String[6];
+    public  String[] positionTable = new String[6];
     private Socket socket;
     /**default constructor**/
     public Brocker() {}
@@ -34,7 +34,7 @@ public class Brocker extends Node implements Runnable, Serializable {
     }
     /**copy constructor**/
     public Brocker(Socket socket, ArrayList<Brocker> BrokerList, ArrayList<String[]> brokerBusList,
-                   ArrayList<String[]> BusLinesArrays, HashMap<String, ArrayList<String[]>> BusInformationHashMap, ArrayList<String []> localeRouteCodesList) {
+                   ArrayList<String[]> BusLinesArrays, HashMap<String, String[]> BusInformationHashMap, ArrayList<String []> localeRouteCodesList) {
         this.BrokerList = BrokerList;
         this.socket = socket;
         this.BusLinesArray = BusLinesArrays;
@@ -109,14 +109,14 @@ public class Brocker extends Node implements Runnable, Serializable {
                 printBrokerBusList();
                 System.err.println("BrokeList.size: " + BrokerList.size());
             } else if (request.equals("Push")) {
-                String Bus = in.readUTF();
+                String LineId = in.readUTF();
 //                System.err.println("LineId: "+ LineId);
 //                String Bus = convertLineCodeToBus(LineId);
-                System.err.println("Bus: "+ Bus);
-                if(acceptPublisher(Bus)==true){
+                System.err.println("Bus: "+ LineId);
+                if(acceptPublisher(LineId)==true){
                     positionTable =(String[])in.readObject();
-//                    BusInformationHashMap.put(LineCode,positionList);
-                    System.out.println("positionList contains = "+ positionTable[0]+" "+positionTable[1]+" "+positionTable[2]+" "+positionTable[3] );
+                    BusInformationHashMap.put(LineId,positionTable);
+                    System.out.println("positionList contains = "+ positionTable[0]+" "+positionTable[1]+" "+positionTable[2]+" "+positionTable[3]+" "+positionTable[4]+" "+positionTable[5]);
                 }
                 else {
                     in.readObject();
@@ -127,18 +127,20 @@ public class Brocker extends Node implements Runnable, Serializable {
                 System.err.println("LocalTopic: "+ topic.getBusLine());
 
                 Thread t = new Thread(()->{
+                    //String lastLat = null;
                     while(true) {
-                        String[] local= findPositionOftheBus(topic);
-                        if (local != null) {
-                            for (int i = 0; i < local.length; i++) {
+                        String[] localLastPosition= findPositionOftheBus(topic);
+                        //&& !localLastPosition[3].equals(lastLat)
+                        if (localLastPosition != null ) {
+                            for (int i = 0; i < localLastPosition.length; i++) {
                                 Bus b1 = new Bus();
-                                b1.setBusLineCode(local[0]);
-                                b1.setRouteCode(local[1]);
-                                b1.setVehicleId(local[2]);
-                                b1.setLineName(getBusLineName(local[1]));
-                                b1.setInfo(getBusLineInfo(local[1]));
+                                b1.setBusLineId(localLastPosition[0]);
+                                b1.setRouteCode(localLastPosition[1]);
+                                b1.setVehicleId(localLastPosition[2]);
+                                b1.setLineName(getBusLineName(localLastPosition[1]));
+                                b1.setInfo(getBusLineInfo(localLastPosition[1]));
                                 //b1.setLineNumber(topic.getBusLine());
-                                Value value1 = new Value(b1, Double.parseDouble(local[3]), Double.parseDouble(local[4]));
+                                Value value1 = new Value(b1, Double.parseDouble(localLastPosition[3]), Double.parseDouble(localLastPosition[4]));
                                 try {
                                     out.writeObject(value1);
                                     out.flush();
@@ -149,7 +151,7 @@ public class Brocker extends Node implements Runnable, Serializable {
 //                            catch (InterruptedException e) {
 //                                e.printStackTrace();
 //                            }
-
+                                //lastLat= localLastPosition[3];
                             }
                         } else {
                             try {
@@ -159,6 +161,7 @@ public class Brocker extends Node implements Runnable, Serializable {
                                 e.printStackTrace();
                             }
                         }
+
                     }//end while
                 });
                 t.start();
@@ -228,9 +231,9 @@ public class Brocker extends Node implements Runnable, Serializable {
      * and returns the list of all the bus positions for the specific bus**/
     private String [] findPositionOftheBus(Topic localTopic){
         String busLineId =localTopic.getBusLine();
-        String busLineCode = convertLineIdToLineCode(busLineId);
-        if(positionTable[0]==busLineCode){
-            return positionTable;
+        //String busLineCode = convertLineIdToLineCode(busLineId);
+        if(BusInformationHashMap.containsKey(busLineId)){
+            return BusInformationHashMap.get(busLineId);
         }
         return null;
     }

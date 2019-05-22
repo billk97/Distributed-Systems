@@ -8,8 +8,8 @@ public class TestSub {
 
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-        Subscriber su = new Subscriber("192.168.1.66",4202);
-        su.setBrokerIp("192.168.1.66");
+        Subscriber su = new Subscriber("172.16.2.22",4202);
+        su.setBrokerIp("172.16.2.22");
         su.setBrokerport(4202);
         su.EstablishConnection();
         su.disconnect();
