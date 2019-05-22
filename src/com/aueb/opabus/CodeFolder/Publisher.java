@@ -44,13 +44,27 @@ public class Publisher extends Node {
         System.out.println("BusLIneArray: "+ BusLinesArray.size());
         for(int i=rangeStart; i<rangeEnd;i++){
             /**stores for the specific lineCode/LineId the positions on a ArrayList**/
-            String busLineId=BusLinesArray.get(i)[0];
-            ArrayList<String []> tempArray = r.readBusPosition(busLineId);
+            String busLineCode=BusLinesArray.get(i)[0];
+            ArrayList<String []> tempArray = r.readBusPosition(busLineCode);
             /**adds busLineId and a table with positions**/
-            busPositionsHashMap.put(BusLinesArray.get(i)[0],tempArray);
+            busPositionsHashMap.put(BusLinesArray.get(i)[1],tempArray);
         }
         //System.out.println("hashmap size ="+busPositionsHashMap.size());
     }//end readBusInformation
+
+    public String findArrayMaxLength(){
+        int max=0;
+        String maxKey=" ";
+        for(String key: busPositionsHashMap.keySet()){
+            if(max< busPositionsHashMap.get(key).size()){
+                max= busPositionsHashMap.get(key).size();
+                maxKey= key;
+            }
+        }
+        System.out.println("MAX ARRAY HAS LENGHT = "+max+" with lineId ="+maxKey);
+        return maxKey;
+    }
+
 
     /**this function gets the list of all Brokers via tcp connection **/
     public void getMyBrokerList(){
@@ -81,7 +95,7 @@ public class Publisher extends Node {
         for(int i=0;i<localBrockerList.size();i++) { //search at local broker list
             int BrokerRangeListSize = localBrockerList.get(i).getBrokerBusList().size(); //size of the BrokerRangeList for each broker
             for (int j = 0; j < BrokerRangeListSize; j++) { //search to every broker's hashmap's arraylist
-                String busOfBroker = localBrockerList.get(i).getBrokerBusList().get(j)[0];
+                String busOfBroker = localBrockerList.get(i).getBrokerBusList().get(j)[1];
                 if (busOfPub.equals(busOfBroker)) {
                     return localBrockerList.get(i);
                 }
@@ -111,35 +125,44 @@ public class Publisher extends Node {
      * topic(busLine)
      * and sends them to the broker**/
     public void push ()  {
-        for(String key: busPositionsHashMap.keySet()){ //for every key=busline search for the broker with same busline
-            //todo na to kanoyme etsi
-//            Thread t = new Thread(() -> {
-//                // your code here ...
-//            });
-            String ip=findBus(key).ipAddress; //responsible broker's ip
-            int port = findBus(key).port; //responsible broker's port
-            Socket socket=connect(ip, port);
-            ObjectOutputStream out = null;
-            try {
-                out = new ObjectOutputStream(socket.getOutputStream());
-                ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-                System.out.println(in.readUTF());
-                out.writeUTF("Push");
-                out.flush();
-                out.writeUTF(key);
-                out.flush();
-                out.writeObject(busPositionsHashMap.get(key));
-                out.flush();
-                out.close();
-                in.close();
-                TimeUnit.SECONDS.sleep(1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } finally {
-                Disconnect(socket);
-            }
+        String maxLineId = findArrayMaxLength();
+        for(int i=0;i<busPositionsHashMap.get(maxLineId).size();i++) {
+            for (String buslineId : busPositionsHashMap.keySet()) { //for every buslineId=buslineId search for the broker with same buslineId
+
+                String ip = findBus(buslineId).ipAddress; //responsible broker's ip
+                int port = findBus(buslineId).port; //responsible broker's port
+                Socket socket = connect(ip, port);
+                ObjectOutputStream out = null;
+                try {
+                    out = new ObjectOutputStream(socket.getOutputStream());
+                    ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+                    System.out.println(in.readUTF());
+                    out.writeUTF("Push");
+                    out.flush();
+                    out.writeUTF(buslineId);
+                    out.flush();
+
+                    if(busPositionsHashMap.get(buslineId).size()>i) {
+                        out.writeObject(busPositionsHashMap.get(buslineId).get(i));
+                        out.flush();
+                    }else{
+                        String[] zeroTable =new String[6];
+                        out.writeObject(zeroTable);
+                        out.flush();
+                    }
+//                out.writeObject(busPositionsHashMap.get(buslineId));
+//                out.flush();
+                    out.close();
+                    in.close();
+                    TimeUnit.SECONDS.sleep(2);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    Disconnect(socket);
+                }
+            }//end for2
         }//end for1
     }//end push
     /**setter getter **/
@@ -157,5 +180,12 @@ public class Publisher extends Node {
     }
     public void setBrokerPort(int brokerPort) {
         this.brokerPort = brokerPort;
+    }
+
+    public static void main(String[] args) {
+        Publisher pub = new Publisher(4202,"192.168.1.65",0,20);
+        pub.readBusInformation();
+        pub.findArrayMaxLength();
+
     }
 }//end Class com.aueb.opabus.CodeFolder.Publisher
